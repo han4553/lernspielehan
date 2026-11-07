@@ -6879,7 +6879,7 @@ function endBlock(g,h){const n=greenCount(g);return `${cityCard(g)}<div class="c
 /* ---------- 3D-Stadt „Kaufstadt live“ (three.js eingebettet) ---------- */
 const City=(function(){
  const T=window.THREE;
- let ok=null,R,S,Cam,wrap,cv,W=0,H=0,t0=performance.now(),last=0,azBase=0,drag=null,lastTouch=-9999,pend=null,lastKey='';
+ let ok=null,R,S,Cam,wrap,cv,W=0,H=0,t0=performance.now(),last=0,lastR=0,azBase=0,drag=null,lastTouch=-9999,pend=null,lastKey='';
  const el=0.5,dist=26;
  const cur=[50,50,50,50,50,50],tgt=[50,50,50,50,50,50];
  const shops=[],tags=[],people=[],wins=[],blades=[],trees=[],cont=[],mixers=[],men=[],towers=[];
@@ -6984,6 +6984,8 @@ const City=(function(){
  function frame(ts){
   requestAnimationFrame(frame);
   if(!wrap||!wrap.isConnected||document.hidden)return;
+  if(ts-lastR<33)return;lastR=ts;
+  const rc=wrap.getBoundingClientRect();if(rc.bottom<0||rc.top>innerHeight)return;
   const now=ts/1000,dt=Math.min(0.1,now-last||0.016);last=now;
   apply(dt,now);
   const auto=(performance.now()-lastTouch>4000)&&!drag?Math.sin(now*0.12)*0.45:0;
@@ -6993,7 +6995,7 @@ const City=(function(){
   R.render(S,Cam);
  }
  let started=false;
- function init(){if(ok!==null)return ok;try{if(!T||!window.WebGLRenderingContext)throw 0;build();ok=true;if(!started){started=true;requestAnimationFrame(frame)}}catch(e){ok=false}return ok}
+ function init(){if(ok!==null)return ok;try{if(!T||!window.WebGLRenderingContext||/[?&]no3d/.test(location.search))throw 0;build();ok=true;if(!started){started=true;requestAnimationFrame(frame)}}catch(e){ok=false}return ok}
  function setG(g,snap){for(let i=0;i<6;i++){tgt[i]=g[i];if(snap)cur[i]=g[i]}}
  function attach(){const sl=document.getElementById('c3d-slot');if(!sl)return;
   if(!init()){sl.parentNode.style.display='none';return}
