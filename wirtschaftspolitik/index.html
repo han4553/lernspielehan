@@ -1,0 +1,2607 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kabinett Kaufstadt</title>
+<style>
+:root{--r:#e63946;--y:#ffbe0b;--t:#2a9d8f;--n:#1d3557;--p:#fff6e5;--ink:#1b1b2f}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Trebuchet MS",Verdana,sans-serif;color:var(--ink);background:var(--p) radial-gradient(circle,#f1dcb2 1.3px,transparent 1.5px) 0 0/22px 22px;font-size:16px;line-height:1.4}
+header{height:56px;background:repeating-linear-gradient(90deg,var(--r) 0 30px,#fff 30px 60px);border-bottom:4px solid var(--ink);display:flex;align-items:center;justify-content:center;position:sticky;top:0;z-index:5}
+header b{background:var(--y);border:3px solid var(--ink);padding:3px 14px;border-radius:12px;font-size:18px;box-shadow:3px 3px 0 var(--ink);cursor:pointer;letter-spacing:.5px}
+main{max-width:1000px;margin:0 auto;padding:12px 12px 60px}
+h1,h2,h3{margin:.2em 0;line-height:1.15}
+.card{background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:5px 5px 0 var(--ink);padding:14px;margin:12px 0}
+.grid{display:grid;gap:12px}
+@media(min-width:760px){.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}}
+.btn{display:inline-block;font:inherit;font-weight:800;background:var(--y);color:var(--ink);border:3px solid var(--ink);border-radius:12px;padding:10px 16px;cursor:pointer;box-shadow:3px 3px 0 var(--ink);margin:4px 4px 4px 0;transition:transform .08s}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.btn.r{background:var(--r);color:#fff}.btn.t{background:var(--t);color:#fff}.btn.n{background:var(--n);color:#fff}.btn.w{background:#fff}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.big{font-size:20px;padding:14px 20px}
+.tag{display:inline-block;background:var(--n);color:#fff;border-radius:8px;padding:2px 8px;font-size:13px;font-weight:700}
+.muted{color:#555;font-size:14px}
+.ms{display:block;width:100%;text-align:left;font:inherit;background:#fffdf4;border:3px solid var(--ink);border-radius:14px 30px 30px 14px;padding:10px 40px 10px 14px;margin:9px 0;cursor:pointer;position:relative;box-shadow:3px 3px 0 var(--ink)}
+.ms:after{content:"";position:absolute;right:12px;top:50%;width:14px;height:14px;margin-top:-7px;border:3px solid var(--ink);border-radius:50%;background:var(--p)}
+.ms b{font-size:17px}.ms small{display:block;color:#444}
+.ms.sel{background:#d9f5e8;border-color:var(--t);box-shadow:3px 3px 0 var(--t)}
+.ms.chosen{background:#fff2c2}
+.ms[disabled]{cursor:default}
+.g{display:grid;grid-template-columns:34px 1fr 44px;gap:8px;align-items:center;margin:6px 0}
+.g .nm{grid-column:2;font-size:13px;font-weight:700;margin-bottom:2px}
+.bar{height:18px;border:2px solid var(--ink);border-radius:10px;background:#eee;overflow:hidden;position:relative}
+.bar i{display:block;height:100%;transition:width .6s}
+.z-r{background:var(--r)}.z-y{background:var(--y)}.z-g{background:var(--t)}
+.dl{font-size:13px;font-weight:800}.up{color:#18794e}.dn{color:#c1121f}
+.meme{background:linear-gradient(#3a3a4a,#18181f);color:#fff;text-align:center;border-radius:12px;padding:10px 8px;border:3px solid var(--ink);font-family:Impact,"Arial Black",sans-serif;text-transform:uppercase;letter-spacing:.5px}
+.meme .e{font-size:54px;line-height:1.1}.meme div{font-size:17px}
+.fact{background:#e8f4f8;border:3px dashed var(--n);border-radius:12px;padding:8px 12px;margin:10px 0;font-size:15px}
+.ev{display:flex;gap:12px;align-items:flex-start}
+.ev .ic{font-size:56px;line-height:1}
+.pill{display:inline-block;border:2px solid var(--ink);border-radius:20px;padding:2px 10px;margin:2px;background:#fff;font-weight:700;font-size:14px}
+.pill.k{background:#ffd6d9}.pill.h{background:#d9f5e8}.pill.nn{background:#eee}
+.photo{width:100%;border:3px solid var(--ink);border-radius:12px;display:block}
+.cred{font-size:11px;color:#555;margin:2px 0 8px}
+input,select{font:inherit;padding:10px;border:3px solid var(--ink);border-radius:10px;background:#fff;margin:4px 4px 4px 0}
+.role{display:flex;gap:12px;align-items:center}
+.role .ic{font-size:46px}
+.stars{font-size:13px;letter-spacing:1px}
+.mood{font-size:44px;line-height:1}
+table{border-collapse:collapse;width:100%}td,th{border-bottom:2px solid #eee;padding:6px;text-align:left;font-size:15px}
+.qrbox{background:#fff;border:3px solid var(--ink);border-radius:12px;padding:8px;display:inline-block}
+.qrbox svg{display:block;width:230px;height:230px}
+.code{font-size:56px;font-weight:900;letter-spacing:10px;background:var(--y);border:3px solid var(--ink);border-radius:14px;padding:0 18px;display:inline-block;box-shadow:4px 4px 0 var(--ink)}
+.rolechoice{cursor:pointer}
+.rolechoice:hover{background:#fff7d6}
+.vbar{display:flex;align-items:center;gap:8px;margin:6px 0}.vbar .b{flex:1;height:20px;background:#eee;border:2px solid var(--ink);border-radius:10px;overflow:hidden}.vbar .b i{display:block;height:100%;background:var(--n)}
+.ok{color:#18794e;font-weight:800}.bad{color:#c1121f;font-weight:800}
+.hint{background:#fff2c2;border:3px solid var(--ink);border-radius:12px;padding:8px 12px;font-weight:700}
+</style></head>
+<body>
+<header><b id="logo" data-a="home">🏬 Kabinett Kaufstadt</b></header>
+<main id="app"></main>
+<script>//---------------------------------------------------------------------
+//
+// QR Code Generator for JavaScript
+//
+// Copyright (c) 2009 Kazuhiko Arase
+//
+// URL: http://www.d-project.com/
+//
+// Licensed under the MIT license:
+//  http://www.opensource.org/licenses/mit-license.php
+//
+// The word 'QR Code' is registered trademark of
+// DENSO WAVE INCORPORATED
+//  http://www.denso-wave.com/qrcode/faqpatent-e.html
+//
+//---------------------------------------------------------------------
+
+var qrcode = function() {
+
+  //---------------------------------------------------------------------
+  // qrcode
+  //---------------------------------------------------------------------
+
+  /**
+   * qrcode
+   * @param typeNumber 1 to 40
+   * @param errorCorrectionLevel 'L','M','Q','H'
+   */
+  var qrcode = function(typeNumber, errorCorrectionLevel) {
+
+    var PAD0 = 0xEC;
+    var PAD1 = 0x11;
+
+    var _typeNumber = typeNumber;
+    var _errorCorrectionLevel = QRErrorCorrectionLevel[errorCorrectionLevel];
+    var _modules = null;
+    var _moduleCount = 0;
+    var _dataCache = null;
+    var _dataList = [];
+
+    var _this = {};
+
+    var makeImpl = function(test, maskPattern) {
+
+      _moduleCount = _typeNumber * 4 + 17;
+      _modules = function(moduleCount) {
+        var modules = new Array(moduleCount);
+        for (var row = 0; row < moduleCount; row += 1) {
+          modules[row] = new Array(moduleCount);
+          for (var col = 0; col < moduleCount; col += 1) {
+            modules[row][col] = null;
+          }
+        }
+        return modules;
+      }(_moduleCount);
+
+      setupPositionProbePattern(0, 0);
+      setupPositionProbePattern(_moduleCount - 7, 0);
+      setupPositionProbePattern(0, _moduleCount - 7);
+      setupPositionAdjustPattern();
+      setupTimingPattern();
+      setupTypeInfo(test, maskPattern);
+
+      if (_typeNumber >= 7) {
+        setupTypeNumber(test);
+      }
+
+      if (_dataCache == null) {
+        _dataCache = createData(_typeNumber, _errorCorrectionLevel, _dataList);
+      }
+
+      mapData(_dataCache, maskPattern);
+    };
+
+    var setupPositionProbePattern = function(row, col) {
+
+      for (var r = -1; r <= 7; r += 1) {
+
+        if (row + r <= -1 || _moduleCount <= row + r) continue;
+
+        for (var c = -1; c <= 7; c += 1) {
+
+          if (col + c <= -1 || _moduleCount <= col + c) continue;
+
+          if ( (0 <= r && r <= 6 && (c == 0 || c == 6) )
+              || (0 <= c && c <= 6 && (r == 0 || r == 6) )
+              || (2 <= r && r <= 4 && 2 <= c && c <= 4) ) {
+            _modules[row + r][col + c] = true;
+          } else {
+            _modules[row + r][col + c] = false;
+          }
+        }
+      }
+    };
+
+    var getBestMaskPattern = function() {
+
+      var minLostPoint = 0;
+      var pattern = 0;
+
+      for (var i = 0; i < 8; i += 1) {
+
+        makeImpl(true, i);
+
+        var lostPoint = QRUtil.getLostPoint(_this);
+
+        if (i == 0 || minLostPoint > lostPoint) {
+          minLostPoint = lostPoint;
+          pattern = i;
+        }
+      }
+
+      return pattern;
+    };
+
+    var setupTimingPattern = function() {
+
+      for (var r = 8; r < _moduleCount - 8; r += 1) {
+        if (_modules[r][6] != null) {
+          continue;
+        }
+        _modules[r][6] = (r % 2 == 0);
+      }
+
+      for (var c = 8; c < _moduleCount - 8; c += 1) {
+        if (_modules[6][c] != null) {
+          continue;
+        }
+        _modules[6][c] = (c % 2 == 0);
+      }
+    };
+
+    var setupPositionAdjustPattern = function() {
+
+      var pos = QRUtil.getPatternPosition(_typeNumber);
+
+      for (var i = 0; i < pos.length; i += 1) {
+
+        for (var j = 0; j < pos.length; j += 1) {
+
+          var row = pos[i];
+          var col = pos[j];
+
+          if (_modules[row][col] != null) {
+            continue;
+          }
+
+          for (var r = -2; r <= 2; r += 1) {
+
+            for (var c = -2; c <= 2; c += 1) {
+
+              if (r == -2 || r == 2 || c == -2 || c == 2
+                  || (r == 0 && c == 0) ) {
+                _modules[row + r][col + c] = true;
+              } else {
+                _modules[row + r][col + c] = false;
+              }
+            }
+          }
+        }
+      }
+    };
+
+    var setupTypeNumber = function(test) {
+
+      var bits = QRUtil.getBCHTypeNumber(_typeNumber);
+
+      for (var i = 0; i < 18; i += 1) {
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+        _modules[Math.floor(i / 3)][i % 3 + _moduleCount - 8 - 3] = mod;
+      }
+
+      for (var i = 0; i < 18; i += 1) {
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+        _modules[i % 3 + _moduleCount - 8 - 3][Math.floor(i / 3)] = mod;
+      }
+    };
+
+    var setupTypeInfo = function(test, maskPattern) {
+
+      var data = (_errorCorrectionLevel << 3) | maskPattern;
+      var bits = QRUtil.getBCHTypeInfo(data);
+
+      // vertical
+      for (var i = 0; i < 15; i += 1) {
+
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+
+        if (i < 6) {
+          _modules[i][8] = mod;
+        } else if (i < 8) {
+          _modules[i + 1][8] = mod;
+        } else {
+          _modules[_moduleCount - 15 + i][8] = mod;
+        }
+      }
+
+      // horizontal
+      for (var i = 0; i < 15; i += 1) {
+
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+
+        if (i < 8) {
+          _modules[8][_moduleCount - i - 1] = mod;
+        } else if (i < 9) {
+          _modules[8][15 - i - 1 + 1] = mod;
+        } else {
+          _modules[8][15 - i - 1] = mod;
+        }
+      }
+
+      // fixed module
+      _modules[_moduleCount - 8][8] = (!test);
+    };
+
+    var mapData = function(data, maskPattern) {
+
+      var inc = -1;
+      var row = _moduleCount - 1;
+      var bitIndex = 7;
+      var byteIndex = 0;
+      var maskFunc = QRUtil.getMaskFunction(maskPattern);
+
+      for (var col = _moduleCount - 1; col > 0; col -= 2) {
+
+        if (col == 6) col -= 1;
+
+        while (true) {
+
+          for (var c = 0; c < 2; c += 1) {
+
+            if (_modules[row][col - c] == null) {
+
+              var dark = false;
+
+              if (byteIndex < data.length) {
+                dark = ( ( (data[byteIndex] >>> bitIndex) & 1) == 1);
+              }
+
+              var mask = maskFunc(row, col - c);
+
+              if (mask) {
+                dark = !dark;
+              }
+
+              _modules[row][col - c] = dark;
+              bitIndex -= 1;
+
+              if (bitIndex == -1) {
+                byteIndex += 1;
+                bitIndex = 7;
+              }
+            }
+          }
+
+          row += inc;
+
+          if (row < 0 || _moduleCount <= row) {
+            row -= inc;
+            inc = -inc;
+            break;
+          }
+        }
+      }
+    };
+
+    var createBytes = function(buffer, rsBlocks) {
+
+      var offset = 0;
+
+      var maxDcCount = 0;
+      var maxEcCount = 0;
+
+      var dcdata = new Array(rsBlocks.length);
+      var ecdata = new Array(rsBlocks.length);
+
+      for (var r = 0; r < rsBlocks.length; r += 1) {
+
+        var dcCount = rsBlocks[r].dataCount;
+        var ecCount = rsBlocks[r].totalCount - dcCount;
+
+        maxDcCount = Math.max(maxDcCount, dcCount);
+        maxEcCount = Math.max(maxEcCount, ecCount);
+
+        dcdata[r] = new Array(dcCount);
+
+        for (var i = 0; i < dcdata[r].length; i += 1) {
+          dcdata[r][i] = 0xff & buffer.getBuffer()[i + offset];
+        }
+        offset += dcCount;
+
+        var rsPoly = QRUtil.getErrorCorrectPolynomial(ecCount);
+        var rawPoly = qrPolynomial(dcdata[r], rsPoly.getLength() - 1);
+
+        var modPoly = rawPoly.mod(rsPoly);
+        ecdata[r] = new Array(rsPoly.getLength() - 1);
+        for (var i = 0; i < ecdata[r].length; i += 1) {
+          var modIndex = i + modPoly.getLength() - ecdata[r].length;
+          ecdata[r][i] = (modIndex >= 0)? modPoly.getAt(modIndex) : 0;
+        }
+      }
+
+      var totalCodeCount = 0;
+      for (var i = 0; i < rsBlocks.length; i += 1) {
+        totalCodeCount += rsBlocks[i].totalCount;
+      }
+
+      var data = new Array(totalCodeCount);
+      var index = 0;
+
+      for (var i = 0; i < maxDcCount; i += 1) {
+        for (var r = 0; r < rsBlocks.length; r += 1) {
+          if (i < dcdata[r].length) {
+            data[index] = dcdata[r][i];
+            index += 1;
+          }
+        }
+      }
+
+      for (var i = 0; i < maxEcCount; i += 1) {
+        for (var r = 0; r < rsBlocks.length; r += 1) {
+          if (i < ecdata[r].length) {
+            data[index] = ecdata[r][i];
+            index += 1;
+          }
+        }
+      }
+
+      return data;
+    };
+
+    var createData = function(typeNumber, errorCorrectionLevel, dataList) {
+
+      var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, errorCorrectionLevel);
+
+      var buffer = qrBitBuffer();
+
+      for (var i = 0; i < dataList.length; i += 1) {
+        var data = dataList[i];
+        buffer.put(data.getMode(), 4);
+        buffer.put(data.getLength(), QRUtil.getLengthInBits(data.getMode(), typeNumber) );
+        data.write(buffer);
+      }
+
+      // calc num max data.
+      var totalDataCount = 0;
+      for (var i = 0; i < rsBlocks.length; i += 1) {
+        totalDataCount += rsBlocks[i].dataCount;
+      }
+
+      if (buffer.getLengthInBits() > totalDataCount * 8) {
+        throw 'code length overflow. ('
+          + buffer.getLengthInBits()
+          + '>'
+          + totalDataCount * 8
+          + ')';
+      }
+
+      // end code
+      if (buffer.getLengthInBits() + 4 <= totalDataCount * 8) {
+        buffer.put(0, 4);
+      }
+
+      // padding
+      while (buffer.getLengthInBits() % 8 != 0) {
+        buffer.putBit(false);
+      }
+
+      // padding
+      while (true) {
+
+        if (buffer.getLengthInBits() >= totalDataCount * 8) {
+          break;
+        }
+        buffer.put(PAD0, 8);
+
+        if (buffer.getLengthInBits() >= totalDataCount * 8) {
+          break;
+        }
+        buffer.put(PAD1, 8);
+      }
+
+      return createBytes(buffer, rsBlocks);
+    };
+
+    _this.addData = function(data, mode) {
+
+      mode = mode || 'Byte';
+
+      var newData = null;
+
+      switch(mode) {
+      case 'Numeric' :
+        newData = qrNumber(data);
+        break;
+      case 'Alphanumeric' :
+        newData = qrAlphaNum(data);
+        break;
+      case 'Byte' :
+        newData = qr8BitByte(data);
+        break;
+      case 'Kanji' :
+        newData = qrKanji(data);
+        break;
+      default :
+        throw 'mode:' + mode;
+      }
+
+      _dataList.push(newData);
+      _dataCache = null;
+    };
+
+    _this.isDark = function(row, col) {
+      if (row < 0 || _moduleCount <= row || col < 0 || _moduleCount <= col) {
+        throw row + ',' + col;
+      }
+      return _modules[row][col];
+    };
+
+    _this.getModuleCount = function() {
+      return _moduleCount;
+    };
+
+    _this.make = function() {
+      if (_typeNumber < 1) {
+        var typeNumber = 1;
+
+        for (; typeNumber < 40; typeNumber++) {
+          var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, _errorCorrectionLevel);
+          var buffer = qrBitBuffer();
+
+          for (var i = 0; i < _dataList.length; i++) {
+            var data = _dataList[i];
+            buffer.put(data.getMode(), 4);
+            buffer.put(data.getLength(), QRUtil.getLengthInBits(data.getMode(), typeNumber) );
+            data.write(buffer);
+          }
+
+          var totalDataCount = 0;
+          for (var i = 0; i < rsBlocks.length; i++) {
+            totalDataCount += rsBlocks[i].dataCount;
+          }
+
+          if (buffer.getLengthInBits() <= totalDataCount * 8) {
+            break;
+          }
+        }
+
+        _typeNumber = typeNumber;
+      }
+
+      makeImpl(false, getBestMaskPattern() );
+    };
+
+    _this.createTableTag = function(cellSize, margin) {
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      var qrHtml = '';
+
+      qrHtml += '<table style="';
+      qrHtml += ' border-width: 0px; border-style: none;';
+      qrHtml += ' border-collapse: collapse;';
+      qrHtml += ' padding: 0px; margin: ' + margin + 'px;';
+      qrHtml += '">';
+      qrHtml += '<tbody>';
+
+      for (var r = 0; r < _this.getModuleCount(); r += 1) {
+
+        qrHtml += '<tr>';
+
+        for (var c = 0; c < _this.getModuleCount(); c += 1) {
+          qrHtml += '<td style="';
+          qrHtml += ' border-width: 0px; border-style: none;';
+          qrHtml += ' border-collapse: collapse;';
+          qrHtml += ' padding: 0px; margin: 0px;';
+          qrHtml += ' width: ' + cellSize + 'px;';
+          qrHtml += ' height: ' + cellSize + 'px;';
+          qrHtml += ' background-color: ';
+          qrHtml += _this.isDark(r, c)? '#000000' : '#ffffff';
+          qrHtml += ';';
+          qrHtml += '"/>';
+        }
+
+        qrHtml += '</tr>';
+      }
+
+      qrHtml += '</tbody>';
+      qrHtml += '</table>';
+
+      return qrHtml;
+    };
+
+    _this.createSvgTag = function(cellSize, margin, alt, title) {
+
+      var opts = {};
+      if (typeof arguments[0] == 'object') {
+        // Called by options.
+        opts = arguments[0];
+        // overwrite cellSize and margin.
+        cellSize = opts.cellSize;
+        margin = opts.margin;
+        alt = opts.alt;
+        title = opts.title;
+      }
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      // Compose alt property surrogate
+      alt = (typeof alt === 'string') ? {text: alt} : alt || {};
+      alt.text = alt.text || null;
+      alt.id = (alt.text) ? alt.id || 'qrcode-description' : null;
+
+      // Compose title property surrogate
+      title = (typeof title === 'string') ? {text: title} : title || {};
+      title.text = title.text || null;
+      title.id = (title.text) ? title.id || 'qrcode-title' : null;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var c, mc, r, mr, qrSvg='', rect;
+
+      rect = 'l' + cellSize + ',0 0,' + cellSize +
+        ' -' + cellSize + ',0 0,-' + cellSize + 'z ';
+
+      qrSvg += '<svg version="1.1" xmlns="http://www.w3.org/2000/svg"';
+      qrSvg += !opts.scalable ? ' width="' + size + 'px" height="' + size + 'px"' : '';
+      qrSvg += ' viewBox="0 0 ' + size + ' ' + size + '" ';
+      qrSvg += ' preserveAspectRatio="xMinYMin meet"';
+      qrSvg += (title.text || alt.text) ? ' role="img" aria-labelledby="' +
+          escapeXml([title.id, alt.id].join(' ').trim() ) + '"' : '';
+      qrSvg += '>';
+      qrSvg += (title.text) ? '<title id="' + escapeXml(title.id) + '">' +
+          escapeXml(title.text) + '</title>' : '';
+      qrSvg += (alt.text) ? '<description id="' + escapeXml(alt.id) + '">' +
+          escapeXml(alt.text) + '</description>' : '';
+      qrSvg += '<rect width="100%" height="100%" fill="white" cx="0" cy="0"/>';
+      qrSvg += '<path d="';
+
+      for (r = 0; r < _this.getModuleCount(); r += 1) {
+        mr = r * cellSize + margin;
+        for (c = 0; c < _this.getModuleCount(); c += 1) {
+          if (_this.isDark(r, c) ) {
+            mc = c*cellSize+margin;
+            qrSvg += 'M' + mc + ',' + mr + rect;
+          }
+        }
+      }
+
+      qrSvg += '" stroke="transparent" fill="black"/>';
+      qrSvg += '</svg>';
+
+      return qrSvg;
+    };
+
+    _this.createDataURL = function(cellSize, margin) {
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+
+      return createDataURL(size, size, function(x, y) {
+        if (min <= x && x < max && min <= y && y < max) {
+          var c = Math.floor( (x - min) / cellSize);
+          var r = Math.floor( (y - min) / cellSize);
+          return _this.isDark(r, c)? 0 : 1;
+        } else {
+          return 1;
+        }
+      } );
+    };
+
+    _this.createImgTag = function(cellSize, margin, alt) {
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+
+      var img = '';
+      img += '<img';
+      img += '\u0020src="';
+      img += _this.createDataURL(cellSize, margin);
+      img += '"';
+      img += '\u0020width="';
+      img += size;
+      img += '"';
+      img += '\u0020height="';
+      img += size;
+      img += '"';
+      if (alt) {
+        img += '\u0020alt="';
+        img += escapeXml(alt);
+        img += '"';
+      }
+      img += '/>';
+
+      return img;
+    };
+
+    var escapeXml = function(s) {
+      var escaped = '';
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charAt(i);
+        switch(c) {
+        case '<': escaped += '&lt;'; break;
+        case '>': escaped += '&gt;'; break;
+        case '&': escaped += '&amp;'; break;
+        case '"': escaped += '&quot;'; break;
+        default : escaped += c; break;
+        }
+      }
+      return escaped;
+    };
+
+    var _createHalfASCII = function(margin) {
+      var cellSize = 1;
+      margin = (typeof margin == 'undefined')? cellSize * 2 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+
+      var y, x, r1, r2, p;
+
+      var blocks = {
+        '██': '█',
+        '█ ': '▀',
+        ' █': '▄',
+        '  ': ' '
+      };
+
+      var blocksLastLineNoMargin = {
+        '██': '▀',
+        '█ ': '▀',
+        ' █': ' ',
+        '  ': ' '
+      };
+
+      var ascii = '';
+      for (y = 0; y < size; y += 2) {
+        r1 = Math.floor((y - min) / cellSize);
+        r2 = Math.floor((y + 1 - min) / cellSize);
+        for (x = 0; x < size; x += 1) {
+          p = '█';
+
+          if (min <= x && x < max && min <= y && y < max && _this.isDark(r1, Math.floor((x - min) / cellSize))) {
+            p = ' ';
+          }
+
+          if (min <= x && x < max && min <= y+1 && y+1 < max && _this.isDark(r2, Math.floor((x - min) / cellSize))) {
+            p += ' ';
+          }
+          else {
+            p += '█';
+          }
+
+          // Output 2 characters per pixel, to create full square. 1 character per pixels gives only half width of square.
+          ascii += (margin < 1 && y+1 >= max) ? blocksLastLineNoMargin[p] : blocks[p];
+        }
+
+        ascii += '\n';
+      }
+
+      if (size % 2 && margin > 0) {
+        return ascii.substring(0, ascii.length - size - 1) + Array(size+1).join('▀');
+      }
+
+      return ascii.substring(0, ascii.length-1);
+    };
+
+    _this.createASCII = function(cellSize, margin) {
+      cellSize = cellSize || 1;
+
+      if (cellSize < 2) {
+        return _createHalfASCII(margin);
+      }
+
+      cellSize -= 1;
+      margin = (typeof margin == 'undefined')? cellSize * 2 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+
+      var y, x, r, p;
+
+      var white = Array(cellSize+1).join('██');
+      var black = Array(cellSize+1).join('  ');
+
+      var ascii = '';
+      var line = '';
+      for (y = 0; y < size; y += 1) {
+        r = Math.floor( (y - min) / cellSize);
+        line = '';
+        for (x = 0; x < size; x += 1) {
+          p = 1;
+
+          if (min <= x && x < max && min <= y && y < max && _this.isDark(r, Math.floor((x - min) / cellSize))) {
+            p = 0;
+          }
+
+          // Output 2 characters per pixel, to create full square. 1 character per pixels gives only half width of square.
+          line += p ? white : black;
+        }
+
+        for (r = 0; r < cellSize; r += 1) {
+          ascii += line + '\n';
+        }
+      }
+
+      return ascii.substring(0, ascii.length-1);
+    };
+
+    _this.renderTo2dContext = function(context, cellSize) {
+      cellSize = cellSize || 2;
+      var length = _this.getModuleCount();
+      for (var row = 0; row < length; row++) {
+        for (var col = 0; col < length; col++) {
+          context.fillStyle = _this.isDark(row, col) ? 'black' : 'white';
+          context.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
+        }
+      }
+    }
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrcode.stringToBytes
+  //---------------------------------------------------------------------
+
+  qrcode.stringToBytesFuncs = {
+    'default' : function(s) {
+      var bytes = [];
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charCodeAt(i);
+        bytes.push(c & 0xff);
+      }
+      return bytes;
+    }
+  };
+
+  qrcode.stringToBytes = qrcode.stringToBytesFuncs['default'];
+
+  //---------------------------------------------------------------------
+  // qrcode.createStringToBytes
+  //---------------------------------------------------------------------
+
+  /**
+   * @param unicodeData base64 string of byte array.
+   * [16bit Unicode],[16bit Bytes], ...
+   * @param numChars
+   */
+  qrcode.createStringToBytes = function(unicodeData, numChars) {
+
+    // create conversion map.
+
+    var unicodeMap = function() {
+
+      var bin = base64DecodeInputStream(unicodeData);
+      var read = function() {
+        var b = bin.read();
+        if (b == -1) throw 'eof';
+        return b;
+      };
+
+      var count = 0;
+      var unicodeMap = {};
+      while (true) {
+        var b0 = bin.read();
+        if (b0 == -1) break;
+        var b1 = read();
+        var b2 = read();
+        var b3 = read();
+        var k = String.fromCharCode( (b0 << 8) | b1);
+        var v = (b2 << 8) | b3;
+        unicodeMap[k] = v;
+        count += 1;
+      }
+      if (count != numChars) {
+        throw count + ' != ' + numChars;
+      }
+
+      return unicodeMap;
+    }();
+
+    var unknownChar = '?'.charCodeAt(0);
+
+    return function(s) {
+      var bytes = [];
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charCodeAt(i);
+        if (c < 128) {
+          bytes.push(c);
+        } else {
+          var b = unicodeMap[s.charAt(i)];
+          if (typeof b == 'number') {
+            if ( (b & 0xff) == b) {
+              // 1byte
+              bytes.push(b);
+            } else {
+              // 2bytes
+              bytes.push(b >>> 8);
+              bytes.push(b & 0xff);
+            }
+          } else {
+            bytes.push(unknownChar);
+          }
+        }
+      }
+      return bytes;
+    };
+  };
+
+  //---------------------------------------------------------------------
+  // QRMode
+  //---------------------------------------------------------------------
+
+  var QRMode = {
+    MODE_NUMBER :    1 << 0,
+    MODE_ALPHA_NUM : 1 << 1,
+    MODE_8BIT_BYTE : 1 << 2,
+    MODE_KANJI :     1 << 3
+  };
+
+  //---------------------------------------------------------------------
+  // QRErrorCorrectionLevel
+  //---------------------------------------------------------------------
+
+  var QRErrorCorrectionLevel = {
+    L : 1,
+    M : 0,
+    Q : 3,
+    H : 2
+  };
+
+  //---------------------------------------------------------------------
+  // QRMaskPattern
+  //---------------------------------------------------------------------
+
+  var QRMaskPattern = {
+    PATTERN000 : 0,
+    PATTERN001 : 1,
+    PATTERN010 : 2,
+    PATTERN011 : 3,
+    PATTERN100 : 4,
+    PATTERN101 : 5,
+    PATTERN110 : 6,
+    PATTERN111 : 7
+  };
+
+  //---------------------------------------------------------------------
+  // QRUtil
+  //---------------------------------------------------------------------
+
+  var QRUtil = function() {
+
+    var PATTERN_POSITION_TABLE = [
+      [],
+      [6, 18],
+      [6, 22],
+      [6, 26],
+      [6, 30],
+      [6, 34],
+      [6, 22, 38],
+      [6, 24, 42],
+      [6, 26, 46],
+      [6, 28, 50],
+      [6, 30, 54],
+      [6, 32, 58],
+      [6, 34, 62],
+      [6, 26, 46, 66],
+      [6, 26, 48, 70],
+      [6, 26, 50, 74],
+      [6, 30, 54, 78],
+      [6, 30, 56, 82],
+      [6, 30, 58, 86],
+      [6, 34, 62, 90],
+      [6, 28, 50, 72, 94],
+      [6, 26, 50, 74, 98],
+      [6, 30, 54, 78, 102],
+      [6, 28, 54, 80, 106],
+      [6, 32, 58, 84, 110],
+      [6, 30, 58, 86, 114],
+      [6, 34, 62, 90, 118],
+      [6, 26, 50, 74, 98, 122],
+      [6, 30, 54, 78, 102, 126],
+      [6, 26, 52, 78, 104, 130],
+      [6, 30, 56, 82, 108, 134],
+      [6, 34, 60, 86, 112, 138],
+      [6, 30, 58, 86, 114, 142],
+      [6, 34, 62, 90, 118, 146],
+      [6, 30, 54, 78, 102, 126, 150],
+      [6, 24, 50, 76, 102, 128, 154],
+      [6, 28, 54, 80, 106, 132, 158],
+      [6, 32, 58, 84, 110, 136, 162],
+      [6, 26, 54, 82, 110, 138, 166],
+      [6, 30, 58, 86, 114, 142, 170]
+    ];
+    var G15 = (1 << 10) | (1 << 8) | (1 << 5) | (1 << 4) | (1 << 2) | (1 << 1) | (1 << 0);
+    var G18 = (1 << 12) | (1 << 11) | (1 << 10) | (1 << 9) | (1 << 8) | (1 << 5) | (1 << 2) | (1 << 0);
+    var G15_MASK = (1 << 14) | (1 << 12) | (1 << 10) | (1 << 4) | (1 << 1);
+
+    var _this = {};
+
+    var getBCHDigit = function(data) {
+      var digit = 0;
+      while (data != 0) {
+        digit += 1;
+        data >>>= 1;
+      }
+      return digit;
+    };
+
+    _this.getBCHTypeInfo = function(data) {
+      var d = data << 10;
+      while (getBCHDigit(d) - getBCHDigit(G15) >= 0) {
+        d ^= (G15 << (getBCHDigit(d) - getBCHDigit(G15) ) );
+      }
+      return ( (data << 10) | d) ^ G15_MASK;
+    };
+
+    _this.getBCHTypeNumber = function(data) {
+      var d = data << 12;
+      while (getBCHDigit(d) - getBCHDigit(G18) >= 0) {
+        d ^= (G18 << (getBCHDigit(d) - getBCHDigit(G18) ) );
+      }
+      return (data << 12) | d;
+    };
+
+    _this.getPatternPosition = function(typeNumber) {
+      return PATTERN_POSITION_TABLE[typeNumber - 1];
+    };
+
+    _this.getMaskFunction = function(maskPattern) {
+
+      switch (maskPattern) {
+
+      case QRMaskPattern.PATTERN000 :
+        return function(i, j) { return (i + j) % 2 == 0; };
+      case QRMaskPattern.PATTERN001 :
+        return function(i, j) { return i % 2 == 0; };
+      case QRMaskPattern.PATTERN010 :
+        return function(i, j) { return j % 3 == 0; };
+      case QRMaskPattern.PATTERN011 :
+        return function(i, j) { return (i + j) % 3 == 0; };
+      case QRMaskPattern.PATTERN100 :
+        return function(i, j) { return (Math.floor(i / 2) + Math.floor(j / 3) ) % 2 == 0; };
+      case QRMaskPattern.PATTERN101 :
+        return function(i, j) { return (i * j) % 2 + (i * j) % 3 == 0; };
+      case QRMaskPattern.PATTERN110 :
+        return function(i, j) { return ( (i * j) % 2 + (i * j) % 3) % 2 == 0; };
+      case QRMaskPattern.PATTERN111 :
+        return function(i, j) { return ( (i * j) % 3 + (i + j) % 2) % 2 == 0; };
+
+      default :
+        throw 'bad maskPattern:' + maskPattern;
+      }
+    };
+
+    _this.getErrorCorrectPolynomial = function(errorCorrectLength) {
+      var a = qrPolynomial([1], 0);
+      for (var i = 0; i < errorCorrectLength; i += 1) {
+        a = a.multiply(qrPolynomial([1, QRMath.gexp(i)], 0) );
+      }
+      return a;
+    };
+
+    _this.getLengthInBits = function(mode, type) {
+
+      if (1 <= type && type < 10) {
+
+        // 1 - 9
+
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 10;
+        case QRMode.MODE_ALPHA_NUM : return 9;
+        case QRMode.MODE_8BIT_BYTE : return 8;
+        case QRMode.MODE_KANJI     : return 8;
+        default :
+          throw 'mode:' + mode;
+        }
+
+      } else if (type < 27) {
+
+        // 10 - 26
+
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 12;
+        case QRMode.MODE_ALPHA_NUM : return 11;
+        case QRMode.MODE_8BIT_BYTE : return 16;
+        case QRMode.MODE_KANJI     : return 10;
+        default :
+          throw 'mode:' + mode;
+        }
+
+      } else if (type < 41) {
+
+        // 27 - 40
+
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 14;
+        case QRMode.MODE_ALPHA_NUM : return 13;
+        case QRMode.MODE_8BIT_BYTE : return 16;
+        case QRMode.MODE_KANJI     : return 12;
+        default :
+          throw 'mode:' + mode;
+        }
+
+      } else {
+        throw 'type:' + type;
+      }
+    };
+
+    _this.getLostPoint = function(qrcode) {
+
+      var moduleCount = qrcode.getModuleCount();
+
+      var lostPoint = 0;
+
+      // LEVEL1
+
+      for (var row = 0; row < moduleCount; row += 1) {
+        for (var col = 0; col < moduleCount; col += 1) {
+
+          var sameCount = 0;
+          var dark = qrcode.isDark(row, col);
+
+          for (var r = -1; r <= 1; r += 1) {
+
+            if (row + r < 0 || moduleCount <= row + r) {
+              continue;
+            }
+
+            for (var c = -1; c <= 1; c += 1) {
+
+              if (col + c < 0 || moduleCount <= col + c) {
+                continue;
+              }
+
+              if (r == 0 && c == 0) {
+                continue;
+              }
+
+              if (dark == qrcode.isDark(row + r, col + c) ) {
+                sameCount += 1;
+              }
+            }
+          }
+
+          if (sameCount > 5) {
+            lostPoint += (3 + sameCount - 5);
+          }
+        }
+      };
+
+      // LEVEL2
+
+      for (var row = 0; row < moduleCount - 1; row += 1) {
+        for (var col = 0; col < moduleCount - 1; col += 1) {
+          var count = 0;
+          if (qrcode.isDark(row, col) ) count += 1;
+          if (qrcode.isDark(row + 1, col) ) count += 1;
+          if (qrcode.isDark(row, col + 1) ) count += 1;
+          if (qrcode.isDark(row + 1, col + 1) ) count += 1;
+          if (count == 0 || count == 4) {
+            lostPoint += 3;
+          }
+        }
+      }
+
+      // LEVEL3
+
+      for (var row = 0; row < moduleCount; row += 1) {
+        for (var col = 0; col < moduleCount - 6; col += 1) {
+          if (qrcode.isDark(row, col)
+              && !qrcode.isDark(row, col + 1)
+              &&  qrcode.isDark(row, col + 2)
+              &&  qrcode.isDark(row, col + 3)
+              &&  qrcode.isDark(row, col + 4)
+              && !qrcode.isDark(row, col + 5)
+              &&  qrcode.isDark(row, col + 6) ) {
+            lostPoint += 40;
+          }
+        }
+      }
+
+      for (var col = 0; col < moduleCount; col += 1) {
+        for (var row = 0; row < moduleCount - 6; row += 1) {
+          if (qrcode.isDark(row, col)
+              && !qrcode.isDark(row + 1, col)
+              &&  qrcode.isDark(row + 2, col)
+              &&  qrcode.isDark(row + 3, col)
+              &&  qrcode.isDark(row + 4, col)
+              && !qrcode.isDark(row + 5, col)
+              &&  qrcode.isDark(row + 6, col) ) {
+            lostPoint += 40;
+          }
+        }
+      }
+
+      // LEVEL4
+
+      var darkCount = 0;
+
+      for (var col = 0; col < moduleCount; col += 1) {
+        for (var row = 0; row < moduleCount; row += 1) {
+          if (qrcode.isDark(row, col) ) {
+            darkCount += 1;
+          }
+        }
+      }
+
+      var ratio = Math.abs(100 * darkCount / moduleCount / moduleCount - 50) / 5;
+      lostPoint += ratio * 10;
+
+      return lostPoint;
+    };
+
+    return _this;
+  }();
+
+  //---------------------------------------------------------------------
+  // QRMath
+  //---------------------------------------------------------------------
+
+  var QRMath = function() {
+
+    var EXP_TABLE = new Array(256);
+    var LOG_TABLE = new Array(256);
+
+    // initialize tables
+    for (var i = 0; i < 8; i += 1) {
+      EXP_TABLE[i] = 1 << i;
+    }
+    for (var i = 8; i < 256; i += 1) {
+      EXP_TABLE[i] = EXP_TABLE[i - 4]
+        ^ EXP_TABLE[i - 5]
+        ^ EXP_TABLE[i - 6]
+        ^ EXP_TABLE[i - 8];
+    }
+    for (var i = 0; i < 255; i += 1) {
+      LOG_TABLE[EXP_TABLE[i] ] = i;
+    }
+
+    var _this = {};
+
+    _this.glog = function(n) {
+
+      if (n < 1) {
+        throw 'glog(' + n + ')';
+      }
+
+      return LOG_TABLE[n];
+    };
+
+    _this.gexp = function(n) {
+
+      while (n < 0) {
+        n += 255;
+      }
+
+      while (n >= 256) {
+        n -= 255;
+      }
+
+      return EXP_TABLE[n];
+    };
+
+    return _this;
+  }();
+
+  //---------------------------------------------------------------------
+  // qrPolynomial
+  //---------------------------------------------------------------------
+
+  function qrPolynomial(num, shift) {
+
+    if (typeof num.length == 'undefined') {
+      throw num.length + '/' + shift;
+    }
+
+    var _num = function() {
+      var offset = 0;
+      while (offset < num.length && num[offset] == 0) {
+        offset += 1;
+      }
+      var _num = new Array(num.length - offset + shift);
+      for (var i = 0; i < num.length - offset; i += 1) {
+        _num[i] = num[i + offset];
+      }
+      return _num;
+    }();
+
+    var _this = {};
+
+    _this.getAt = function(index) {
+      return _num[index];
+    };
+
+    _this.getLength = function() {
+      return _num.length;
+    };
+
+    _this.multiply = function(e) {
+
+      var num = new Array(_this.getLength() + e.getLength() - 1);
+
+      for (var i = 0; i < _this.getLength(); i += 1) {
+        for (var j = 0; j < e.getLength(); j += 1) {
+          num[i + j] ^= QRMath.gexp(QRMath.glog(_this.getAt(i) ) + QRMath.glog(e.getAt(j) ) );
+        }
+      }
+
+      return qrPolynomial(num, 0);
+    };
+
+    _this.mod = function(e) {
+
+      if (_this.getLength() - e.getLength() < 0) {
+        return _this;
+      }
+
+      var ratio = QRMath.glog(_this.getAt(0) ) - QRMath.glog(e.getAt(0) );
+
+      var num = new Array(_this.getLength() );
+      for (var i = 0; i < _this.getLength(); i += 1) {
+        num[i] = _this.getAt(i);
+      }
+
+      for (var i = 0; i < e.getLength(); i += 1) {
+        num[i] ^= QRMath.gexp(QRMath.glog(e.getAt(i) ) + ratio);
+      }
+
+      // recursive call
+      return qrPolynomial(num, 0).mod(e);
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // QRRSBlock
+  //---------------------------------------------------------------------
+
+  var QRRSBlock = function() {
+
+    var RS_BLOCK_TABLE = [
+
+      // L
+      // M
+      // Q
+      // H
+
+      // 1
+      [1, 26, 19],
+      [1, 26, 16],
+      [1, 26, 13],
+      [1, 26, 9],
+
+      // 2
+      [1, 44, 34],
+      [1, 44, 28],
+      [1, 44, 22],
+      [1, 44, 16],
+
+      // 3
+      [1, 70, 55],
+      [1, 70, 44],
+      [2, 35, 17],
+      [2, 35, 13],
+
+      // 4
+      [1, 100, 80],
+      [2, 50, 32],
+      [2, 50, 24],
+      [4, 25, 9],
+
+      // 5
+      [1, 134, 108],
+      [2, 67, 43],
+      [2, 33, 15, 2, 34, 16],
+      [2, 33, 11, 2, 34, 12],
+
+      // 6
+      [2, 86, 68],
+      [4, 43, 27],
+      [4, 43, 19],
+      [4, 43, 15],
+
+      // 7
+      [2, 98, 78],
+      [4, 49, 31],
+      [2, 32, 14, 4, 33, 15],
+      [4, 39, 13, 1, 40, 14],
+
+      // 8
+      [2, 121, 97],
+      [2, 60, 38, 2, 61, 39],
+      [4, 40, 18, 2, 41, 19],
+      [4, 40, 14, 2, 41, 15],
+
+      // 9
+      [2, 146, 116],
+      [3, 58, 36, 2, 59, 37],
+      [4, 36, 16, 4, 37, 17],
+      [4, 36, 12, 4, 37, 13],
+
+      // 10
+      [2, 86, 68, 2, 87, 69],
+      [4, 69, 43, 1, 70, 44],
+      [6, 43, 19, 2, 44, 20],
+      [6, 43, 15, 2, 44, 16],
+
+      // 11
+      [4, 101, 81],
+      [1, 80, 50, 4, 81, 51],
+      [4, 50, 22, 4, 51, 23],
+      [3, 36, 12, 8, 37, 13],
+
+      // 12
+      [2, 116, 92, 2, 117, 93],
+      [6, 58, 36, 2, 59, 37],
+      [4, 46, 20, 6, 47, 21],
+      [7, 42, 14, 4, 43, 15],
+
+      // 13
+      [4, 133, 107],
+      [8, 59, 37, 1, 60, 38],
+      [8, 44, 20, 4, 45, 21],
+      [12, 33, 11, 4, 34, 12],
+
+      // 14
+      [3, 145, 115, 1, 146, 116],
+      [4, 64, 40, 5, 65, 41],
+      [11, 36, 16, 5, 37, 17],
+      [11, 36, 12, 5, 37, 13],
+
+      // 15
+      [5, 109, 87, 1, 110, 88],
+      [5, 65, 41, 5, 66, 42],
+      [5, 54, 24, 7, 55, 25],
+      [11, 36, 12, 7, 37, 13],
+
+      // 16
+      [5, 122, 98, 1, 123, 99],
+      [7, 73, 45, 3, 74, 46],
+      [15, 43, 19, 2, 44, 20],
+      [3, 45, 15, 13, 46, 16],
+
+      // 17
+      [1, 135, 107, 5, 136, 108],
+      [10, 74, 46, 1, 75, 47],
+      [1, 50, 22, 15, 51, 23],
+      [2, 42, 14, 17, 43, 15],
+
+      // 18
+      [5, 150, 120, 1, 151, 121],
+      [9, 69, 43, 4, 70, 44],
+      [17, 50, 22, 1, 51, 23],
+      [2, 42, 14, 19, 43, 15],
+
+      // 19
+      [3, 141, 113, 4, 142, 114],
+      [3, 70, 44, 11, 71, 45],
+      [17, 47, 21, 4, 48, 22],
+      [9, 39, 13, 16, 40, 14],
+
+      // 20
+      [3, 135, 107, 5, 136, 108],
+      [3, 67, 41, 13, 68, 42],
+      [15, 54, 24, 5, 55, 25],
+      [15, 43, 15, 10, 44, 16],
+
+      // 21
+      [4, 144, 116, 4, 145, 117],
+      [17, 68, 42],
+      [17, 50, 22, 6, 51, 23],
+      [19, 46, 16, 6, 47, 17],
+
+      // 22
+      [2, 139, 111, 7, 140, 112],
+      [17, 74, 46],
+      [7, 54, 24, 16, 55, 25],
+      [34, 37, 13],
+
+      // 23
+      [4, 151, 121, 5, 152, 122],
+      [4, 75, 47, 14, 76, 48],
+      [11, 54, 24, 14, 55, 25],
+      [16, 45, 15, 14, 46, 16],
+
+      // 24
+      [6, 147, 117, 4, 148, 118],
+      [6, 73, 45, 14, 74, 46],
+      [11, 54, 24, 16, 55, 25],
+      [30, 46, 16, 2, 47, 17],
+
+      // 25
+      [8, 132, 106, 4, 133, 107],
+      [8, 75, 47, 13, 76, 48],
+      [7, 54, 24, 22, 55, 25],
+      [22, 45, 15, 13, 46, 16],
+
+      // 26
+      [10, 142, 114, 2, 143, 115],
+      [19, 74, 46, 4, 75, 47],
+      [28, 50, 22, 6, 51, 23],
+      [33, 46, 16, 4, 47, 17],
+
+      // 27
+      [8, 152, 122, 4, 153, 123],
+      [22, 73, 45, 3, 74, 46],
+      [8, 53, 23, 26, 54, 24],
+      [12, 45, 15, 28, 46, 16],
+
+      // 28
+      [3, 147, 117, 10, 148, 118],
+      [3, 73, 45, 23, 74, 46],
+      [4, 54, 24, 31, 55, 25],
+      [11, 45, 15, 31, 46, 16],
+
+      // 29
+      [7, 146, 116, 7, 147, 117],
+      [21, 73, 45, 7, 74, 46],
+      [1, 53, 23, 37, 54, 24],
+      [19, 45, 15, 26, 46, 16],
+
+      // 30
+      [5, 145, 115, 10, 146, 116],
+      [19, 75, 47, 10, 76, 48],
+      [15, 54, 24, 25, 55, 25],
+      [23, 45, 15, 25, 46, 16],
+
+      // 31
+      [13, 145, 115, 3, 146, 116],
+      [2, 74, 46, 29, 75, 47],
+      [42, 54, 24, 1, 55, 25],
+      [23, 45, 15, 28, 46, 16],
+
+      // 32
+      [17, 145, 115],
+      [10, 74, 46, 23, 75, 47],
+      [10, 54, 24, 35, 55, 25],
+      [19, 45, 15, 35, 46, 16],
+
+      // 33
+      [17, 145, 115, 1, 146, 116],
+      [14, 74, 46, 21, 75, 47],
+      [29, 54, 24, 19, 55, 25],
+      [11, 45, 15, 46, 46, 16],
+
+      // 34
+      [13, 145, 115, 6, 146, 116],
+      [14, 74, 46, 23, 75, 47],
+      [44, 54, 24, 7, 55, 25],
+      [59, 46, 16, 1, 47, 17],
+
+      // 35
+      [12, 151, 121, 7, 152, 122],
+      [12, 75, 47, 26, 76, 48],
+      [39, 54, 24, 14, 55, 25],
+      [22, 45, 15, 41, 46, 16],
+
+      // 36
+      [6, 151, 121, 14, 152, 122],
+      [6, 75, 47, 34, 76, 48],
+      [46, 54, 24, 10, 55, 25],
+      [2, 45, 15, 64, 46, 16],
+
+      // 37
+      [17, 152, 122, 4, 153, 123],
+      [29, 74, 46, 14, 75, 47],
+      [49, 54, 24, 10, 55, 25],
+      [24, 45, 15, 46, 46, 16],
+
+      // 38
+      [4, 152, 122, 18, 153, 123],
+      [13, 74, 46, 32, 75, 47],
+      [48, 54, 24, 14, 55, 25],
+      [42, 45, 15, 32, 46, 16],
+
+      // 39
+      [20, 147, 117, 4, 148, 118],
+      [40, 75, 47, 7, 76, 48],
+      [43, 54, 24, 22, 55, 25],
+      [10, 45, 15, 67, 46, 16],
+
+      // 40
+      [19, 148, 118, 6, 149, 119],
+      [18, 75, 47, 31, 76, 48],
+      [34, 54, 24, 34, 55, 25],
+      [20, 45, 15, 61, 46, 16]
+    ];
+
+    var qrRSBlock = function(totalCount, dataCount) {
+      var _this = {};
+      _this.totalCount = totalCount;
+      _this.dataCount = dataCount;
+      return _this;
+    };
+
+    var _this = {};
+
+    var getRsBlockTable = function(typeNumber, errorCorrectionLevel) {
+
+      switch(errorCorrectionLevel) {
+      case QRErrorCorrectionLevel.L :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 0];
+      case QRErrorCorrectionLevel.M :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 1];
+      case QRErrorCorrectionLevel.Q :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 2];
+      case QRErrorCorrectionLevel.H :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 3];
+      default :
+        return undefined;
+      }
+    };
+
+    _this.getRSBlocks = function(typeNumber, errorCorrectionLevel) {
+
+      var rsBlock = getRsBlockTable(typeNumber, errorCorrectionLevel);
+
+      if (typeof rsBlock == 'undefined') {
+        throw 'bad rs block @ typeNumber:' + typeNumber +
+            '/errorCorrectionLevel:' + errorCorrectionLevel;
+      }
+
+      var length = rsBlock.length / 3;
+
+      var list = [];
+
+      for (var i = 0; i < length; i += 1) {
+
+        var count = rsBlock[i * 3 + 0];
+        var totalCount = rsBlock[i * 3 + 1];
+        var dataCount = rsBlock[i * 3 + 2];
+
+        for (var j = 0; j < count; j += 1) {
+          list.push(qrRSBlock(totalCount, dataCount) );
+        }
+      }
+
+      return list;
+    };
+
+    return _this;
+  }();
+
+  //---------------------------------------------------------------------
+  // qrBitBuffer
+  //---------------------------------------------------------------------
+
+  var qrBitBuffer = function() {
+
+    var _buffer = [];
+    var _length = 0;
+
+    var _this = {};
+
+    _this.getBuffer = function() {
+      return _buffer;
+    };
+
+    _this.getAt = function(index) {
+      var bufIndex = Math.floor(index / 8);
+      return ( (_buffer[bufIndex] >>> (7 - index % 8) ) & 1) == 1;
+    };
+
+    _this.put = function(num, length) {
+      for (var i = 0; i < length; i += 1) {
+        _this.putBit( ( (num >>> (length - i - 1) ) & 1) == 1);
+      }
+    };
+
+    _this.getLengthInBits = function() {
+      return _length;
+    };
+
+    _this.putBit = function(bit) {
+
+      var bufIndex = Math.floor(_length / 8);
+      if (_buffer.length <= bufIndex) {
+        _buffer.push(0);
+      }
+
+      if (bit) {
+        _buffer[bufIndex] |= (0x80 >>> (_length % 8) );
+      }
+
+      _length += 1;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrNumber
+  //---------------------------------------------------------------------
+
+  var qrNumber = function(data) {
+
+    var _mode = QRMode.MODE_NUMBER;
+    var _data = data;
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return _data.length;
+    };
+
+    _this.write = function(buffer) {
+
+      var data = _data;
+
+      var i = 0;
+
+      while (i + 2 < data.length) {
+        buffer.put(strToNum(data.substring(i, i + 3) ), 10);
+        i += 3;
+      }
+
+      if (i < data.length) {
+        if (data.length - i == 1) {
+          buffer.put(strToNum(data.substring(i, i + 1) ), 4);
+        } else if (data.length - i == 2) {
+          buffer.put(strToNum(data.substring(i, i + 2) ), 7);
+        }
+      }
+    };
+
+    var strToNum = function(s) {
+      var num = 0;
+      for (var i = 0; i < s.length; i += 1) {
+        num = num * 10 + chatToNum(s.charAt(i) );
+      }
+      return num;
+    };
+
+    var chatToNum = function(c) {
+      if ('0' <= c && c <= '9') {
+        return c.charCodeAt(0) - '0'.charCodeAt(0);
+      }
+      throw 'illegal char :' + c;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrAlphaNum
+  //---------------------------------------------------------------------
+
+  var qrAlphaNum = function(data) {
+
+    var _mode = QRMode.MODE_ALPHA_NUM;
+    var _data = data;
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return _data.length;
+    };
+
+    _this.write = function(buffer) {
+
+      var s = _data;
+
+      var i = 0;
+
+      while (i + 1 < s.length) {
+        buffer.put(
+          getCode(s.charAt(i) ) * 45 +
+          getCode(s.charAt(i + 1) ), 11);
+        i += 2;
+      }
+
+      if (i < s.length) {
+        buffer.put(getCode(s.charAt(i) ), 6);
+      }
+    };
+
+    var getCode = function(c) {
+
+      if ('0' <= c && c <= '9') {
+        return c.charCodeAt(0) - '0'.charCodeAt(0);
+      } else if ('A' <= c && c <= 'Z') {
+        return c.charCodeAt(0) - 'A'.charCodeAt(0) + 10;
+      } else {
+        switch (c) {
+        case ' ' : return 36;
+        case '$' : return 37;
+        case '%' : return 38;
+        case '*' : return 39;
+        case '+' : return 40;
+        case '-' : return 41;
+        case '.' : return 42;
+        case '/' : return 43;
+        case ':' : return 44;
+        default :
+          throw 'illegal char :' + c;
+        }
+      }
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qr8BitByte
+  //---------------------------------------------------------------------
+
+  var qr8BitByte = function(data) {
+
+    var _mode = QRMode.MODE_8BIT_BYTE;
+    var _data = data;
+    var _bytes = qrcode.stringToBytes(data);
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return _bytes.length;
+    };
+
+    _this.write = function(buffer) {
+      for (var i = 0; i < _bytes.length; i += 1) {
+        buffer.put(_bytes[i], 8);
+      }
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrKanji
+  //---------------------------------------------------------------------
+
+  var qrKanji = function(data) {
+
+    var _mode = QRMode.MODE_KANJI;
+    var _data = data;
+
+    var stringToBytes = qrcode.stringToBytesFuncs['SJIS'];
+    if (!stringToBytes) {
+      throw 'sjis not supported.';
+    }
+    !function(c, code) {
+      // self test for sjis support.
+      var test = stringToBytes(c);
+      if (test.length != 2 || ( (test[0] << 8) | test[1]) != code) {
+        throw 'sjis not supported.';
+      }
+    }('\u53cb', 0x9746);
+
+    var _bytes = stringToBytes(data);
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return ~~(_bytes.length / 2);
+    };
+
+    _this.write = function(buffer) {
+
+      var data = _bytes;
+
+      var i = 0;
+
+      while (i + 1 < data.length) {
+
+        var c = ( (0xff & data[i]) << 8) | (0xff & data[i + 1]);
+
+        if (0x8140 <= c && c <= 0x9FFC) {
+          c -= 0x8140;
+        } else if (0xE040 <= c && c <= 0xEBBF) {
+          c -= 0xC140;
+        } else {
+          throw 'illegal char at ' + (i + 1) + '/' + c;
+        }
+
+        c = ( (c >>> 8) & 0xff) * 0xC0 + (c & 0xff);
+
+        buffer.put(c, 13);
+
+        i += 2;
+      }
+
+      if (i < data.length) {
+        throw 'illegal char at ' + (i + 1);
+      }
+    };
+
+    return _this;
+  };
+
+  //=====================================================================
+  // GIF Support etc.
+  //
+
+  //---------------------------------------------------------------------
+  // byteArrayOutputStream
+  //---------------------------------------------------------------------
+
+  var byteArrayOutputStream = function() {
+
+    var _bytes = [];
+
+    var _this = {};
+
+    _this.writeByte = function(b) {
+      _bytes.push(b & 0xff);
+    };
+
+    _this.writeShort = function(i) {
+      _this.writeByte(i);
+      _this.writeByte(i >>> 8);
+    };
+
+    _this.writeBytes = function(b, off, len) {
+      off = off || 0;
+      len = len || b.length;
+      for (var i = 0; i < len; i += 1) {
+        _this.writeByte(b[i + off]);
+      }
+    };
+
+    _this.writeString = function(s) {
+      for (var i = 0; i < s.length; i += 1) {
+        _this.writeByte(s.charCodeAt(i) );
+      }
+    };
+
+    _this.toByteArray = function() {
+      return _bytes;
+    };
+
+    _this.toString = function() {
+      var s = '';
+      s += '[';
+      for (var i = 0; i < _bytes.length; i += 1) {
+        if (i > 0) {
+          s += ',';
+        }
+        s += _bytes[i];
+      }
+      s += ']';
+      return s;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // base64EncodeOutputStream
+  //---------------------------------------------------------------------
+
+  var base64EncodeOutputStream = function() {
+
+    var _buffer = 0;
+    var _buflen = 0;
+    var _length = 0;
+    var _base64 = '';
+
+    var _this = {};
+
+    var writeEncoded = function(b) {
+      _base64 += String.fromCharCode(encode(b & 0x3f) );
+    };
+
+    var encode = function(n) {
+      if (n < 0) {
+        // error.
+      } else if (n < 26) {
+        return 0x41 + n;
+      } else if (n < 52) {
+        return 0x61 + (n - 26);
+      } else if (n < 62) {
+        return 0x30 + (n - 52);
+      } else if (n == 62) {
+        return 0x2b;
+      } else if (n == 63) {
+        return 0x2f;
+      }
+      throw 'n:' + n;
+    };
+
+    _this.writeByte = function(n) {
+
+      _buffer = (_buffer << 8) | (n & 0xff);
+      _buflen += 8;
+      _length += 1;
+
+      while (_buflen >= 6) {
+        writeEncoded(_buffer >>> (_buflen - 6) );
+        _buflen -= 6;
+      }
+    };
+
+    _this.flush = function() {
+
+      if (_buflen > 0) {
+        writeEncoded(_buffer << (6 - _buflen) );
+        _buffer = 0;
+        _buflen = 0;
+      }
+
+      if (_length % 3 != 0) {
+        // padding
+        var padlen = 3 - _length % 3;
+        for (var i = 0; i < padlen; i += 1) {
+          _base64 += '=';
+        }
+      }
+    };
+
+    _this.toString = function() {
+      return _base64;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // base64DecodeInputStream
+  //---------------------------------------------------------------------
+
+  var base64DecodeInputStream = function(str) {
+
+    var _str = str;
+    var _pos = 0;
+    var _buffer = 0;
+    var _buflen = 0;
+
+    var _this = {};
+
+    _this.read = function() {
+
+      while (_buflen < 8) {
+
+        if (_pos >= _str.length) {
+          if (_buflen == 0) {
+            return -1;
+          }
+          throw 'unexpected end of file./' + _buflen;
+        }
+
+        var c = _str.charAt(_pos);
+        _pos += 1;
+
+        if (c == '=') {
+          _buflen = 0;
+          return -1;
+        } else if (c.match(/^\s$/) ) {
+          // ignore if whitespace.
+          continue;
+        }
+
+        _buffer = (_buffer << 6) | decode(c.charCodeAt(0) );
+        _buflen += 6;
+      }
+
+      var n = (_buffer >>> (_buflen - 8) ) & 0xff;
+      _buflen -= 8;
+      return n;
+    };
+
+    var decode = function(c) {
+      if (0x41 <= c && c <= 0x5a) {
+        return c - 0x41;
+      } else if (0x61 <= c && c <= 0x7a) {
+        return c - 0x61 + 26;
+      } else if (0x30 <= c && c <= 0x39) {
+        return c - 0x30 + 52;
+      } else if (c == 0x2b) {
+        return 62;
+      } else if (c == 0x2f) {
+        return 63;
+      } else {
+        throw 'c:' + c;
+      }
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // gifImage (B/W)
+  //---------------------------------------------------------------------
+
+  var gifImage = function(width, height) {
+
+    var _width = width;
+    var _height = height;
+    var _data = new Array(width * height);
+
+    var _this = {};
+
+    _this.setPixel = function(x, y, pixel) {
+      _data[y * _width + x] = pixel;
+    };
+
+    _this.write = function(out) {
+
+      //---------------------------------
+      // GIF Signature
+
+      out.writeString('GIF87a');
+
+      //---------------------------------
+      // Screen Descriptor
+
+      out.writeShort(_width);
+      out.writeShort(_height);
+
+      out.writeByte(0x80); // 2bit
+      out.writeByte(0);
+      out.writeByte(0);
+
+      //---------------------------------
+      // Global Color Map
+
+      // black
+      out.writeByte(0x00);
+      out.writeByte(0x00);
+      out.writeByte(0x00);
+
+      // white
+      out.writeByte(0xff);
+      out.writeByte(0xff);
+      out.writeByte(0xff);
+
+      //---------------------------------
+      // Image Descriptor
+
+      out.writeString(',');
+      out.writeShort(0);
+      out.writeShort(0);
+      out.writeShort(_width);
+      out.writeShort(_height);
+      out.writeByte(0);
+
+      //---------------------------------
+      // Local Color Map
+
+      //---------------------------------
+      // Raster Data
+
+      var lzwMinCodeSize = 2;
+      var raster = getLZWRaster(lzwMinCodeSize);
+
+      out.writeByte(lzwMinCodeSize);
+
+      var offset = 0;
+
+      while (raster.length - offset > 255) {
+        out.writeByte(255);
+        out.writeBytes(raster, offset, 255);
+        offset += 255;
+      }
+
+      out.writeByte(raster.length - offset);
+      out.writeBytes(raster, offset, raster.length - offset);
+      out.writeByte(0x00);
+
+      //---------------------------------
+      // GIF Terminator
+      out.writeString(';');
+    };
+
+    var bitOutputStream = function(out) {
+
+      var _out = out;
+      var _bitLength = 0;
+      var _bitBuffer = 0;
+
+      var _this = {};
+
+      _this.write = function(data, length) {
+
+        if ( (data >>> length) != 0) {
+          throw 'length over';
+        }
+
+        while (_bitLength + length >= 8) {
+          _out.writeByte(0xff & ( (data << _bitLength) | _bitBuffer) );
+          length -= (8 - _bitLength);
+          data >>>= (8 - _bitLength);
+          _bitBuffer = 0;
+          _bitLength = 0;
+        }
+
+        _bitBuffer = (data << _bitLength) | _bitBuffer;
+        _bitLength = _bitLength + length;
+      };
+
+      _this.flush = function() {
+        if (_bitLength > 0) {
+          _out.writeByte(_bitBuffer);
+        }
+      };
+
+      return _this;
+    };
+
+    var getLZWRaster = function(lzwMinCodeSize) {
+
+      var clearCode = 1 << lzwMinCodeSize;
+      var endCode = (1 << lzwMinCodeSize) + 1;
+      var bitLength = lzwMinCodeSize + 1;
+
+      // Setup LZWTable
+      var table = lzwTable();
+
+      for (var i = 0; i < clearCode; i += 1) {
+        table.add(String.fromCharCode(i) );
+      }
+      table.add(String.fromCharCode(clearCode) );
+      table.add(String.fromCharCode(endCode) );
+
+      var byteOut = byteArrayOutputStream();
+      var bitOut = bitOutputStream(byteOut);
+
+      // clear code
+      bitOut.write(clearCode, bitLength);
+
+      var dataIndex = 0;
+
+      var s = String.fromCharCode(_data[dataIndex]);
+      dataIndex += 1;
+
+      while (dataIndex < _data.length) {
+
+        var c = String.fromCharCode(_data[dataIndex]);
+        dataIndex += 1;
+
+        if (table.contains(s + c) ) {
+
+          s = s + c;
+
+        } else {
+
+          bitOut.write(table.indexOf(s), bitLength);
+
+          if (table.size() < 0xfff) {
+
+            if (table.size() == (1 << bitLength) ) {
+              bitLength += 1;
+            }
+
+            table.add(s + c);
+          }
+
+          s = c;
+        }
+      }
+
+      bitOut.write(table.indexOf(s), bitLength);
+
+      // end code
+      bitOut.write(endCode, bitLength);
+
+      bitOut.flush();
+
+      return byteOut.toByteArray();
+    };
+
+    var lzwTable = function() {
+
+      var _map = {};
+      var _size = 0;
+
+      var _this = {};
+
+      _this.add = function(key) {
+        if (_this.contains(key) ) {
+          throw 'dup key:' + key;
+        }
+        _map[key] = _size;
+        _size += 1;
+      };
+
+      _this.size = function() {
+        return _size;
+      };
+
+      _this.indexOf = function(key) {
+        return _map[key];
+      };
+
+      _this.contains = function(key) {
+        return typeof _map[key] != 'undefined';
+      };
+
+      return _this;
+    };
+
+    return _this;
+  };
+
+  var createDataURL = function(width, height, getPixel) {
+    var gif = gifImage(width, height);
+    for (var y = 0; y < height; y += 1) {
+      for (var x = 0; x < width; x += 1) {
+        gif.setPixel(x, y, getPixel(x, y) );
+      }
+    }
+
+    var b = byteArrayOutputStream();
+    gif.write(b);
+
+    var base64 = base64EncodeOutputStream();
+    var bytes = b.toByteArray();
+    for (var i = 0; i < bytes.length; i += 1) {
+      base64.writeByte(bytes[i]);
+    }
+    base64.flush();
+
+    return 'data:image/gif;base64,' + base64;
+  };
+
+  //---------------------------------------------------------------------
+  // returns qrcode function.
+
+  return qrcode;
+}();
+
+// multibyte support
+!function() {
+
+  qrcode.stringToBytesFuncs['UTF-8'] = function(s) {
+    // http://stackoverflow.com/questions/18729405/how-to-convert-utf8-string-to-byte-array
+    function toUTF8Array(str) {
+      var utf8 = [];
+      for (var i=0; i < str.length; i++) {
+        var charcode = str.charCodeAt(i);
+        if (charcode < 0x80) utf8.push(charcode);
+        else if (charcode < 0x800) {
+          utf8.push(0xc0 | (charcode >> 6),
+              0x80 | (charcode & 0x3f));
+        }
+        else if (charcode < 0xd800 || charcode >= 0xe000) {
+          utf8.push(0xe0 | (charcode >> 12),
+              0x80 | ((charcode>>6) & 0x3f),
+              0x80 | (charcode & 0x3f));
+        }
+        // surrogate pair
+        else {
+          i++;
+          // UTF-16 encodes 0x10000-0x10FFFF by
+          // subtracting 0x10000 and splitting the
+          // 20 bits of 0x0-0xFFFFF into two halves
+          charcode = 0x10000 + (((charcode & 0x3ff)<<10)
+            | (str.charCodeAt(i) & 0x3ff));
+          utf8.push(0xf0 | (charcode >>18),
+              0x80 | ((charcode>>12) & 0x3f),
+              0x80 | ((charcode>>6) & 0x3f),
+              0x80 | (charcode & 0x3f));
+        }
+      }
+      return utf8;
+    }
+    return toUTF8Array(s);
+  };
+
+}();
+
+(function (factory) {
+  if (typeof define === 'function' && define.amd) {
+      define([], factory);
+  } else if (typeof exports === 'object') {
+      module.exports = factory();
+  }
+}(function () {
+    return qrcode;
+}));
+</script>
+<script>
+"use strict";
+const API = location.protocol==='file:' ? 'https://lernspiele.vercel.app' : '';
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const clamp=v=>Math.max(0,Math.min(100,v));
+const addv=(g,e)=>g.map((v,i)=>clamp(v+e[i]));
+const SHIP='data:image/jpeg;base64,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';
+
+/* ---------- Daten ---------- */
+const ZIELE=[
+ {n:'Preisniveaustabilität',s:'Preise',ic:'🏷️',f:'Die EZB peilt rund 2 % Inflation an – nicht 0 %! Ein bisschen Preissteigerung gilt als „stabil“.'},
+ {n:'Hoher Beschäftigungsstand',s:'Jobs',ic:'👷',f:'Ganz ohne Arbeitslose geht es nie: Wer gerade den Job wechselt, zählt mit (Sucharbeitslosigkeit).'},
+ {n:'Stetiges, angemessenes Wachstum',s:'Wachstum',ic:'📈',f:'Wachstum misst man am realen Bruttoinlandsprodukt (BIP) – also ohne die Preissteigerung.'},
+ {n:'Außenwirtschaftliches Gleichgewicht',s:'Außenhandel',ic:'🚢',f:'Deutschland verkauft seit Jahren mehr ins Ausland, als es einkauft. Das kann Streit mit Handelspartnern geben.'},
+ {n:'Umweltschutz / Nachhaltigkeit',s:'Umwelt',ic:'🌱',f:'Zum „magischen Viereck“ (Stabilitätsgesetz 1967) kommen heute oft Umwelt und Verteilung dazu: das Sechseck.'},
+ {n:'Gerechte Verteilung',s:'Verteilung',ic:'⚖️',f:'Wer wenig verdient, gibt einen größeren Anteil seines Einkommens für Lebensmittel und Energie aus.'}
+];
+const ROLLEN=[
+ {n:'Marlene, Modehaus-Inhaberin',ic:'👗',b:'Sie führt ein Modehaus mit 12 Beschäftigten in der Fußgängerzone.',w:[1,1,3,1,1,0],a:'Dein Laden muss Gewinn machen: Umsatz und Wachstum zählen!',m:['„Meine Kasse bleibt leer – so überlebt kein Laden!“','„Das bringt endlich wieder Kundschaft in den Laden!“']},
+ {n:'Kemal, Discounter-Filialleiter',ic:'🛒',b:'Er kalkuliert jeden Cent: Preise stehen im Regal, Margen sind klein.',w:[3,1,2,1,0,1],a:'Du brauchst stabile Preise und volle Regale.',m:['„Die Preise im Regal geraten ins Rutschen – das wird eng!“','„Regale voll, Preise ruhig – so lässt sich planen.“']},
+ {n:'Svenja, Verkäuferin',ic:'🧾',b:'Sie arbeitet in Teilzeit im Einzelhandel und verdient knapp über dem Mindestlohn.',w:[1,3,1,0,0,3],a:'Du willst einen sicheren Job und einen fairen Lohn.',m:['„Am Ende zahlen wir: Stunden gekürzt oder Lohn zu niedrig.“','„Mein Job ist sicher und es bleibt mehr im Portemonnaie.“']},
+ {n:'Tim, Azubi im Einzelhandel',ic:'🎓',b:'Er ist im 2. Ausbildungsjahr und hofft auf Übernahme.',w:[1,3,2,0,2,2],a:'Du willst Ausbildung, Übernahme und eine Zukunft.',m:['„Wer bildet noch aus, wenn der Laden wackelt?“','„Perfekt – meine Übernahme sieht gut aus!“']},
+ {n:'Hilde, Rentnerin',ic:'👵',b:'Sie lebt von einer kleinen Rente und rechnet im Supermarkt jeden Euro nach.',w:[3,0,0,0,1,3],a:'Dein Geld soll morgen noch etwas wert sein.',m:['„Meine Rente reicht nicht mehr für den Wocheneinkauf.“','„Mein Geld bleibt etwas wert – das beruhigt.“']},
+ {n:'Jonas, Online-Händler',ic:'📦',b:'Er verkauft Sneaker im Internet und bezieht sie aus Asien.',w:[1,1,3,3,0,0],a:'Du brauchst freie Handelswege und wachsende Nachfrage.',m:['„Zölle und Gebühren fressen meine Marge!“','„Freie Bahn für den Versand!“']},
+ {n:'Klara, Umweltaktivistin',ic:'🌱',b:'Sie engagiert sich im Verband für nachhaltigen Konsum.',w:[0,1,0,1,3,2],a:'Du willst, dass Handel und Konsum die Umwelt schonen.',m:['„Schon wieder Wachstum auf Kosten der Umwelt!“','„Endlich ein Schritt in die richtige Richtung!“']},
+ {n:'Ali, Import-Großhändler',ic:'🚛',b:'Er beliefert Läden mit Importwaren aus Übersee.',w:[2,1,2,3,0,0],a:'Du brauchst reibungslosen Außenhandel und planbare Kosten.',m:['„Meine Container stecken fest – Zölle fressen den Gewinn.“','„Der Handel läuft – so macht Import Spaß.“']}
+];
+/* Ereignisse: sc = Schock, ms = Maßnahmen mit Wirkung e (je Ziel P,B,W,A,U,V) */
+const EV=[
+ {t:'Preisschock an der Kasse',ic:'🛒',txt:'Butter, Nudeln, Kaffee: Die Preise im Supermarkt steigen binnen Monaten um 7 %. Kundinnen greifen zu Eigenmarken, im Modehaus bleibt die Kasse still.',
+  f:'Inflation trifft Haushalte mit kleinem Einkommen härter: Sie geben einen größeren Anteil für Lebensmittel und Energie aus.',meme:['Preise im Supermarkt','Mein Geldbeutel: 😭','💸'],sc:[-14,0,-4,0,0,-6],
+  dq:'Wer gewinnt, wer verliert bei hoher Inflation – und warum ist Inflation nicht für alle gleich schlimm?',
+  ms:[
+   {n:'Leitzins anheben',ic:'🏦',t:'Kredite werden teurer, Sparen lohnt sich, die Nachfrage sinkt.',e:[14,-8,-10,2,0,-2],x:'Geldpolitik der EZB: Die Preise werden gedämpft, aber Händler zahlen mehr für Kredite und Kundinnen kaufen weniger. Typischer Zielkonflikt: Preisstabilität ↔ Wachstum/Beschäftigung.'},
+   {n:'Mehrwertsteuer auf Lebensmittel senken',ic:'🥖',t:'Waren werden günstiger, die Kaufkraft steigt.',e:[6,3,4,0,0,6],x:'Fiskalpolitik: Der Staat verzichtet auf Einnahmen und entlastet dafür Haushalte. Mehrere Ziele werden zugleich besser: Zielharmonie – bezahlt wird aber mit weniger Staatseinnahmen.'},
+   {n:'Preisdeckel für Grundnahrungsmittel',ic:'🧊',t:'Der Staat legt Höchstpreise fest.',e:[8,-4,-5,-3,0,4],x:'Händler verkaufen unter Einkaufspreis oder nehmen Ware aus dem Regal: Knappheit droht. Kurzfristig gerecht, langfristig riskant.'},
+   {n:'Abwarten – der Markt regelt das',ic:'⏳',t:'Keine staatliche Maßnahme.',e:[-6,0,0,0,0,-8],x:'Ohne Gegensteuern trifft die Inflation vor allem Menschen mit kleinem Einkommen und Sparerinnen.'}],
+  q:{q:'Die Zinserhöhung senkt die Preise, kostet aber Jobs und Wachstum. Das nennt man …',o:['Zielharmonie','Zielkonflikt','Zielneutralität'],c:1,x:'Ein Ziel wird erreicht, ein anderes verschlechtert sich: Zielkonflikt (Zielkonkurrenz).'}},
+ {t:'Mindestlohn: Streit im Laden',ic:'👩‍💼',txt:'Verkäuferinnen verdienen oft knapp über dem Mindestlohn. Gewerkschaften fordern deutlich mehr, Inhaber warnen vor Stellenabbau.',
+  f:'Den gesetzlichen Mindestlohn gibt es in Deutschland seit dem 1. Januar 2015.',meme:['Mindestlohn rauf!','Inhaber: „Dann streiche ich Stellen“ 😬','🧾'],sc:[0,0,0,0,0,-10],
+  dq:'Wer trägt die höheren Lohnkosten: Kundschaft, Inhaber oder Beschäftigte? Wie wirkt sich das auf deinen Ausbildungsbetrieb aus?',
+  ms:[
+   {n:'Mindestlohn kräftig anheben',ic:'💶',t:'Starke Lohnerhöhung per Gesetz.',e:[-5,-6,3,-2,0,14],x:'Mehr Kaufkraft und mehr Gerechtigkeit – aber Läden mit kleinen Margen bauen eher Stellen ab oder erhöhen Preise. Zielkonflikt: Verteilung ↔ Beschäftigung/Preise.'},
+   {n:'Mindestlohn moderat anheben',ic:'🪜',t:'Eine kleine Stufe nach oben.',e:[-2,-2,2,0,0,7],x:'Ein Kompromiss: Die Wirkung ist schwächer, der Konflikt aber auch.'},
+   {n:'Mindestlohn abschaffen',ic:'🗑️',t:'Löhne werden frei verhandelt.',e:[2,5,1,2,0,-12],x:'Niedrigere Lohnkosten schaffen eher Jobs, aber viele Beschäftigte rutschen in Armut. Zielkonflikt: Beschäftigung ↔ Verteilung.'},
+   {n:'Kombilohn: Staat stockt Löhne auf',ic:'🤝',t:'Niedrige Löhne werden vom Staat ergänzt.',e:[0,3,1,0,0,6],x:'Beschäftigung bleibt hoch, Einkommen steigt – die Kosten trägt aber der Staat (Steuerzahler).'}],
+  q:{q:'Der höhere Mindestlohn verbessert die Verteilung, kann aber Stellen kosten. Welche beiden Ziele stehen im Konflikt?',o:['Verteilung ↔ Beschäftigung','Umwelt ↔ Außenhandel','Preise ↔ Außenhandel'],c:0,x:'Gerechte Verteilung und hoher Beschäftigungsstand – bei kleinen Margen im Einzelhandel ein typischer Konflikt.'}},
+ {t:'Innenstadt-Sterben',ic:'🏚️',txt:'Paketboten statt Passanten: Der Onlinehandel wächst, in der Fußgängerzone stehen Läden leer. Die Stadt fürchtet Jobverluste und tote Straßen.',
+  f:'Retouren: Jedes Jahr werden Millionen Pakete zurückgeschickt – für Umwelt und Händler ein teures Problem.',meme:['Onlineshopping bis 23 Uhr','Die Innenstadt: 🏜️','📦'],sc:[0,-8,-4,0,0,0],
+  dq:'Was tut die Kundschaft selbst für oder gegen die Innenstadt? Was könnte dein Betrieb anders machen?',
+  ms:[
+   {n:'Innenstadt-Förderprogramm',ic:'🏪',t:'Zuschüsse für Mieten, Umbau und Aktionen.',e:[0,8,5,-1,3,2],x:'Jobs und Umsatz vor Ort werden gestärkt, weniger Paketverkehr schont die Umwelt: Zielharmonie.'},
+   {n:'Paketsteuer / Retourengebühr',ic:'📦',t:'Onlinebestellungen werden teurer.',e:[-2,4,-2,0,5,2],x:'Stationäre Läden profitieren, die Umwelt auch – Online-Händler und Kundschaft zahlen drauf.'},
+   {n:'Sonntagsöffnung erlauben',ic:'🕐',t:'Mehr Verkaufstage in der Innenstadt.',e:[0,3,5,0,-3,-5],x:'Mehr Umsatz, aber Belastung für Beschäftigte und mehr Verkehr: Zielkonflikt Wachstum ↔ Umwelt/Verteilung.'},
+   {n:'Nichts tun',ic:'🤷',t:'Der Markt entscheidet.',e:[0,-4,0,0,-1,0],x:'Der Strukturwandel geht weiter – Jobs verschwinden vor Ort, neue entstehen im Versand.'}],
+  q:{q:'Sonntagsöffnung bringt Umsatz, belastet aber Beschäftigte und Umwelt. Das nennt man …',o:['Zielharmonie','Zielkonflikt','Zielneutralität'],c:1,x:'Wachstum steht hier gegen Verteilung und Umwelt: Zielkonflikt.'}},
+ {t:'Zollstreit & teure Container',ic:'🚢',txt:'Neue Zölle, stockende Lieferketten: Sneaker und Smartphones aus Asien kommen später und teurer. Der Handel zittert vor leeren Regalen.',
+  f:'Auf einem einzigen Containerschiff passen tausende Container – ein Stau im Hafen spürt man bis ins Ladenregal.',meme:['Container im Stau','Ich: Wo ist mein Paket? 🥲','🚢'],sc:[-8,-3,-4,-8,0,0],photo:true,
+  dq:'Welche Produkte in deinem Laden stammen aus dem Ausland? Was passiert mit ihren Preisen bei Zöllen?',
+  ms:[
+   {n:'Einfuhrzölle erhöhen',ic:'🚧',t:'Importwaren werden teurer.',e:[-8,2,-5,7,1,-2],x:'Heimische Hersteller profitieren, Importwaren werden teurer: Preise und Wachstum leiden. Zielkonflikt: Außenwirtschaft ↔ Preisstabilität.'},
+   {n:'Freihandelsabkommen aushandeln',ic:'🤝',t:'Zölle fallen, Handel wird einfacher.',e:[6,2,7,4,-5,-2],x:'Waren werden günstiger, Handel und Wachstum steigen – lange Transportwege belasten aber die Umwelt.'},
+   {n:'Heimische Produktion fördern',ic:'🏭',t:'Subventionen für Hersteller im Inland.',e:[-3,6,2,4,-1,0],x:'Jobs im Inland, weniger Abhängigkeit – aber höhere Preise im Regal.'},
+   {n:'Lieferkettengesetz verschärfen',ic:'📜',t:'Händler müssen Standards der Zulieferer prüfen.',e:[-4,-2,-3,-2,8,6],x:'Umwelt und faire Löhne weltweit werden gestärkt – für Händler steigen Aufwand und Kosten.'}],
+  q:{q:'Warum kann ein sehr hoher Exportüberschuss ein Problem sein?',o:['Andere Länder können sich verschulden oder mit Gegenmaßnahmen reagieren','Dann sinken automatisch alle Preise im Land','Er hat nie Folgen'],c:0,x:'Wer viel mehr verkauft als einkauft, „exportiert“ Schulden und provoziert Streit – das Ziel heißt deshalb Gleichgewicht, nicht Maximum.'}},
+ {t:'Energiepreise & Klima',ic:'🌍',txt:'Heizung, Kühltheken, Beleuchtung: Die Energiekosten fressen die Marge. Zugleich fordern Kundinnen nachhaltigere Läden.',
+  f:'Kühlregale und Beleuchtung gehören zu den größten Stromverbrauchern im Supermarkt.',meme:['Stromrechnung des Ladens','Kühlregal: 🥶💸','⚡'],sc:[-6,0,-3,0,-6,-3],
+  dq:'Wer soll die Kosten des Klimaschutzes tragen: Unternehmen, Kundschaft oder der Staat?',
+  ms:[
+   {n:'CO₂-Preis erhöhen',ic:'🏭',t:'Energie und Waren mit viel CO₂ werden teurer.',e:[-5,-3,-4,2,12,-5],x:'Klimaschutz wirkt, aber Preise steigen und Geringverdiener spüren es stärker. Zielkonflikt: Umwelt ↔ Verteilung/Wachstum.'},
+   {n:'Energiepreisbremse (Subvention)',ic:'🔌',t:'Der Staat deckelt die Energiekosten.',e:[6,2,3,-2,-6,5],x:'Entlastung für Haushalte und Betriebe – aber Anreiz zum Sparen sinkt, die Umwelt leidet.'},
+   {n:'Solardach & LED im Handel fördern',ic:'☀️',t:'Zuschüsse für energiesparende Läden.',e:[1,4,3,2,8,0],x:'Betriebe sparen Kosten, Aufträge für Handwerk, die Umwelt gewinnt: Zielharmonie.'},
+   {n:'Einwegplastik & Verpackungen einschränken',ic:'♻️',t:'Strengere Regeln für Verpackungen.',e:[-2,0,-2,0,7,-1],x:'Weniger Müll, höhere Verpackungskosten für den Handel.'}],
+  q:{q:'Der CO₂-Preis schützt das Klima, belastet aber Menschen mit wenig Geld. Welche Ziele stehen im Konflikt?',o:['Umweltschutz ↔ gerechte Verteilung','Beschäftigung ↔ Außenhandel','Preise ↔ Außenhandel'],c:0,x:'Umweltschutz und Verteilung: Wer wenig hat, spürt höhere Preise stärker.'}},
+ {t:'Kaufzurückhaltung & Flaute',ic:'😟',txt:'Weniger Kundschaft, Kurzarbeit droht, Umsatz im Keller. Die Wirtschaft schwächelt.',
+  f:'Aufschwung, Boom, Abschwung, Rezession: Die Wirtschaft schwankt wie auf einer Welle – das nennt man Konjunktur.',meme:['Kundschaft im Laden','Kundschaft: Heute nicht. 🦗','😟'],sc:[2,-8,-10,0,0,-3],
+  dq:'Wann ist Staatsverschuldung sinnvoll – und wann gefährlich?',
+  ms:[
+   {n:'Konjunkturprogramm (Staatsausgaben)',ic:'🏗️',t:'Der Staat investiert in Straßen, Schulen und Gebäude.',e:[-6,10,12,-3,-3,3],x:'Nachfrage und Jobs steigen – Preisdruck und Staatsschulden aber auch. Zielharmonie bei Wachstum/Beschäftigung, Konflikt mit Preisstabilität.'},
+   {n:'Unternehmenssteuern senken',ic:'🏢',t:'Betriebe behalten mehr Gewinn.',e:[-2,5,6,3,-2,-6],x:'Investitionen werden attraktiver, doch dem Staat fehlt Geld und die Verteilung wird ungleicher.'},
+   {n:'Kurzarbeitergeld ausweiten',ic:'🛟',t:'Der Staat zahlt einen Teil des Lohns bei weniger Arbeit.',e:[0,10,3,0,0,4],x:'Arbeitsplätze bleiben erhalten, Kaufkraft stabil – eine typische Maßnahme in der Krise.'},
+   {n:'Sparpolitik: Staatsausgaben kürzen',ic:'✂️',t:'Der Staat spart.',e:[3,-8,-10,2,2,-6],x:'Der Haushalt entspannt sich, aber Nachfrage und Jobs gehen weiter zurück.'}],
+  q:{q:'Mehr Umsatz im Laden führt zu mehr Personal. Das Verhältnis der Ziele Wachstum und Beschäftigung ist dann …',o:['Zielharmonie','Zielkonflikt','Zielneutralität'],c:0,x:'Beide Ziele verstärken sich: Zielharmonie.'}},
+ {t:'Azubis gesucht',ic:'🎓',txt:'Offene Ausbildungsstellen, Verkäuferinnen fehlen, Filialen verkürzen Öffnungszeiten. Der Fachkräftemangel bremst den Handel.',
+  f:'Im Einzelhandel gibt es mehr Ausbildungsberufe als nur „Verkäufer/in“: z. B. Kaufleute im Einzelhandel.',meme:['Stellenanzeige','Bewerber: 0 🦗','🎓'],sc:[3,-5,-6,0,0,0],
+  dq:'Was würde dich in deinem Beruf halten – Lohn, Arbeitszeit, Perspektive?',
+  ms:[
+   {n:'Ausbildungsprämie für Betriebe',ic:'🎁',t:'Betriebe bekommen Geld pro Azubi.',e:[-1,7,3,0,0,3],x:'Mehr Ausbildung stärkt Jobs und Verteilung gleichzeitig: Zielharmonie.'},
+   {n:'Zuwanderung von Fachkräften erleichtern',ic:'🌐',t:'Schnellere Anerkennung und Einreise.',e:[2,4,8,2,-2,2],x:'Mehr Arbeitskräfte stärken Wachstum – Integration und Wohnraum brauchen Zeit.'},
+   {n:'Rente mit 70',ic:'👴',t:'Längeres Arbeitsleben.',e:[0,4,5,0,0,-10],x:'Mehr Arbeitskräfte, aber ältere Beschäftigte tragen die Last: Zielkonflikt mit gerechter Verteilung.'},
+   {n:'Vier-Tage-Woche bei vollem Lohn',ic:'📅',t:'Weniger Arbeitszeit, gleiches Gehalt.',e:[-3,3,-6,0,3,6],x:'Mehr Freizeit und Verteilung der Arbeit, aber mehr Kosten – Zielkonflikt mit Wachstum und Preisen.'}],
+  q:{q:'Eine Ausbildungsprämie stärkt Beschäftigung UND Verteilung. Das nennt man …',o:['Zielharmonie','Zielkonflikt','Zielneutralität'],c:0,x:'Zwei Ziele werden gemeinsam besser: Zielharmonie.'}},
+ {t:'Exportweltmeister – und jetzt?',ic:'🏆',txt:'Deutschland verkauft viel mehr ins Ausland, als es einkauft. Das Ausland beschwert sich, der Euro wird stärker, Importwaren im Laden werden billiger.',
+  f:'Ein „Überschuss“ in der Handelsbilanz klingt gut – nach dem Stabilitätsgesetz ist aber ein Gleichgewicht das Ziel.',meme:['Exportüberschuss','Handelspartner: 😤','🏆'],sc:[4,2,3,10,0,0],
+  dq:'Wer profitiert vom Exportüberschuss – und wer eher nicht?',
+  ms:[
+   {n:'Binnennachfrage stärken (Investitionen, Löhne)',ic:'🏘️',t:'Mehr Kaufkraft im Inland.',e:[-3,4,5,-6,-1,4],x:'Das Gleichgewicht verbessert sich, Läden verkaufen mehr – aber die Preise ziehen an.'},
+   {n:'Exportförderung ausbauen',ic:'📤',t:'Noch mehr Unterstützung für Exporteure.',e:[2,4,6,9,-3,-3],x:'Jobs und Wachstum, doch der Überschuss wächst weiter: Konflikt mit dem außenwirtschaftlichen Gleichgewicht.'},
+   {n:'Importzölle senken',ic:'📥',t:'Importwaren werden noch günstiger.',e:[6,-2,1,-8,-2,3],x:'Die Läden profitieren von günstigen Waren, heimische Hersteller stehen unter Druck.'},
+   {n:'Nichts ändern',ic:'😎',t:'Alles bleibt, wie es ist.',e:[0,1,2,4,0,0],x:'Der Überschuss bleibt – und damit der Streit mit den Handelspartnern.'}],
+  q:{q:'Ein dauerhaft sehr hoher Exportüberschuss bedeutet …',o:['perfektes außenwirtschaftliches Gleichgewicht','ein Ungleichgewicht, das Streit mit Handelspartnern auslösen kann','automatisch mehr Umweltschutz'],c:1,x:'Das Ziel heißt Gleichgewicht: weder dauerhaft großer Überschuss noch großes Defizit.'}}
+];
+const KC=[
+ {a:'Wachstum',b:'Beschäftigung',s:'Das Modehaus verkauft mehr und stellt zwei Verkäuferinnen ein.',ans:1,x:'Mehr Umsatz → mehr Personal: Beide Ziele verstärken sich (Zielharmonie).'},
+ {a:'Preisstabilität',b:'Beschäftigung',s:'Die Zentralbank erhöht die Zinsen, um die Preise zu dämpfen – Händler investieren weniger und stellen nicht ein.',ans:0,x:'Kurzfristig kann Preisstabilität auf Kosten der Beschäftigung gehen (Zielkonflikt).'},
+ {a:'Wachstum',b:'Umweltschutz',s:'Sonntagsöffnung und mehr Lieferverkehr bringen Umsatz, aber auch mehr Abgase.',ans:0,x:'Mehr Konsum und Verkehr belasten oft die Umwelt (Zielkonflikt).'},
+ {a:'Beschäftigung',b:'gerechte Verteilung',s:'Mehr Menschen haben einen Job im Einzelhandel und damit ein eigenes Einkommen.',ans:1,x:'Arbeit sichert Einkommen: Beide Ziele ziehen am selben Strang (Zielharmonie).'},
+ {a:'Außenwirtschaft',b:'Beschäftigung',s:'Der Exportboom sorgt für volle Aufträge bei Zulieferern – auch im Großhandel steigt der Bedarf an Personal.',ans:1,x:'Exporte sichern in vielen Branchen Arbeitsplätze (Zielharmonie).'},
+ {a:'Preisstabilität',b:'Wachstum',s:'Die Preise explodieren, die Zentralbank bremst mit höheren Zinsen – Kundschaft kauft weniger.',ans:0,x:'Bremst man die Preise, bremst man oft auch die Nachfrage (Zielkonflikt).'},
+ {a:'Umweltschutz',b:'gerechte Verteilung',s:'Ein hoher CO₂-Preis macht Energie und Waren teurer – Haushalte mit wenig Geld spüren das stärker.',ans:0,x:'Klimaschutz kann Geringverdiener überproportional belasten (Zielkonflikt).'},
+ {a:'Umweltschutz',b:'außenwirtschaftliches Gleichgewicht',s:'Ein Supermarkt führt ein Bio-Siegel auf Tomaten ein. Die Handelsbilanz verändert sich dadurch kaum.',ans:2,x:'Kein erkennbarer Zusammenhang zwischen beiden Zielen (Zielneutralität).'},
+ {a:'Preisstabilität',b:'gerechte Verteilung',s:'Die Preise bleiben ruhig – Sparguthaben und kleine Renten behalten ihre Kaufkraft.',ans:1,x:'Stabile Preise schützen vor allem Menschen mit kleinem Einkommen (Zielharmonie).'},
+ {a:'Außenwirtschaft',b:'Preisstabilität',s:'Ein dauerhafter Exportüberschuss lässt Geld ins Land fließen und kann die Preise im Inland nach oben treiben.',ans:0,x:'Hohe Überschüsse können über „importierte Inflation“ die Preise belasten (Zielkonflikt).'}
+];
+const GLOSS=[
+ ['Magisches Viereck','Preisniveaustabilität, hoher Beschäftigungsstand, stetiges und angemessenes Wirtschaftswachstum, außenwirtschaftliches Gleichgewicht (Stabilitätsgesetz 1967).'],
+ ['Magisches Sechseck','Das Viereck plus Umweltschutz und gerechte Verteilung.'],
+ ['Zielkonflikt','Wer ein Ziel fördert, verschlechtert ein anderes.'],
+ ['Zielharmonie','Ein Ziel zu fördern hilft auch einem anderen.'],
+ ['Zielneutralität','Zwei Ziele beeinflussen sich nicht.'],
+ ['Fiskalpolitik','Steuern und Staatsausgaben des Staates steuern die Wirtschaft.'],
+ ['Geldpolitik','Die Zentralbank (EZB) steuert Zinsen und Geldmenge.'],
+ ['Konjunktur','Schwankungen der Wirtschaft: Aufschwung, Boom, Abschwung, Rezession.']
+];
+const MOODS=['😡','🙁','😐','🙂','😍'];
+
+/* ---------- Hilfsfunktionen ---------- */
+const zone=v=>v<35?'z-r':v<65?'z-y':'z-g';
+function gauges(g,gp){return ZIELE.map((z,i)=>{const d=gp?g[i]-gp[i]:0;return `<div class="g"><div style="font-size:24px">${z.ic}</div><div><div class="nm">${z.s}</div><div class="bar"><i class="${zone(g[i])}" style="width:${g[i]}%"></i></div></div><div class="dl ${d>0?'up':d<0?'dn':''}">${gp?(d>0?'+':'')+d:g[i]}</div></div>`}).join('')}
+function moodOf(ro,e){const w=ROLLEN[ro].w;const sw=w.reduce((a,b)=>a+b,0);const m=e.reduce((s,v,i)=>s+v*w[i],0)/sw;return m>=4?4:m>=1.5?3:m>-1.5?2:m>-4?1:0}
+function stars(w){return w.map((v,i)=>v?`<span class="pill">${ZIELE[i].ic} ${'★'.repeat(v)}</span>`:'').join('')}
+function roleCard(ro){const R=ROLLEN[ro];return `<div class="card"><div class="role"><div class="ic">${R.ic}</div><div><h3>${esc(R.n)}</h3><div class="muted">${esc(R.b)}</div></div></div><div class="hint" style="margin-top:8px">🎯 ${esc(R.a)}</div><div class="stars" style="margin-top:6px">Wichtig für dich: ${stars(R.w)}</div></div>`}
+function conflicts(e){const up=[],dn=[];e.forEach((v,i)=>{if(v>=3)up.push(i);if(v<=-3)dn.push(i)});
+  if(up.length&&dn.length){const k=up.flatMap(u=>dn.map(d=>`<span class="pill k">🔥 ${ZIELE[u].s} ↑ ↔ ${ZIELE[d].s} ↓</span>`)).join('');return `<div><b>Zielkonflikt:</b> ${k}</div>`}
+  if(up.length)return `<div><b>Zielharmonie:</b> <span class="pill h">🤝 ${up.map(u=>ZIELE[u].s).join(' + ')} verbessern sich gemeinsam</span></div>`;
+  if(dn.length)return `<div><b>Alle Ziele rutschen ab:</b> <span class="pill k">${dn.map(u=>ZIELE[u].s).join(', ')} ↓</span></div>`;
+  return `<div><b>Zielneutralität:</b> <span class="pill nn">kaum Wirkung</span></div>`}
+function eventCard(i){const E=EV[i];return `<div class="card"><span class="tag">Runde ${i+1} von ${EV.length}</span><div class="ev"><div class="ic">${E.ic}</div><div><h2>${esc(E.t)}</h2><div>${esc(E.txt)}</div></div></div>${E.photo?`<img class="photo" src="${SHIP}" alt="Containerschiff"><div class="cred">Foto: Frank Schulenburg, CC BY-SA 4.0, Wikimedia Commons („Container ship from Hamburg passing the Golden Gate.jpg“)</div>`:''}<div class="grid g2" style="margin-top:8px"><div class="meme"><div class="e">${E.meme[2]}</div><div>${esc(E.meme[0])}</div><div style="color:#ffbe0b">${esc(E.meme[1])}</div></div><div class="fact">💡 <b>Side Fact:</b> ${esc(E.f)}</div></div></div>`}
+function radar(g){const cx=130,cy=130,R=90;const pt=(i,v)=>{const a=-Math.PI/2+i*Math.PI/3;return [cx+Math.cos(a)*R*v/100,cy+Math.sin(a)*R*v/100]};
+  const ring=v=>ZIELE.map((_,i)=>pt(i,v).join(',')).join(' ');
+  return `<svg viewBox="0 0 260 260" style="max-width:300px;width:100%"><polygon points="${ring(100)}" fill="#fff" stroke="#1b1b2f" stroke-width="2"/><polygon points="${ring(65)}" fill="#e6f7f1" stroke="#2a9d8f" stroke-dasharray="4 3"/><polygon points="${ring(35)}" fill="none" stroke="#e63946" stroke-dasharray="4 3"/>${ZIELE.map((_,i)=>{const p=pt(i,100);return `<line x1="${cx}" y1="${cy}" x2="${p[0]}" y2="${p[1]}" stroke="#bbb"/>`}).join('')}<polygon points="${g.map((v,i)=>pt(i,v).join(',')).join(' ')}" fill="rgba(255,190,11,.65)" stroke="#1b1b2f" stroke-width="3"/>${ZIELE.map((z,i)=>{const p=pt(i,118);return `<text x="${p[0]}" y="${p[1]}" text-anchor="middle" dominant-baseline="middle" font-size="19">${z.ic}</text>`}).join('')}</svg>`}
+function glossary(){return `<div class="card"><h3>📚 Fachbegriffe</h3>${GLOSS.map(g=>`<div><b>${g[0]}:</b> ${g[1]}</div>`).join('')}</div>`}
+function greenCount(g){return g.filter(v=>v>=65).length}
+function medal(n){return n>=5?'🥇 Wirtschaftsminister:in mit Fingerspitzengefühl':n>=3?'🥈 Solide Kabinettsarbeit':n>=1?'🥉 Politik ist eben ein Kompromiss':'🪙 Alles im roten Bereich – nächstes Mal besser!'}
+function resultBlock(r,ch,gp,g,ro){const E=EV[r],m=E.ms[ch];const e=m.e;
+  return `<div class="card"><h2>${m.ic} Beschlossen: ${esc(m.n)}</h2><div class="muted">${esc(m.t)}</div>${gauges(g,gp)}</div>
+  <div class="card">${conflicts(e)}<div style="margin-top:8px">${esc(m.x)}</div></div>`+
+  (ro!=null?`<div class="card role"><div class="mood">${MOODS[moodOf(ro,e)]}</div><div><b>${esc(ROLLEN[ro].n)}</b><div>${esc(ROLLEN[ro].m[moodOf(ro,e)>=3?1:0])}</div></div></div>`:'')}
+function endBlock(g,h){const n=greenCount(g);return `<div class="card" style="text-align:center"><h2>🏁 Zeugnis des Kabinetts</h2>${radar(g)}<div style="font-size:20px;font-weight:800">${medal(n)}</div><div>${n} von 6 Zielen im grünen Bereich (≥ 65)</div></div><div class="card"><h3>Eure Beschlüsse</h3>${h.map((c,r)=>`<div>${EV[r].ic} <b>${esc(EV[r].t)}:</b> ${EV[r].ms[c].ic} ${esc(EV[r].ms[c].n)}</div>`).join('')}</div><div class="card"><h3>🗣️ Zum Weiterdenken</h3><div>• Welches Ziel hat euer Kabinett am stärksten vernachlässigt – und wer hat darunter gelitten?</div><div>• Gibt es überhaupt eine Politik, die alle sechs Ziele gleichzeitig erreicht? Warum heißt das Viereck „magisch“?</div><div>• Welche Maßnahme hätte euren Ausbildungsbetrieb besonders getroffen?</div></div>`+glossary()}
+
+/* ---------- Zustand ---------- */
+let M='home',solo=null,kc=null,T=null,ST=null,pollT=null,lastHash='';
+const store={get(k){try{return sessionStorage.getItem(k)}catch(e){return null}},set(k,v){try{sessionStorage.setItem(k,v)}catch(e){}},del(k){try{sessionStorage.removeItem(k)}catch(e){}}};
+async function api(a,p){try{const r=await fetch(API+'/api/wp',{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(Object.assign({a},p))});return await r.json()}catch(e){return {ok:false,err:'Keine Verbindung zum Server'}}}
+function stopPoll(){if(pollT){clearInterval(pollT);pollT=null}lastHash=''}
+function set(html){$('#app').innerHTML=html;window.scrollTo(0,0)}
+
+/* ---------- Ansichten ---------- */
+function vHome(){const p=new URLSearchParams(location.search);const code=(p.get('raum')||'').toUpperCase();
+ return `<div class="card" style="background:var(--y)"><h1 style="font-size:34px">🏬 Kabinett Kaufstadt</h1><div style="font-size:18px">Wirtschaftspolitische Ziele und ihre Konflikte – aus Sicht des Einzelhandels. Ihr regiert die Stadt Kaufstadt: Acht Krisen, vier Maßnahmen pro Krise, sechs Ziele im Blick.</div></div>
+ <div class="grid g3"><div class="card"><h3>🎮 Einzelspiel</h3><div class="muted">Du bist Wirtschaftsminister:in. Wähle eine Rolle und steuere durch 8 Krisen.</div><button class="btn big r" data-a="solo-start">Los geht’s</button></div>
+ <div class="card"><h3>🔎 Konflikt-Check</h3><div class="muted">10 Blitzfragen: Zielkonflikt, Zielharmonie oder Zielneutralität?</div><button class="btn big t" data-a="kc-start">Training</button></div>
+ <div class="card"><h3>👩‍🏫 Klassenmodus</h3><div class="muted">Lehrkraft eröffnet einen Raum, alle bekommen eine Rolle und stimmen ab.</div><button class="btn big n" data-a="t-create">Raum eröffnen</button></div></div>
+ <div class="card"><h3>🙋 Einem Raum beitreten</h3><input id="jc" placeholder="Raumcode" maxlength="4" value="${esc(code)}" style="width:130px;text-transform:uppercase"><input id="jn" placeholder="Dein Name" maxlength="20"><button class="btn" data-a="join">Beitreten</button><div id="jerr" class="bad"></div></div>
+ <div class="card"><h3>🔷 Das magische Sechseck</h3><div class="grid g3">${ZIELE.map(z=>`<div style="border:3px solid var(--ink);border-radius:12px;padding:8px;background:#fffdf4"><div style="font-size:30px">${z.ic}</div><b>${z.n}</b><div class="muted">${z.f}</div></div>`).join('')}</div></div>`}
+
+function vSolo(){const s=solo;
+ if(s.ph==='role')return `<div class="card"><h2>Welche Rolle übernimmst du?</h2><div class="muted">Jede Rolle hat eigene Interessen. Du entscheidest aber für ganz Kaufstadt!</div></div><div class="grid g2">${ROLLEN.map((R,i)=>`<div class="card rolechoice" data-a="role" data-i="${i}"><div class="role"><div class="ic">${R.ic}</div><div><h3>${esc(R.n)}</h3><div class="muted">${esc(R.b)}</div><div class="stars">${stars(R.w)}</div></div></div></div>`).join('')}</div><button class="btn" data-a="role" data-i="${Math.floor(Math.random()*ROLLEN.length)}">🎲 Zufällige Rolle</button>`;
+ if(s.ph==='vote'){const E=EV[s.r];return eventCard(s.r)+`<div class="card"><h3>📊 Lage der Stadt</h3>${gauges(s.g)}<div class="muted">Grün ab 65 · Gelb · Rot unter 35</div></div>`+roleCard(s.role)+`<div class="card"><h3>Was beschließt das Kabinett?</h3>${E.ms.map((m,i)=>`<button class="ms" data-a="pick" data-i="${i}"><b>${m.ic} ${esc(m.n)}</b><small>${esc(m.t)}</small></button>`).join('')}</div>`}
+ if(s.ph==='result'){const E=EV[s.r],q=E.q;const done=s.qa!==null;
+  return resultBlock(s.r,s.ch,s.gp,s.g,s.role)+`<div class="card"><h3>❓ Kurzquiz (+10 Punkte)</h3><div>${esc(q.q)}</div>${q.o.map((o,i)=>`<button class="ms ${done?(i===q.c?'sel':(i===s.qa?'chosen':'')):''}" data-a="quiz" data-i="${i}" ${done?'disabled':''}><b>${esc(o)}</b></button>`).join('')}${done?`<div class="${s.qa===q.c?'ok':'bad'}">${s.qa===q.c?'Richtig! +10':'Leider falsch.'} ${esc(q.x)}</div>`:''}</div><div class="card"><div class="fact">🗣️ <b>Diskussion:</b> ${esc(E.dq)}</div></div><button class="btn big r" data-a="next" ${done?'':'disabled'}>${s.r<EV.length-1?'Nächste Krise ▶':'Zum Zeugnis 🏁'}</button>`}
+ if(s.ph==='end'){const n=greenCount(s.g);const pts=s.pts+n*10;return endBlock(s.g,s.h)+`<div class="card"><h3>Punkte</h3><div style="font-size:24px;font-weight:900">${pts} Punkte</div><div class="muted">Quiz ${s.pts} + ${n} grüne Ziele × 10</div></div><button class="btn big r" data-a="solo-start">Nochmal spielen</button><button class="btn big" data-a="home">Startseite</button>`}}
+
+function vKC(){const k=kc;if(k.i>=KC.length)return `<div class="card" style="text-align:center"><h2>Training geschafft!</h2><div style="font-size:30px;font-weight:900">${k.score} von ${KC.length}</div><div>${k.score>=9?'🥇 Konflikt-Profi':k.score>=6?'🥈 Gut dabei':'🥉 Weiter üben'}</div></div>${glossary()}<button class="btn big r" data-a="kc-start">Nochmal</button><button class="btn big" data-a="home">Startseite</button>`;
+ const c=KC[k.i],d=k.ans!==null;const lab=['Zielkonflikt 🔥','Zielharmonie 🤝','Zielneutralität 😐'];
+ return `<div class="card"><span class="tag">Frage ${k.i+1} von ${KC.length}</span><h2>${c.a} ↔ ${c.b}</h2><div style="font-size:18px">${esc(c.s)}</div></div><div class="card"><div class="muted">Wie stehen die beiden Ziele zueinander?</div>${lab.map((l,i)=>`<button class="ms ${d?(i===c.ans?'sel':(i===k.ans?'chosen':'')):''}" data-a="kc-ans" data-i="${i}" ${d?'disabled':''}><b>${l}</b></button>`).join('')}${d?`<div class="${k.ans===c.ans?'ok':'bad'}">${k.ans===c.ans?'Richtig!':'Nicht ganz.'} ${esc(c.x)}</div><button class="btn big r" data-a="kc-next">${k.i<KC.length-1?'Weiter ▶':'Ergebnis'}</button>`:''}</div>`}
+
+function vTeacher(){const t=T,m=t.meta;let h='';
+ const link=location.origin+location.pathname+'?raum='+t.code;
+ h+=`<div class="card"><span class="tag">Lehrkraft</span> <b>Raumcode:</b> <span class="code">${t.code}</span> <button class="btn w" data-a="copy">Link kopieren</button><button class="btn n" data-a="t-close">Raum schließen</button></div>`;
+ if(m.ph==='lobby'){let qr='';try{const q=qrcode(0,'M');q.addData(link);q.make();qr=q.createSvgTag({cellSize:6,margin:2,scalable:true})}catch(e){}
+  h+=`<div class="grid g2"><div class="card" style="text-align:center"><h3>Scannen & beitreten</h3><div class="qrbox">${qr}</div><div class="muted" style="word-break:break-all">${esc(link)}</div></div><div class="card"><h3>👥 ${t.pl.length} Spieler:innen</h3>${plTable(t,false)}<button class="btn big r" data-a="t-start" ${t.pl.length?'':'disabled'}>Runde 1 starten ▶</button></div></div>`}
+ else if(m.ph==='vote'){const n=t.pl.length,cnt=[0,0,0,0];Object.values(t.votes).forEach(v=>cnt[v]++);const tot=cnt.reduce((a,b)=>a+b,0);const E=EV[m.r];const top=Math.max(...cnt);const maj=cnt.indexOf(top);
+  h+=eventCard(m.r)+`<div class="card"><h3>📊 Lage der Stadt</h3>${gauges(m.g)}</div><div class="card"><h3>🗳️ Abstimmung: ${tot} von ${n}</h3>${E.ms.map((x,i)=>`<div class="vbar"><div style="width:62%"><b>${x.ic} ${esc(x.n)}</b></div><div class="b"><i style="width:${tot?cnt[i]/tot*100:0}%"></i></div><b>${cnt[i]}</b></div>`).join('')}<div style="margin-top:8px">Beschluss: <select id="ovr">${E.ms.map((x,i)=>`<option value="${i}" ${i===maj?'selected':''}>${x.ic} ${esc(x.n)}${i===maj&&tot?' (Mehrheit)':''}</option>`).join('')}</select> <button class="btn r" data-a="t-eval">Auswerten ▶</button></div></div><div class="card"><h3>Spieler:innen</h3>${plTable(t,true)}</div>`}
+ else if(m.ph==='result'){const mo=t.pl.map(p=>`<span class="pill">${MOODS[moodOf(p.r,EV[m.r].ms[m.ch].e)]} ${esc(p.n)} <small>(${ROLLEN[p.r].ic})</small></span>`).join('');
+  h+=eventCard(m.r)+resultBlock(m.r,m.ch,m.gp,m.g,null)+`<div class="card"><h3>🎭 Stimmungsbild der Rollen</h3>${mo||'–'}<div class="muted" style="margin-top:6px">Stimmen: ${EV[m.r].ms.map((x,i)=>x.ic+' '+(m.ct[i]||0)).join(' · ')}</div></div><div class="card"><div class="fact">🗣️ <b>Diskussion:</b> ${esc(EV[m.r].dq)}</div></div><button class="btn big r" data-a="t-next">${m.r<EV.length-1?'Nächste Runde ▶':'Zum Zeugnis 🏁'}</button>`}
+ else h+=endBlock(m.g,m.h)+`<button class="btn big" data-a="t-close">Raum schließen & zur Startseite</button>`;
+ return h}
+function plTable(t,votes){if(!t.pl.length)return '<div class="muted">Noch niemand da – QR-Code scannen lassen …</div>';return `<table><tr><th>Name</th><th>Rolle</th>${votes?'<th>Stimme</th>':''}<th></th></tr>${t.pl.map(p=>`<tr><td>${esc(p.n)}</td><td>${ROLLEN[p.r].ic} ${esc(ROLLEN[p.r].n.split(',')[0])}</td>${votes?`<td>${t.votes[p.n]!==undefined?'✅':'…'}</td>`:''}<td><button class="btn w" style="padding:2px 8px;margin:0" data-a="t-kick" data-n="${esc(p.n)}">✕</button></td></tr>`).join('')}</table>`}
+
+function vStudent(){const s=ST,m=s.meta;const hd=`<div class="card"><span class="tag">Raum ${s.code}</span> <b>${esc(s.name)}</b></div>`;
+ if(m.ph==='lobby')return hd+roleCard(s.role)+`<div class="card hint">⏳ Warte, bis die Lehrkraft das Spiel startet … (${s.n} im Raum)</div>`;
+ if(m.ph==='vote'){const E=EV[m.r];return hd+eventCard(m.r)+`<div class="card"><h3>📊 Lage der Stadt</h3>${gauges(m.g)}</div>`+roleCard(s.role)+`<div class="card"><h3>Wofür stimmst du?</h3><div class="muted">Du darfst deine Stimme ändern, solange die Runde offen ist.</div>${E.ms.map((x,i)=>`<button class="ms ${s.my===i?'sel':''}" data-a="s-vote" data-i="${i}"><b>${x.ic} ${esc(x.n)}</b><small>${esc(x.t)}</small></button>`).join('')}${s.my!==null?'<div class="ok">✅ Deine Stimme ist abgegeben.</div>':''}</div>`}
+ if(m.ph==='result')return hd+resultBlock(m.r,m.ch,m.gp,m.g,s.role)+`<div class="card"><div class="muted">Stimmen: ${EV[m.r].ms.map((x,i)=>x.ic+' '+(m.ct[i]||0)).join(' · ')}</div><div class="fact">🗣️ <b>Diskussion:</b> ${esc(EV[m.r].dq)}</div></div><div class="card hint">Warte auf die nächste Runde …</div>`;
+ return hd+endBlock(m.g,m.h)}
+
+function render(){if(M==='home')set(vHome());else if(M==='solo')set(vSolo());else if(M==='kc')set(vKC());else if(M==='teacher')set(vTeacher());else if(M==='student')set(vStudent())}
+
+/* ---------- Klassenmodus: Lehrkraft ---------- */
+async function tCreate(){const r=await api('create',{});if(!r.ok){alert(r.err);return}T={code:r.c,hk:r.hk,meta:r.meta,pl:[],votes:{}};store.set('wp-t',JSON.stringify({c:r.c,hk:r.hk}));M='teacher';stopPoll();render();pollT=setInterval(tPoll,3000)}
+async function tPoll(){if(!T)return;const r=await api('state',{c:T.code,hk:T.hk});if(!r.ok){if(r.err==='Raum nicht gefunden'){alert('Raum abgelaufen.');tLeave()}return}
+ const h=JSON.stringify([r.meta,r.pl,r.votes]);if(h===lastHash)return;
+ const ae=document.activeElement;if(ae&&ae.tagName==='SELECT'&&ae.id==='ovr'&&r.meta.ph==='vote'&&T.meta.ph==='vote'&&T.meta.r===r.meta.r){T.pl=r.pl;T.votes=r.votes;T.meta=r.meta;lastHash=h;return}
+ lastHash=h;T.meta=r.meta;T.pl=r.pl;T.votes=r.votes;render()}
+function tLeave(){stopPoll();T=null;store.del('wp-t');M='home';render()}
+async function tSetMeta(m){const r=await api('set',{c:T.code,hk:T.hk,meta:m});if(!r.ok){alert(r.err);return false}T.meta=m;lastHash='';return true}
+async function tStartRound(r){const prev=T.meta;const base=prev.ph==='lobby'?[50,50,50,50,50,50]:prev.g;const g=addv(base,EV[r].sc);const ok=await tSetMeta({ph:'vote',r,g,h:prev.h||[]});if(ok){T.votes={};render()}}
+async function tEval(){const ch=Number($('#ovr').value);const r0=await api('state',{c:T.code,hk:T.hk});const votes=r0.ok?r0.votes:T.votes;const ct=[0,0,0,0];Object.values(votes).forEach(v=>ct[v]++);const m=T.meta;const g=addv(m.g,EV[m.r].ms[ch].e);const ok=await tSetMeta({ph:'result',r:m.r,gp:m.g,g,ch,ct,h:(m.h||[]).concat([ch])});if(ok){T.votes=votes;render()}}
+async function tNext(){const m=T.meta;if(m.r<EV.length-1)await tStartRound(m.r+1);else{if(await tSetMeta({ph:'end',r:m.r,g:m.g,h:m.h}))render()}}
+
+/* ---------- Klassenmodus: Schüler ---------- */
+async function sJoin(code,name){const r=await api('join',{c:code,n:name});if(!r.ok)return r;ST={code,name,role:r.role,meta:{ph:'lobby'},my:null,n:0};store.set('wp-s',JSON.stringify({c:code,n:name}));M='student';stopPoll();await sPoll(true);pollT=setInterval(sPoll,3000);return r}
+async function sPoll(force){if(!ST)return;const r=await api('state',{c:ST.code,n:ST.name});if(!r.ok){if(r.err==='Raum nicht gefunden'){alert('Der Raum ist nicht mehr da.');sLeave()}return}
+ if(r.me===null){alert('Du wurdest aus dem Raum entfernt.');sLeave();return}
+ const h=JSON.stringify([r.meta,r.n,r.my]);if(h===lastHash&&!force)return;lastHash=h;ST.meta=r.meta;ST.n=r.n;ST.my=r.my;ST.role=r.me;render()}
+function sLeave(){stopPoll();ST=null;store.del('wp-s');M='home';render()}
+
+/* ---------- Aktionen ---------- */
+document.addEventListener('click',async e=>{const b=e.target.closest('[data-a]');if(!b||b.disabled)return;const a=b.dataset.a,i=Number(b.dataset.i);
+ switch(a){
+  case 'home':if(M==='teacher'||M==='student'){if(!confirm('Raum wirklich verlassen?'))return;if(M==='teacher')tLeave();else sLeave();return}stopPoll();M='home';render();break;
+  case 'solo-start':solo={ph:'role'};M='solo';render();break;
+  case 'role':solo={role:i,r:0,g:[50,50,50,50,50,50],ph:'vote',pts:0,h:[],qa:null};solo.g=addv(solo.g,EV[0].sc);solo.gp=solo.g.slice();render();break;
+  case 'pick':{solo.ch=i;solo.gp=solo.g.slice();solo.g=addv(solo.g,EV[solo.r].ms[i].e);solo.h.push(i);solo.qa=null;solo.ph='result';render();break}
+  case 'quiz':if(solo.qa!==null)return;solo.qa=i;if(i===EV[solo.r].q.c)solo.pts+=10;{const y=window.scrollY;render();window.scrollTo(0,y)}break;
+  case 'next':if(solo.r<EV.length-1){solo.r++;solo.g=addv(solo.g,EV[solo.r].sc);solo.gp=solo.g.slice();solo.ph='vote'}else solo.ph='end';render();break;
+  case 'kc-start':kc={i:0,score:0,ans:null};M='kc';render();break;
+  case 'kc-ans':if(kc.ans!==null)return;kc.ans=i;if(i===KC[kc.i].ans)kc.score++;{const y=window.scrollY;render();window.scrollTo(0,y)}break;
+  case 'kc-next':kc.i++;kc.ans=null;render();break;
+  case 't-create':tCreate();break;
+  case 't-start':tStartRound(0);break;
+  case 't-eval':tEval();break;
+  case 't-next':tNext();break;
+  case 't-kick':await api('kick',{c:T.code,hk:T.hk,n:b.dataset.n});lastHash='';tPoll();break;
+  case 't-close':if(!confirm('Raum schließen? Alle Daten werden gelöscht.'))return;await api('close',{c:T.code,hk:T.hk});tLeave();break;
+  case 'copy':{const l=location.origin+location.pathname+'?raum='+T.code;try{await navigator.clipboard.writeText(l);b.textContent='✓ kopiert'}catch(x){prompt('Link kopieren:',l)}break}
+  case 'join':{const c=($('#jc').value||'').trim().toUpperCase(),n=($('#jn').value||'').trim();if(!c||!n){$('#jerr').textContent='Bitte Code und Namen eingeben.';return}const r=await sJoin(c,n);if(!r.ok)$('#jerr').textContent=r.err;break}
+  case 's-vote':{ST.my=i;{const y=window.scrollY;render();window.scrollTo(0,y)}const r=await api('vote',{c:ST.code,n:ST.name,r:ST.meta.r,v:i});if(!r.ok){alert(r.err);lastHash='';sPoll(true)}break}
+ }});
+
+/* ---------- Start ---------- */
+(async function init(){const p=new URLSearchParams(location.search);
+ const st=store.get('wp-t'),ss=store.get('wp-s');
+ if(p.has('lehrer')||st){if(st){try{const o=JSON.parse(st);const r=await api('state',{c:o.c,hk:o.hk});if(r.ok&&r.host){T={code:o.c,hk:o.hk,meta:r.meta,pl:r.pl,votes:r.votes};M='teacher';render();pollT=setInterval(tPoll,3000);return}}catch(e){}store.del('wp-t')}}
+ if(ss){try{const o=JSON.parse(ss);if(!p.get('raum')||p.get('raum').toUpperCase()===o.c){const r=await sJoin(o.c,o.n);if(r.ok)return}}catch(e){}store.del('wp-s')}
+ render()})();
+</script></body></html>
