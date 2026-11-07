@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/wirtschaftspolitik", "destination": "/wirtschaftspolitik/Kabinett_Kaufstadt.html" },
+    { "source": "/wirtschaftspolitik/", "destination": "/wirtschaftspolitik/Kabinett_Kaufstadt.html" }
+  ]
+}
