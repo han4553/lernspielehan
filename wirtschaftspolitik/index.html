@@ -54,6 +54,7 @@ table{border-collapse:collapse;width:100%}td,th{border-bottom:2px solid #eee;pad
 .rolechoice:hover{background:#fff7d6}
 .vbar{display:flex;align-items:center;gap:8px;margin:6px 0}.vbar .b{flex:1;height:20px;background:#eee;border:2px solid var(--ink);border-radius:10px;overflow:hidden}.vbar .b i{display:block;height:100%;background:var(--n)}
 .ok{color:#18794e;font-weight:800}.bad{color:#c1121f;font-weight:800}
+.chain .st{display:flex;gap:10px;align-items:center;background:#fffdf4;border:2px solid var(--ink);border-radius:12px;padding:6px 10px}.chain .num{background:var(--n);color:#fff;border-radius:50%;width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;font-weight:800;flex:none}.chain .ar{text-align:center;font-size:18px;line-height:1}
 .hint{background:#fff2c2;border:3px solid var(--ink);border-radius:12px;padding:8px 12px;font-weight:700}
 </style></head>
 <body>
@@ -2484,6 +2485,136 @@ const GLOSS=[
 ];
 const MOODS=['😡','🙁','😐','🙂','😍'];
 
+/* ---------- Erklär-Ebene: Laden-Beispiele, Kernbegriffe, Wirkungsketten ---------- */
+const EXTRA=[
+ {ez:'Dein Warenkorb, der letztes Jahr 100 € kostete, kostet jetzt 107 €. Auch dein Einkauf wird teurer – aber deine Kundschaft hat nicht 7 % mehr Geld im Portemonnaie.',
+  kn:['Inflation','Die Preise steigen im Durchschnitt. Für 1 € bekommt man weniger. Gemessen wird sie mit dem Verbraucherpreisindex (einem typischen Warenkorb).'],
+  k:[['Zins steigt','Kredite werden teurer, Sparen lohnt sich','Kundschaft kauft weniger','Preise steigen langsamer – aber Läden stellen weniger ein'],
+     ['Steuer auf Lebensmittel sinkt','Lebensmittel werden billiger','Kundschaft hat mehr Geld übrig','Mehr Umsatz im Laden – der Staat nimmt weniger ein'],
+     ['Staat setzt einen Höchstpreis','Händler verdient weniger je Packung','Ware wird knapp oder verschwindet','Kurzfristig gerecht, langfristig Mangel'],
+     ['Keine Maßnahme','Preise steigen weiter','Kleine Einkommen verlieren Kaufkraft','Kundschaft kauft nur noch das Billigste']]},
+ {ez:'Rechenbeispiel: 10 Beschäftigte × 40 Std. pro Woche × 1 € mehr Stundenlohn = rund 1.700 € mehr Lohnkosten im Monat.',
+  kn:['Mindestlohn','Die gesetzliche Lohnuntergrenze pro Stunde. Sie schützt Beschäftigte, kostet aber den Arbeitgeber mehr.'],
+  k:[['Lohn pro Stunde steigt stark','Beschäftigte haben mehr im Portemonnaie','Der Laden hat höhere Kosten','Preise steigen oder Stellen fallen weg'],
+     ['Kleine Lohnstufe','Kosten steigen wenig','Etwas mehr Kaufkraft','Kompromiss: kleine Wirkung, kleiner Konflikt'],
+     ['Löhne werden frei verhandelt','Läden zahlen oft weniger','Mehr Stellen sind möglich','Aber der Lohn reicht oft nicht zum Leben'],
+     ['Staat stockt niedrige Löhne auf','Der Laden zahlt gleich viel','Beschäftigte haben netto mehr','Die Differenz zahlen die Steuerzahler']]},
+ {ez:'Rechenbeispiel: Kaufen 10 % der Kundschaft nur noch online, fehlen bei 400.000 € Jahresumsatz 40.000 € – bei knapper Marge oft der ganze Gewinn.',
+  kn:['Strukturwandel','Die Kundschaft wandert in neue Kanäle (z. B. Onlinehandel). Alte Jobs verschwinden, neue entstehen – aber oft nicht am selben Ort.'],
+  k:[['Zuschuss für Miete und Umbau','Läden bleiben offen','Passanten kommen, Jobs bleiben','Weniger Paketverkehr'],
+     ['Onlinebestellung wird teurer','Mehr Käufe im Laden','Weniger Pakete und Retouren','Online-Händler und Kundschaft zahlen mehr'],
+     ['Läden öffnen am Sonntag','Mehr Verkaufszeit','Mehr Umsatz – aber Beschäftigte arbeiten mehr','Mehr Verkehr in der Stadt'],
+     ['Keine Maßnahme','Mehr Leerstand','Jobs im Laden fallen weg','Neue Jobs entstehen im Versand']]},
+ {ez:'Rechenbeispiel: Ein Sneaker kostet im Einkauf 40 €. Bei 10 % Zoll sind es 44 €. Verkaufst du zum gleichen Preis, sinkt deine Marge um 4 € pro Paar.',
+  kn:['Zoll & Handelsbilanz','Zoll = Steuer auf Importe. Handelsbilanz = Exporte minus Importe.'],
+  k:[['Zoll auf Importware','Dein Einkauf wird teurer','Preise im Regal steigen','Heimische Hersteller profitieren, die Kundschaft zahlt'],
+     ['Zölle fallen','Einkauf wird günstiger','Preise sinken, Auswahl wächst','Mehr Transport und mehr Wettbewerb'],
+     ['Staat fördert Hersteller im Inland','Mehr Jobs bei Herstellern','Ware ist im Einkauf oft teurer','Weniger Abhängigkeit vom Ausland'],
+     ['Händler müssen Zulieferer prüfen','Mehr Aufwand und Kosten','Preise steigen leicht','Umwelt und Arbeitsbedingungen im Ausland besser']]},
+ {ez:'Rechenbeispiel: Steigt die Stromrechnung für Kühlregale und Licht von 2.000 € auf 3.000 € im Monat, fehlen dir 12.000 € im Jahr.',
+  kn:['CO₂-Preis','Wer Treibhausgase ausstößt, zahlt dafür. So werden Umweltkosten in den Preis eingerechnet.'],
+  k:[['CO₂ kostet mehr','Energie und Transport werden teurer','Preise im Regal steigen','Klima gewinnt – Geringverdiener spüren es stärker'],
+     ['Staat deckelt Energiekosten','Der Laden zahlt weniger Strom','Preise bleiben stabil','Der Anreiz zum Sparen sinkt'],
+     ['Zuschuss für Technik','Der Laden spart Strom','Handwerk bekommt Aufträge','Weniger CO₂'],
+     ['Weniger Einwegplastik erlaubt','Händler braucht andere Verpackung','Kosten steigen leicht','Weniger Müll']]},
+ {ez:'Rechenbeispiel: Kauft deine Kundschaft 5 % weniger, aber Miete und Löhne bleiben gleich, schrumpft dein Gewinn viel stärker als 5 %.',
+  kn:['Konjunktur','Das Auf und Ab der Wirtschaft. In der Flaute kaufen alle weniger – der Staat kann gegensteuern (Fiskalpolitik).'],
+  k:[['Staat investiert','Aufträge und Gehälter fließen','Menschen haben mehr Geld','Mehr Umsatz im Laden – aber mehr Staatsschulden'],
+     ['Betriebe zahlen weniger Steuern','Mehr Geld zum Investieren','Mehr Stellen sind möglich','Der Staat nimmt weniger ein'],
+     ['Staat zahlt einen Teil des Lohns','Läden entlassen nicht','Beschäftigte behalten ihr Einkommen','Die Kaufkraft bleibt stabil'],
+     ['Staat kürzt Ausgaben','Weniger Aufträge und Gehälter','Kundschaft hat weniger Geld','Der Umsatz im Laden sinkt weiter']]},
+ {ez:'Beispiel: Fehlt eine Verkäuferin, kann der Laden abends nicht mehr öffnen – mehrere Stunden Umsatz pro Woche fallen weg.',
+  kn:['Fachkräftemangel','Mehr offene Stellen als passende Bewerber. Die Wirtschaft kann nicht so wachsen, wie die Nachfrage es erlauben würde.'],
+  k:[['Betrieb bekommt Geld pro Azubi','Mehr Ausbildungsplätze','Mehr Nachwuchs im Laden','Jobs und Verteilung werden besser'],
+     ['Schnellere Anerkennung und Einreise','Mehr Bewerber','Offene Stellen werden besetzt','Integration braucht Zeit'],
+     ['Länger arbeiten','Mehr Arbeitskräfte','Ältere Beschäftigte tragen die Last','Die Rentenkasse wird entlastet'],
+     ['Weniger Arbeitszeit, gleicher Lohn','Laden braucht mehr Personal für gleiche Öffnungszeiten','Kosten steigen','Mehr Freizeit, höhere Preise']]},
+ {ez:'Beispiel: Ist der Euro stark, wird Importware im Einkauf billiger. Das hilft dir als Händler – kann aber heimische Lieferanten treffen.',
+  kn:['Außenbeitrag','Exporte minus Importe. Dauerhaft sehr hoch bedeutet ein Ungleichgewicht und Streit mit Handelspartnern.'],
+  k:[['Mehr Kaufkraft im Inland','Läden verkaufen mehr','Mehr Importe','Der Exportüberschuss sinkt'],
+     ['Mehr Hilfe für Exporteure','Mehr Exporte','Mehr Jobs bei Herstellern','Der Überschuss wächst weiter'],
+     ['Zoll sinkt','Einkauf wird günstiger','Preise im Laden sinken','Heimische Hersteller geraten unter Druck'],
+     ['Keine Maßnahme','Überschuss bleibt','Streit mit Handelspartnern','Stabil, aber riskant']]}
+];
+EV.forEach((E,i)=>{E.ez=EXTRA[i].ez;E.kn=EXTRA[i].kn;E.ms.forEach((m,j)=>{m.k=EXTRA[i].k[j]})});
+
+/* ---------- Lernpfad: Ziele Schritt für Schritt ---------- */
+const LERN=[
+ {w:'Die Preise sollen sich nur langsam und planbar verändern. Wirtschaftspolitik peilt etwa 2 % Inflation pro Jahr an.',
+  l:'Du kalkulierst Einkauf, Miete und Verkaufspreise im Voraus. Springen die Preise, weißt du nicht, was dein Regal morgen kosten muss.',
+  m:'Inflationsrate (Verbraucherpreisindex)',
+  q:{q:'Die Preise steigen im Jahr um 2 %. Ist das ein Problem?',o:['Ja, jede Preissteigerung ist schlecht','Nein, rund 2 % gelten als stabil','Nur wenn man im Laden arbeitet'],c:1,x:'Stabil heißt nicht null, sondern planbar. Rund 2 % gelten als Zielmarke.'},
+  s:'Stabil heißt nicht null – sondern planbar.'},
+ {w:'Wer arbeiten will, soll Arbeit finden. Das nennt man hohen Beschäftigungsstand.',
+  l:'Jede Verkäuferin und jeder Azubi in deinem Laden ist ein Job. Wer Arbeit hat, hat Einkommen – und kauft wieder bei dir.',
+  m:'Arbeitslosenquote',
+  q:{q:'Ist eine Arbeitslosenquote von 0 % realistisch?',o:['Ja, das ist das Ziel','Nein: Wer gerade den Job wechselt, zählt kurz mit','Nur im Einzelhandel'],c:1,x:'Ein bisschen Arbeitslosigkeit beim Jobwechsel gibt es immer (Sucharbeitslosigkeit).'},
+  s:'Hoher Beschäftigungsstand heißt nicht 0 % Arbeitslose.'},
+ {w:'Die Wirtschaft soll gleichmäßig wachsen – nicht in wilden Sprüngen und nicht um jeden Preis.',
+  l:'Wächst die Wirtschaft, haben die Menschen mehr Geld. Das spürst du an der Kasse: mehr Kundschaft, mehr Umsatz.',
+  m:'Reales Bruttoinlandsprodukt (BIP)',
+  q:{q:'Was bedeutet „real“ beim Wirtschaftswachstum?',o:['Ohne die Preissteigerung gerechnet','Nur in echten Läden gemessen','In Euro statt Dollar'],c:0,x:'Real = bereinigt um Preissteigerung. Sonst würde Inflation wie Wachstum aussehen.'},
+  s:'Stetig = ohne wilde Ausschläge. Angemessen = nicht um jeden Preis.'},
+ {w:'Ein Land soll auf Dauer nicht viel mehr verkaufen als einkaufen – und umgekehrt. Exporte und Importe sollen sich ungefähr ausgleichen.',
+  l:'Viele Waren in deinem Regal sind importiert. Gleichzeitig verkaufen deutsche Hersteller ins Ausland und beliefern deine Lieferanten.',
+  m:'Außenbeitrag (Exporte minus Importe)',
+  q:{q:'Deutschland exportiert viel mehr, als es importiert. Was sagt das Ziel dazu?',o:['Super – das Ziel ist übererfüllt','Das ist ein Ungleichgewicht','Das spielt keine Rolle'],c:1,x:'Das Ziel heißt Gleichgewicht, nicht Maximum.'},
+  s:'Gleichgewicht, nicht Maximum.'},
+ {w:'Die Wirtschaft soll die Umwelt nicht kaputt machen – auch nicht für spätere Generationen.',
+  l:'Kühlregale, Verpackungen, Lieferverkehr: Dein Laden verbraucht Energie und verursacht Müll. Kundschaft achtet immer mehr darauf.',
+  m:'z. B. CO₂-Ausstoß',
+  q:{q:'Ein Supermarkt tauscht Leuchtstoffröhren gegen LED. Welches Ziel wird gestärkt?',o:['Umweltschutz (und es spart Stromkosten)','Außenwirtschaftliches Gleichgewicht','Preisniveaustabilität'],c:0,x:'Weniger Strom = weniger CO₂ und niedrigere Kosten: Umwelt und Wirtschaft ziehen hier am selben Strang.'},
+  s:'Nachhaltig = heute wirtschaften, ohne morgen zu verbauen.'},
+ {w:'Einkommen und Vermögen sollen fair verteilt sein, damit alle am Wohlstand teilhaben können.',
+  l:'Wer wenig verdient, spart bei Kleidung und Kosmetik zuerst. Das merkst du an der Kasse – und deine Beschäftigten merken es auf dem Lohnzettel.',
+  m:'z. B. Einkommensverteilung oder Armutsrisiko-Quote',
+  q:{q:'Der Mindestlohn steigt. Welches Ziel soll damit vor allem gestärkt werden?',o:['Gerechte Verteilung','Außenwirtschaftliches Gleichgewicht','Preisniveaustabilität'],c:0,x:'Der Mindestlohn soll Einkommen am unteren Ende anheben.'},
+  s:'Gerecht heißt nicht gleich – sondern fair.'}
+];
+/* t: 0 Konflikt, 1 Harmonie, 2 neutral, 3 kommt drauf an */
+const REL={
+ '0-1':{t:0,x:'Läuft die Wirtschaft heiß, stellen Läden ein und die Preise steigen. Bremst die Zentralbank die Preise mit höheren Zinsen, werden weniger Leute eingestellt.'},
+ '0-2':{t:0,x:'Ein Boom treibt die Preise. Wer die Preise dämpft (z. B. mit höheren Zinsen), bremst auch Umsatz und Wachstum.'},
+ '0-3':{t:0,x:'Zölle machen Importware teurer. Hohe Exportüberschüsse können Geld ins Land bringen und die Preise im Inland treiben.'},
+ '0-4':{t:0,x:'Klimaschutz (z. B. ein CO₂-Preis) macht Energie und viele Waren erst einmal teurer.'},
+ '0-5':{t:1,x:'Stabile Preise schützen kleine Einkommen und kleine Renten – dort schlägt Inflation am stärksten zu.'},
+ '1-2':{t:1,x:'Mehr Umsatz im Laden bedeutet mehr Personal. Und wer Arbeit hat, kauft mehr.'},
+ '1-3':{t:1,x:'Exporte sichern Arbeitsplätze – auch bei Zulieferern und im Großhandel.'},
+ '1-4':{t:3,x:'Strenge Regeln können Jobs kosten. Grüne Technik (z. B. Solardächer) schafft neue.'},
+ '1-5':{t:1,x:'Wer Arbeit hat, hat Einkommen – das verbessert auch die Verteilung.'},
+ '2-3':{t:1,x:'Exporte treiben das Wachstum. Aber: Ein dauerhaft sehr hoher Überschuss ist selbst ein Problem.'},
+ '2-4':{t:0,x:'Mehr Konsum, Verkehr und Verpackung belasten oft die Umwelt.'},
+ '2-5':{t:3,x:'Wachstum kann Einkommen erhöhen – aber nicht automatisch bei allen gleich.'},
+ '3-4':{t:2,x:'Meist kein direkter Zusammenhang – außer bei langen Transportwegen.'},
+ '3-5':{t:2,x:'Direkt kaum Verbindung. Außenhandel wirkt eher über Jobs und Preise.'},
+ '4-5':{t:0,x:'Klimaschutz kostet Geld – das trifft Menschen mit kleinem Einkommen oft härter.'}
+};
+const RELT=[['🔥 Zielkonflikt','k','#ffd6d9'],['🤝 Zielharmonie','h','#d9f5e8'],['😐 Zielneutralität','nn','#eee'],['🤔 Kommt drauf an','nn','#fff2c2']];
+const WERK=[
+ {ic:'🏦',n:'Geldpolitik',w:'Die Europäische Zentralbank (EZB) steuert Zinsen und Geldmenge.',b:'Zins hoch: Kredite für den Laden werden teurer, die Preise steigen langsamer.'},
+ {ic:'🏛️',n:'Fiskalpolitik',w:'Der Staat steuert mit Steuern und Ausgaben.',b:'Mehrwertsteuer runter oder Konjunkturprogramm: Kundschaft hat mehr Geld oder es gibt mehr Aufträge.'},
+ {ic:'📜',n:'Ordnungspolitik',w:'Der Staat setzt Regeln und Gesetze.',b:'Mindestlohn, Ladenöffnungszeiten, Zölle, Verpackungsregeln: Sie ändern Kosten und Spielraum im Laden.'}
+];
+function chainCard(k){return `<div class="card chain"><h3>🔗 So hängt es zusammen</h3>${k.map((s,i)=>`<div class="st"><span class="num">${i+1}</span><span>${esc(s)}</span></div>${i<k.length-1?'<div class="ar">⬇</div>':''}`).join('')}</div>`}
+function relMatrix(L){const hd=ZIELE.map(z=>`<th style="text-align:center;font-size:20px">${z.ic}</th>`).join('');
+ const rows=ZIELE.map((z,i)=>`<tr><th style="font-size:20px">${z.ic}</th>${ZIELE.map((_,j)=>{if(j<=i)return '<td style="background:#f3f3f3"></td>';const r=REL[i+'-'+j];const sel=L.rx===i&&L.ry===j;return `<td style="text-align:center;padding:2px"><button class="btn" style="margin:0;padding:6px 8px;background:${RELT[r.t][2]};${sel?'outline:4px solid #1d3557':''}" data-a="rel" data-x="${i}" data-y="${j}">${RELT[r.t][0].split(' ')[0]}</button></td>`}).join('')}</tr>`).join('');
+ let box='<div class="hint">👆 Tippe ein Feld an: Wie hängen zwei Ziele zusammen?</div>';
+ if(L.rx!=null){const r=REL[L.rx+'-'+L.ry];box=`<div class="card" style="background:${RELT[r.t][2]}"><b>${ZIELE[L.rx].ic} ${ZIELE[L.rx].s} ↔ ${ZIELE[L.ry].ic} ${ZIELE[L.ry].s}</b><div><span class="pill ${RELT[r.t][1]}">${RELT[r.t][0]}</span></div><div style="margin-top:6px">${esc(r.x)}</div></div>`}
+ return `<table style="max-width:440px"><tr><th></th>${hd}</tr>${rows}</table>${box}`}
+function vLern(){const L=lern,st=L.st,total=ZIELE.length+3;
+ const prog=`<div class="card"><div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><b>Lernpfad:</b>${ZIELE.map((z,i)=>`<span class="pill" style="${st>i?'background:#ffbe0b':'opacity:.4'}">${z.ic}</span>`).join('')}<span class="muted">Schritt ${st+1} von ${total}</span></div></div>`;
+ let body='',nextOk=true,last=false;
+ if(st===0){body=`<div class="card"><h2>🎓 Was will Wirtschaftspolitik überhaupt?</h2><div>Stell dir vor, du führst einen Laden. Du willst <b>niedrige Preise</b> für die Kundschaft, <b>gute Löhne</b> für dein Team, <b>viel Umsatz</b> und einen <b>sauberen Betrieb</b> – alles gleichzeitig. Das geht selten. Genau vor diesem Problem steht auch die Politik.</div><div style="text-align:center">${radar([70,70,70,70,70,70])}</div><div>Seit dem <b>Stabilitätsgesetz von 1967</b> gibt es vier Ziele – das <b>magische Viereck</b>: ${[0,1,2,3].map(i=>`<span class="pill">${ZIELE[i].ic} ${ZIELE[i].s}</span>`).join('')}</div><div style="margin-top:6px">Heute kommen oft zwei dazu: ${[4,5].map(i=>`<span class="pill">${ZIELE[i].ic} ${ZIELE[i].s}</span>`).join('')} – das <b>magische Sechseck</b>.</div><div class="fact">💡 „Magisch“ heißt: Alle Ziele gleichzeitig zu erreichen ist fast unmöglich – wie ein Zaubertrick.</div><div class="muted">Gleich lernst du die Ziele <b>eins nach dem anderen</b> kennen – jedes mit Beispiel aus dem Laden.</div></div>`}
+ else if(st<=ZIELE.length){const i=st-1,Z=ZIELE[i],D=LERN[i],q=D.q,qa=L.qa[st],done=qa!==undefined;nextOk=done;
+  body=`<div class="card"><span class="tag">Ziel ${st} von 6</span><div class="ev"><div class="ic">${Z.ic}</div><div><h2>${esc(Z.n)}</h2></div></div>
+  <div class="fact"><b>Was heißt das?</b><br>${esc(D.w)}</div>
+  <div class="fact" style="background:#fff2c2;border-color:var(--ink)"><b>🏪 Im Laden:</b><br>${esc(D.l)}</div>
+  <div><b>📏 Woran misst man es?</b> ${esc(D.m)}</div><div style="margin-top:6px">💡 ${esc(Z.f)}</div></div>
+  <div class="card"><h3>❓ Mini-Check</h3><div>${esc(q.q)}</div>${q.o.map((o,k)=>`<button class="ms ${done?(k===q.c?'sel':(k===qa?'chosen':'')):''}" data-a="lern-q" data-i="${k}" ${done?'disabled':''}><b>${esc(o)}</b></button>`).join('')}${done?`<div class="${qa===q.c?'ok':'bad'}">${qa===q.c?'Richtig!':'Nicht ganz.'} ${esc(q.x)}</div><div class="hint" style="margin-top:8px">📌 Merksatz: ${esc(D.s)}</div>`:''}</div>`}
+ else if(st===ZIELE.length+1){body=`<div class="card"><h2>🕸️ Wie hängen die Ziele zusammen?</h2><div>Jetzt kommt der spannende Teil: Die sechs Ziele beeinflussen sich gegenseitig. <span class="pill k">🔥 Zielkonflikt</span> heißt: Was dem einen Ziel hilft, schadet dem anderen. <span class="pill h">🤝 Zielharmonie</span> heißt: Beide werden besser. <span class="pill nn">😐 Zielneutralität</span> heißt: Sie haben nichts miteinander zu tun.</div></div><div class="card">${relMatrix(L)}</div>`}
+ else{last=true;body=`<div class="card"><h2>🧰 Wer steuert was?</h2><div>Die Politik hat drei Werkzeugkästen. Im Spiel wirst du sie alle benutzen:</div>${WERK.map(w=>`<div class="card" style="margin:8px 0"><div class="role"><div class="ic">${w.ic}</div><div><h3>${w.n}</h3><div>${esc(w.w)}</div><div class="muted">🏪 ${esc(w.b)}</div></div></div></div>`).join('')}<div class="hint">Gleich beginnt das Spiel: 8 Krisen in Kaufstadt. Bei jeder Maßnahme siehst du, wie sich die Ziele verändern – und <b>warum</b>.</div></div>`}
+ return prog+body+`<div>${st>0?'<button class="btn w" data-a="lern-prev">◀ Zurück</button>':''}${last?'<button class="btn big r" data-a="lern-play">Zum Spiel ▶</button>':`<button class="btn big r" data-a="lern-next" ${nextOk?'':'disabled'}>Weiter ▶</button>`}</div>`}
+
 /* ---------- Hilfsfunktionen ---------- */
 const zone=v=>v<35?'z-r':v<65?'z-y':'z-g';
 function gauges(g,gp){return ZIELE.map((z,i)=>{const d=gp?g[i]-gp[i]:0;return `<div class="g"><div style="font-size:24px">${z.ic}</div><div><div class="nm">${z.s}</div><div class="bar"><i class="${zone(g[i])}" style="width:${g[i]}%"></i></div></div><div class="dl ${d>0?'up':d<0?'dn':''}">${gp?(d>0?'+':'')+d:g[i]}</div></div>`}).join('')}
@@ -2495,7 +2626,7 @@ function conflicts(e){const up=[],dn=[];e.forEach((v,i)=>{if(v>=3)up.push(i);if(
   if(up.length)return `<div><b>Zielharmonie:</b> <span class="pill h">🤝 ${up.map(u=>ZIELE[u].s).join(' + ')} verbessern sich gemeinsam</span></div>`;
   if(dn.length)return `<div><b>Alle Ziele rutschen ab:</b> <span class="pill k">${dn.map(u=>ZIELE[u].s).join(', ')} ↓</span></div>`;
   return `<div><b>Zielneutralität:</b> <span class="pill nn">kaum Wirkung</span></div>`}
-function eventCard(i){const E=EV[i];return `<div class="card"><span class="tag">Runde ${i+1} von ${EV.length}</span><div class="ev"><div class="ic">${E.ic}</div><div><h2>${esc(E.t)}</h2><div>${esc(E.txt)}</div></div></div>${E.photo?`<img class="photo" src="${SHIP}" alt="Containerschiff"><div class="cred">Foto: Frank Schulenburg, CC BY-SA 4.0, Wikimedia Commons („Container ship from Hamburg passing the Golden Gate.jpg“)</div>`:''}<div class="grid g2" style="margin-top:8px"><div class="meme"><div class="e">${E.meme[2]}</div><div>${esc(E.meme[0])}</div><div style="color:#ffbe0b">${esc(E.meme[1])}</div></div><div class="fact">💡 <b>Side Fact:</b> ${esc(E.f)}</div></div></div>`}
+function eventCard(i){const E=EV[i];return `<div class="card"><span class="tag">Runde ${i+1} von ${EV.length}</span><div class="ev"><div class="ic">${E.ic}</div><div><h2>${esc(E.t)}</h2><div>${esc(E.txt)}</div></div></div>${E.photo?`<img class="photo" src="${SHIP}" alt="Containerschiff"><div class="cred">Foto: Frank Schulenburg, CC BY-SA 4.0, Wikimedia Commons („Container ship from Hamburg passing the Golden Gate.jpg“)</div>`:''}<div class="fact" style="background:#fff2c2;border-color:var(--ink)">🏪 <b>So trifft es deinen Laden:</b> ${esc(E.ez)}</div><div class="fact">📖 <b>${esc(E.kn[0])}:</b> ${esc(E.kn[1])}</div><div class="grid g2" style="margin-top:8px"><div class="meme"><div class="e">${E.meme[2]}</div><div>${esc(E.meme[0])}</div><div style="color:#ffbe0b">${esc(E.meme[1])}</div></div><div class="fact">💡 <b>Side Fact:</b> ${esc(E.f)}</div></div></div>`}
 function radar(g){const cx=130,cy=130,R=90;const pt=(i,v)=>{const a=-Math.PI/2+i*Math.PI/3;return [cx+Math.cos(a)*R*v/100,cy+Math.sin(a)*R*v/100]};
   const ring=v=>ZIELE.map((_,i)=>pt(i,v).join(',')).join(' ');
   return `<svg viewBox="0 0 260 260" style="max-width:300px;width:100%"><polygon points="${ring(100)}" fill="#fff" stroke="#1b1b2f" stroke-width="2"/><polygon points="${ring(65)}" fill="#e6f7f1" stroke="#2a9d8f" stroke-dasharray="4 3"/><polygon points="${ring(35)}" fill="none" stroke="#e63946" stroke-dasharray="4 3"/>${ZIELE.map((_,i)=>{const p=pt(i,100);return `<line x1="${cx}" y1="${cy}" x2="${p[0]}" y2="${p[1]}" stroke="#bbb"/>`}).join('')}<polygon points="${g.map((v,i)=>pt(i,v).join(',')).join(' ')}" fill="rgba(255,190,11,.65)" stroke="#1b1b2f" stroke-width="3"/>${ZIELE.map((z,i)=>{const p=pt(i,118);return `<text x="${p[0]}" y="${p[1]}" text-anchor="middle" dominant-baseline="middle" font-size="19">${z.ic}</text>`}).join('')}</svg>`}
@@ -2504,12 +2635,12 @@ function greenCount(g){return g.filter(v=>v>=65).length}
 function medal(n){return n>=5?'🥇 Wirtschaftsminister:in mit Fingerspitzengefühl':n>=3?'🥈 Solide Kabinettsarbeit':n>=1?'🥉 Politik ist eben ein Kompromiss':'🪙 Alles im roten Bereich – nächstes Mal besser!'}
 function resultBlock(r,ch,gp,g,ro){const E=EV[r],m=E.ms[ch];const e=m.e;
   return `<div class="card"><h2>${m.ic} Beschlossen: ${esc(m.n)}</h2><div class="muted">${esc(m.t)}</div>${gauges(g,gp)}</div>
-  <div class="card">${conflicts(e)}<div style="margin-top:8px">${esc(m.x)}</div></div>`+
+  ${chainCard(m.k)}<div class="card">${conflicts(e)}<div style="margin-top:8px">${esc(m.x)}</div><div class="muted" style="margin-top:6px">Zielkonflikt = Was dem einen Ziel hilft, schadet dem anderen. Zielharmonie = Beide Ziele werden besser.</div></div>`+
   (ro!=null?`<div class="card role"><div class="mood">${MOODS[moodOf(ro,e)]}</div><div><b>${esc(ROLLEN[ro].n)}</b><div>${esc(ROLLEN[ro].m[moodOf(ro,e)>=3?1:0])}</div></div></div>`:'')}
 function endBlock(g,h){const n=greenCount(g);return `<div class="card" style="text-align:center"><h2>🏁 Zeugnis des Kabinetts</h2>${radar(g)}<div style="font-size:20px;font-weight:800">${medal(n)}</div><div>${n} von 6 Zielen im grünen Bereich (≥ 65)</div></div><div class="card"><h3>Eure Beschlüsse</h3>${h.map((c,r)=>`<div>${EV[r].ic} <b>${esc(EV[r].t)}:</b> ${EV[r].ms[c].ic} ${esc(EV[r].ms[c].n)}</div>`).join('')}</div><div class="card"><h3>🗣️ Zum Weiterdenken</h3><div>• Welches Ziel hat euer Kabinett am stärksten vernachlässigt – und wer hat darunter gelitten?</div><div>• Gibt es überhaupt eine Politik, die alle sechs Ziele gleichzeitig erreicht? Warum heißt das Viereck „magisch“?</div><div>• Welche Maßnahme hätte euren Ausbildungsbetrieb besonders getroffen?</div></div>`+glossary()}
 
 /* ---------- Zustand ---------- */
-let M='home',solo=null,kc=null,T=null,ST=null,pollT=null,lastHash='';
+let M='home',solo=null,kc=null,T=null,ST=null,pollT=null,lastHash='',lern=null;
 const store={get(k){try{return sessionStorage.getItem(k)}catch(e){return null}},set(k,v){try{sessionStorage.setItem(k,v)}catch(e){}},del(k){try{sessionStorage.removeItem(k)}catch(e){}}};
 async function api(a,p){try{const r=await fetch(API+'/api/wp',{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(Object.assign({a},p))});return await r.json()}catch(e){return {ok:false,err:'Keine Verbindung zum Server'}}}
 function stopPoll(){if(pollT){clearInterval(pollT);pollT=null}lastHash=''}
@@ -2518,7 +2649,7 @@ function set(html){$('#app').innerHTML=html;window.scrollTo(0,0)}
 /* ---------- Ansichten ---------- */
 function vHome(){const p=new URLSearchParams(location.search);const code=(p.get('raum')||'').toUpperCase();
  return `<div class="card" style="background:var(--y)"><h1 style="font-size:34px">🏬 Kabinett Kaufstadt</h1><div style="font-size:18px">Wirtschaftspolitische Ziele und ihre Konflikte – aus Sicht des Einzelhandels. Ihr regiert die Stadt Kaufstadt: Acht Krisen, vier Maßnahmen pro Krise, sechs Ziele im Blick.</div></div>
- <div class="grid g3"><div class="card"><h3>🎮 Einzelspiel</h3><div class="muted">Du bist Wirtschaftsminister:in. Wähle eine Rolle und steuere durch 8 Krisen.</div><button class="btn big r" data-a="solo-start">Los geht’s</button></div>
+ <div class="card" style="background:#e8f4f8"><h3>📖 Schritt 1: Lernpfad – die Ziele Schritt für Schritt</h3><div>Erst die sechs Ziele einzeln kennenlernen (mit Beispielen aus dem Laden), dann sehen, wie sie zusammenhängen – danach macht das Spiel richtig Sinn.</div><button class="btn big r" data-a="lern-start">Lernpfad starten</button></div><div class="grid g3"><div class="card"><h3>🎮 Einzelspiel</h3><div class="muted">Du bist Wirtschaftsminister:in. Wähle eine Rolle und steuere durch 8 Krisen.</div><button class="btn big r" data-a="solo-start">Direkt spielen</button></div>
  <div class="card"><h3>🔎 Konflikt-Check</h3><div class="muted">10 Blitzfragen: Zielkonflikt, Zielharmonie oder Zielneutralität?</div><button class="btn big t" data-a="kc-start">Training</button></div>
  <div class="card"><h3>👩‍🏫 Klassenmodus</h3><div class="muted">Lehrkraft eröffnet einen Raum, alle bekommen eine Rolle und stimmen ab.</div><button class="btn big n" data-a="t-create">Raum eröffnen</button></div></div>
  <div class="card"><h3>🙋 Einem Raum beitreten</h3><input id="jc" placeholder="Raumcode" maxlength="4" value="${esc(code)}" style="width:130px;text-transform:uppercase"><input id="jn" placeholder="Dein Name" maxlength="20"><button class="btn" data-a="join">Beitreten</button><div id="jerr" class="bad"></div></div>
@@ -2554,7 +2685,7 @@ function vStudent(){const s=ST,m=s.meta;const hd=`<div class="card"><span class=
  if(m.ph==='result')return hd+resultBlock(m.r,m.ch,m.gp,m.g,s.role)+`<div class="card"><div class="muted">Stimmen: ${EV[m.r].ms.map((x,i)=>x.ic+' '+(m.ct[i]||0)).join(' · ')}</div><div class="fact">🗣️ <b>Diskussion:</b> ${esc(EV[m.r].dq)}</div></div><div class="card hint">Warte auf die nächste Runde …</div>`;
  return hd+endBlock(m.g,m.h)}
 
-function render(){if(M==='home')set(vHome());else if(M==='solo')set(vSolo());else if(M==='kc')set(vKC());else if(M==='teacher')set(vTeacher());else if(M==='student')set(vStudent())}
+function render(){if(M==='home')set(vHome());else if(M==='lern')set(vLern());else if(M==='solo')set(vSolo());else if(M==='kc')set(vKC());else if(M==='teacher')set(vTeacher());else if(M==='student')set(vStudent())}
 
 /* ---------- Klassenmodus: Lehrkraft ---------- */
 async function tCreate(){const r=await api('create',{});if(!r.ok){alert(r.err);return}T={code:r.c,hk:r.hk,meta:r.meta,pl:[],votes:{}};store.set('wp-t',JSON.stringify({c:r.c,hk:r.hk}));M='teacher';stopPoll();render();pollT=setInterval(tPoll,3000)}
@@ -2579,6 +2710,12 @@ function sLeave(){stopPoll();ST=null;store.del('wp-s');M='home';render()}
 document.addEventListener('click',async e=>{const b=e.target.closest('[data-a]');if(!b||b.disabled)return;const a=b.dataset.a,i=Number(b.dataset.i);
  switch(a){
   case 'home':if(M==='teacher'||M==='student'){if(!confirm('Raum wirklich verlassen?'))return;if(M==='teacher')tLeave();else sLeave();return}stopPoll();M='home';render();break;
+  case 'lern-start':lern={st:0,qa:{},rx:null,ry:null};M='lern';render();break;
+  case 'lern-next':lern.st++;render();break;
+  case 'lern-prev':lern.st--;render();break;
+  case 'lern-q':if(lern.qa[lern.st]!==undefined)return;lern.qa[lern.st]=i;{const y=window.scrollY;render();window.scrollTo(0,y)}break;
+  case 'rel':lern.rx=Number(b.dataset.x);lern.ry=Number(b.dataset.y);{const y=window.scrollY;render();window.scrollTo(0,y)}break;
+  case 'lern-play':solo={ph:'role'};M='solo';render();break;
   case 'solo-start':solo={ph:'role'};M='solo';render();break;
   case 'role':solo={role:i,r:0,g:[50,50,50,50,50,50],ph:'vote',pts:0,h:[],qa:null};solo.g=addv(solo.g,EV[0].sc);solo.gp=solo.g.slice();render();break;
   case 'pick':{solo.ch=i;solo.gp=solo.g.slice();solo.g=addv(solo.g,EV[solo.r].ms[i].e);solo.h.push(i);solo.qa=null;solo.ph='result';render();break}
