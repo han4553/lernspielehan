@@ -2790,22 +2790,29 @@ const City=(function(){
   {ro:13,pos:()=>({x:70,y:258}),hi:'Ich bin Max, suche Arbeit.',goal:'👷 Hoher Beschäftigungsstand',txt:'Ich suche seit Monaten Arbeit. Die Schlange vor der Arbeitsagentur wird länger, wenn es der Wirtschaft schlecht geht. Hoher Beschäftigungsstand heißt: Wer arbeiten will, findet Arbeit. Ohne Job und Hilfe landet man schlimmstenfalls auf der Straße.',w:'Die Warteschlange, das Zeltlager und die Zahl der Beschäftigten. Staatsausgaben schaffen Aufträge und Jobs: dein dritter Regler.'},
   {ro:6,pos:()=>({x:256,y:266}),hi:'Hi, ich bin Klara!',goal:'🌱 Umweltschutz und Nachhaltigkeit',txt:'Ich engagiere mich für saubere Umwelt. Siehst du den Müll, den Smog und die kahlen Bäume? Wenn Umwelt zu kurz kommt, verdreckt die Stadt. Nachhaltigkeit heißt: Wir wirtschaften so, dass auch morgen noch Luft, Wasser und Natur da sind.',w:'Himmel, Fabrikrauch, Müll auf der Straße, das Wasser im Hafen und die Bäume im Park: Hier siehst du, wie es der Umwelt geht.'}];
  const GT=[['Alles wird immer teurer!','stabile Preise','Die Preise sind ruhig.'],['Ich habe Angst um meinen Job.','sichere Arbeitsplätze','Mein Job ist sicher.'],['Kaum Aufträge, nichts wächst.','Aufschwung und neue Aufträge','Hier geht richtig was voran!'],['Zölle und Stau im Hafen.','fairen, freien Handel','Der Handel läuft.'],['Überall Müll und dicke Luft!','saubere Luft und eine grüne Stadt','Frische Luft und grüne Bäume.'],['Wenige haben alles, viele zu wenig.','eine gerechte Verteilung von Einkommen und Vermögen','Es geht gerecht zu in Kaufstadt.']];
- function persona(ro,g){if(ro===-1)return{n:'Superreicher',ic:'🎩',mood:'😎',an:g[5]<40?'Steuern auf Vermögen sind eine Zumutung!':null,good:'Ich zahle gern meinen fairen Anteil.',wish:g[5]<40?'noch weniger Steuern für uns Reiche':'dass alle eine Chance haben'};
+ const NP=['Lena','Paul','Mia','Emre','Sofia','Tom','Aylin','Noah','Clara','Ben','Fatma','Luka','Hanna','Omar','Greta','Felix','Nele','Yusuf','Ida','Karl','Rosa','Leon','Mira','Finn','Zoe','Jan','Eva','Ahmet','Lotte','Mats','Dilara','Theo','Amelie','Kemal','Pia','Jonte','Selin','Ole','Franka','Murat','Inga','Ruben','Alva','Samir','Tilda','Bruno','Jule','Nico'],ICS=['🧑','👩','👨','🧔','👵','👴','🧑‍🦱','👩‍🦰'],GENC={};
+ function GEN(k,kind,base){const key=k+'|'+kind;if(!GENC[key]){let h=k*2654435761%4294967296;const r=()=>{h=(h*1103515245+12345)%2147483648;return h};GENC[key]={n:NP[k%NP.length]+', '+kind,ic:ICS[k%ICS.length],w:[0,1,2,3,4,5].map(()=>r()%4),base}}return GENC[key]}
+ const RICHP=[{n:'Herr von Goldberg, Superreicher',ic:'🎩',w:[0,0,0,0,0,0],base:-1},{n:'Frau Silberstein, Superreiche',ic:'👑',w:[0,0,0,0,0,0],base:-1}],CRANEP={n:'Gerda, Kranführerin',ic:'🏗️',w:[1,2,1,3,1,1]},KID0={n:'Lea, Sabines Tochter',ic:'👧',w:[2,1,0,0,3,2]},KID1={n:'Paul, Sabines Sohn',ic:'👦',w:[2,1,0,0,3,2]};
+ const rb=ro=>ro&&typeof ro==='object'?ro.base:ro;
+ let sid=0;
+ function persona(ro,g){if(ro&&typeof ro==='object'&&ro.base===-2)return{n:ro.n,ic:'🧍',mood:'😢',an:'Nachts ist es kalt und die Miete war nicht mehr zu zahlen.',wish:'ein Dach über dem Kopf und eine faire Chance'};
+  if(ro&&typeof ro==='object'&&ro.base===-1){const p=persona(-1,g);p.n=ro.n;p.ic=ro.ic;return p}
+  if(ro===-1)return{n:'Superreicher',ic:'🎩',mood:'😎',an:g[5]<40?'Steuern auf Vermögen sind eine Zumutung!':null,good:'Ich zahle gern meinen fairen Anteil.',wish:g[5]<40?'noch weniger Steuern für uns Reiche':'dass alle eine Chance haben'};
   if(ro===-2)return{n:'Mensch ohne Wohnung',ic:'🧍',mood:'😢',an:'Nachts ist es kalt und die Miete war nicht mehr zu zahlen.',wish:'ein Dach über dem Kopf und eine faire Chance'};
-  const w=RL[ro].w,R0=RL[ro],sc=g.map((v,i)=>({i,s:(w[i]+.3)*(65-v)})).sort((a,b)=>b.s-a.s),wi=sc[0].i,v=g[wi],nm=R0.n.split(',')[0]+','+R0.n.split(',')[1];
+  const R0=typeof ro==='object'?ro:RL[ro],w=R0.w,sc=g.map((v,i)=>({i,s:(w[i]+.3)*(65-v)})).sort((a,b)=>b.s-a.s),wi=sc[0].i,v=g[wi],nm=R0.n;
   if(v>=65){const bi=g.map((x,i)=>({i,x:x*(w[i]+.3)})).sort((a,b)=>b.x-a.x)[0].i;return{n:nm,ic:R0.ic,mood:'😊',good:GT[bi][2],wish:'dass es so bleibt'}}
   return{n:nm,ic:R0.ic,mood:v<35?'😠':'😕',an:GT[wi][0],wish:GT[wi][1],an2:g[sc[1].i]<45?GT[sc[1].i][0]:null}}
  function personaHtml(p){return `<b>${p.ic} ${p.n}</b> ${p.mood}<br>${p.an?'😠 '+p.an:'😊 '+p.good}${p.an2?'<br>😠 '+p.an2:''}<br>🙏 <i>Ich wünsche mir: ${p.wish}.</i>`}
  const RICHT=['Mein dritter Zweitwohnsitz… 🏝️','Steuern? Dafür gibt es Anwälte! 💼','Champagner zum Frühstück 🥂'],BEGT=['Haben Sie etwas Kleingeld? 🙏','Brrr, so kalt heute…','Danke für den Kaffee ☕'];
  function people(m){const L=[],g=tg;
-  OPEN.forEach((o,i)=>{if(o){const n=Math.max(1,Math.round(m.be/40*4));for(let k=0;k<n;k++)L.push({x:X0[i]+11+k*7.5,y:123,ro:k===0?(i===0?8:i===1?9:2):2})}});
+  OPEN.forEach((o,i)=>{if(o){const n=Math.max(1,Math.round(m.be/40*4));for(let k=0;k<n;k++)L.push({x:X0[i]+11+k*7.5,y:123,ro:k===0&&i<2?(i===0?8:9):GEN(i*4+k,'Verkäufer:in')})}});
   sh.forEach(s=>{if(s.st!==1)L.push({x:s.x,y:s.y,ro:s.ro,ref:s})});
-  for(let i=0;i<Math.min(12,m.al);i++){const r=i%6,rw=i<6?0:1;L.push({x:70+r*10+rw*4,y:258-rw*10,ro:i===0?13:[3,2,1,4,7,5][r]})}
-  for(let i=0;i<m.ob;i++)L.push({x:194+i*9,y:264,ro:-2});
-  const nb=Math.round(cl((55-g[5])/55,0,1)*3);[[236,157],[56,157],[20,157]].slice(0,nb).forEach(b=>L.push({x:b[0],y:b[1],ro:-2}));
-  const nr=Math.round(cl((45-g[5])/45,0,1)*3);if(nr>=1)L.push({x:296,y:248,ro:-1});if(nr>=2)L.push({x:richW.x,y:157,ro:-1,ref:richW});
-  L.push({x:100,y:238,ro:11},{x:158,y:248,ro:12},{x:168,y:248,ro:3},{x:176,y:248,ro:4},{x:craneX,y:106,ro:10},{x:262,y:150,ro:10},{x:256,y:266,ro:6});
-  if(g[5]>=55)L.push({x:258,y:284,ro:6},{x:268,y:284,ro:3});
+  for(let i=0;i<Math.min(12,m.al);i++){const r=i%6,rw=i<6?0:1;L.push({x:70+r*10+rw*4,y:258-rw*10,ro:i===0?13:GEN(12+i,'arbeitssuchend')})}
+  for(let i=0;i<m.ob;i++)L.push({x:194+i*9,y:264,ro:GEN(24+i,'ohne Wohnung',-2)});
+  const nb=Math.round(cl((55-g[5])/55,0,1)*3);[[236,157],[56,157],[20,157]].slice(0,nb).forEach((b,i)=>L.push({x:b[0],y:b[1],ro:GEN(29+i,'bettelt',-2)}));
+  const nr=Math.round(cl((45-g[5])/45,0,1)*3);if(nr>=1)L.push({x:296,y:248,ro:RICHP[0]});if(nr>=2)L.push({x:richW.x,y:157,ro:RICHP[1],ref:richW});
+  L.push({x:100,y:238,ro:11},{x:158,y:248,ro:12},{x:168,y:248,ro:KID0},{x:176,y:248,ro:KID1},{x:craneX,y:106,ro:CRANEP},{x:262,y:150,ro:10},{x:256,y:266,ro:6});
+  if(g[5]>=55)L.push({x:258,y:284,ro:GEN(44,'Anwohner:in')},{x:268,y:284,ro:GEN(45,'Anwohner:in')});
   L.push({x:dog.x,y:dog.y||160,dog:1,ref:dog});return L}
  function house(x,y,w,c,lit){R(x,y-26,w,26,c);cx.fillStyle='#b5503c';cx.beginPath();cx.moveTo(x-3,y-26);cx.lineTo(x+w/2,y-38);cx.lineTo(x+w+3,y-26);cx.fill();R(x+w/2-3,y-12,6,12,'#6b4a2b');for(const wx of[x+3,x+w-9]){R(wx,y-22,6,6,lit?'#ffe27a':'#7a8896')}}
  function draw(m,dt){cx.setTransform(1,0,0,1,0,0);cx.clearRect(0,0,cv.width,cv.height);const z=cam.z*sc;cx.setTransform(z,0,0,z,(W/2-cam.x*cam.z)*sc,(H/2-cam.y*cam.z)*sc);
@@ -2860,7 +2867,7 @@ const City=(function(){
   if(rg.z<=3){build=(build+dt*(cl(1.2-rg.z*.3,.2,1)))%4;const hh=Math.min(20,build*6);R(244,242-hh,24,hh,'#d6b48a');R(240,226,2,16,'#d97706');R(240,226,30,2,'#d97706');R(264,226,1,6+Math.sin(tm*2)*2,'#444')}else{R(246,236,22,6,'#d97706');TX('🚧 BAUSTOPP',257,232,'#c0392b',6)}
   P(100,239,'#1d3557');R(98.5,230,3,2,'#e5484d');
   /* Häuser */
-  [[138,236,24,'#f4d6a0'],[168,236,26,'#c8e0f0'],[200,236,24,'#f1b8b8']].forEach((h,i)=>{house(h[0],h[1],h[2],h[3],cg[1]>35||i!==2||true);if(((tm*.8+i)|0)%3===0){P(h[0]+6,h[1]-16,'#ec4899',1);R(h[0]+10,h[1]-24,1.5,4,'#e9b98f')}});
+  [[138,236,24,'#f4d6a0'],[168,236,26,'#c8e0f0'],[200,236,24,'#f1b8b8']].forEach((h,i)=>{house(h[0],h[1],h[2],h[3],cg[1]>35||i!==2||true);});
   cx.fillStyle='rgba(180,180,190,.7)';for(let i=0;i<3;i++)C(150+((tm*8+i*7)%10),195-((tm*12+i*9)%18),2,'rgba(200,200,210,'+(.7-((tm*12+i*9)%18)/26)+')');
   P(168,248,'#3b82f6',1,false,tm*3);P(176,248,'#f59e0b',1,false,tm*3+1);cx.fillStyle='#fff';C(190,248+Math.abs(Math.sin(tm*3))*-4,2.3,'#ff6b6b');
   if(m.kk>55){part(130+Math.random()*100,224,'❤️')}
@@ -2908,7 +2915,7 @@ const City=(function(){
   park:()=>tg[4]>=60?['Hach, frische Luft 🌳','Die Enten sind glücklich 🦆']:tg[4]<35?['*hust* Smog! 😷','Hier liegt überall Müll!']:['Der Park ist noch okay']};
  function step(dt,m){tm+=dt;for(let i=0;i<6;i++)cg[i]+=(tg[i]-cg[i])*Math.min(1,dt*2.5);let a=AR.find(x=>x.k===area),tz=a?a.z:uz,tx=a?a.c[0]:ux,ty=a?a.c[1]:uy;if(tourI!==null){const p=TOURP[tourI].pos(),hw=W/2/2.7,hh=H/2/2.7;tz=2.7;tx=cl(p.x,hw,W-hw);ty=cl(p.y-8,hh,H-hh);if(lastTourI!==tourI){lastTourI=tourI;bubs.filter(b=>b.pin).forEach(b=>b.t=0);say(p.x,p.y-16,'👋 '+TOURP[tourI].hi,null,false,600,true);sel={x:p.x,y:p.y}}}const f=Math.min(1,dt*4);cam.x+=(tx-cam.x)*f;cam.y+=(ty-cam.y)*f;cam.z+=(tz-cam.z)*f;
   OPEN=[1,m.kk>22?1:0,m.kk>32?1:0];
-  spawnT-=dt;if(spawnT<=0){spawnT=cl(2.2-m.kk/60,.45,2.2)*(.7+Math.random()*.6);if(sh.length<9){const op=[0,1,2].filter(i=>OPEN[i]);if(op.length){const L=Math.random()<.5;sh.push({x:L?-6:230+Math.random()*60,d:L?1:-1,y:158+(Math.random()*4|0)*2,shop:rnd(op),st:0,t:0,o:Math.random()*6,ro:Math.random()*8|0,buy:Math.random()<cl(.2+m.kk/100*.8,.15,.95),col:rnd(COLS),bag:false,say:null})}}}
+  spawnT-=dt;if(spawnT<=0){spawnT=cl(2.2-m.kk/60,.45,2.2)*(.7+Math.random()*.6);if(sh.length<9){const op=[0,1,2].filter(i=>OPEN[i]);if(op.length){const L=Math.random()<.5;sh.push({x:L?-6:230+Math.random()*60,d:L?1:-1,y:158+(Math.random()*4|0)*2,shop:rnd(op),st:0,t:0,o:Math.random()*6,id:sid,ro:GEN(32+(sid++%16),'Kundschaft'),buy:Math.random()<cl(.2+m.kk/100*.8,.15,.95),col:rnd(COLS),bag:false,say:null})}}}
   for(let i=sh.length-1;i>=0;i--){const s=sh[i];if(s.st===0){const tx=DX[s.shop];s.x+=Math.sign(tx-s.x)*24*dt;if(Math.abs(tx-s.x)<2){s.st=1;s.t=.8+Math.random()}}else if(s.st===1){s.t-=dt;if(s.t<=0){s.st=2;s.bag=s.buy;s.say=!s.buy;s.t=1.2;s.d=Math.random()<.5?1:-1;if(s.buy){part(s.x,s.y-12,rnd(['❤️','💰','⭐']));if(Math.random()<.3)part(s.x+5,s.y-12,'💕')}else part(s.x,s.y-12,'💸')}}else{s.x+=s.d*24*dt;s.t-=dt;if(s.x<-10||s.x>300)sh.splice(i,1)}}
   cyc.t+=dt;const p=cyc.t/cyc.len;if(!cyc.td&&((cyc.imp&&p>.9)||(!cyc.imp&&p<.05))){cyc.td=true;trucks.push(cyc.imp?{x:262,v:-1,imp:true}:{x:-20,v:1,imp:false})}
   if(cyc.t>=cyc.len){cyc.x0=cyc.imp?QX:SX;cyc.t=0;cyc.td=false;cyc.imp=Math.random()<m.imp/Math.max(1,m.imp+m.exp);cyc.len=cl(10-(m.imp+m.exp)/6,4,10);part(340,150,'💨',-6)}
@@ -2916,7 +2923,7 @@ const City=(function(){
   if(birds.length<3&&Math.random()<dt*.4)birds.push({x:-10,y:20+Math.random()*50,o:Math.random()*6,v:20+Math.random()*15});for(let i=birds.length-1;i>=0;i--){birds[i].x+=birds[i].v*dt;if(birds[i].x>380)birds.splice(i,1)}
   parts.forEach(q=>{q.t-=dt;q.x+=q.vx*dt;q.y+=q.vy*dt});for(let i=parts.length-1;i>=0;i--)if(parts[i].t<=0)parts.splice(i,1);
   if(Math.random()<dt*.25&&cg[2]>40)part(24+Math.random()*30,150,'🕊️',-4);
-  bubT-=dt;if(bubT<=0){bubT=area?2.2:3.2;const lim=tourI!==null?0:area?3:2;if(bubs.filter(b=>!b.pin).length<lim){const vx0=cam.x-W/2/cam.z,vx1=cam.x+W/2/cam.z,vy0=cam.y-H/2/cam.z,vy1=cam.y+H/2/cam.z;const c=people(m).filter(s=>s.x>vx0+10&&s.x<vx1-10&&s.y>vy0+14&&s.y<vy1-2);if(c.length){const s=rnd(c);let t;if(s.dog)t=rnd(['Wuff! 🐶','Wau wau! ❤️','*schwanzwedel*']);else if(s.ro===-1)t=rnd(RICHT);else if(s.ro===-2)t=rnd(BEGT);else{const p=persona(s.ro,tg);t=p.mood+' '+(p.an||p.good)}say(s.x,s.y-14,t,s.ref)}}}
+  bubT-=dt;if(bubT<=0){bubT=area?2.2:3.2;const lim=tourI!==null?0:area?3:2;if(bubs.filter(b=>!b.pin).length<lim){const vx0=cam.x-W/2/cam.z,vx1=cam.x+W/2/cam.z,vy0=cam.y-H/2/cam.z,vy1=cam.y+H/2/cam.z;const c=people(m).filter(s=>s.x>vx0+10&&s.x<vx1-10&&s.y>vy0+14&&s.y<vy1-2);if(c.length){const s=rnd(c);let t;if(s.dog)t=rnd(['Wuff! 🐶','Wau wau! ❤️','*schwanzwedel*']);else if(rb(s.ro)===-1)t=rnd(RICHT);else if(rb(s.ro)===-2)t=rnd(BEGT);else{const p=persona(s.ro,tg);t=p.mood+' '+(p.an||p.good)}say(s.x,s.y-14,t,s.ref)}}}
   for(let i=bubs.length-1;i>=0;i--){const b=bubs[i];b.t-=dt;if(b.f&&b.f.x!==undefined){b.x=b.f.x;if(b.f.y!==undefined)b.y=b.f.y-14}if(b.t<=0){if(b.el)b.el.remove();bubs.splice(i,1)}}
   if(chipT>0){chipT-=dt;if(chipT<=0)chips={}}}
  function placeB(){bubs.forEach(b=>{if(!b.el){b.el=document.createElement('div');b.el.className='bb'+(b.pin?' big':'');if(b.html===true)b.el.innerHTML=b.txt;else b.el.textContent=b.txt;bbl.appendChild(b.el)}const k=cssW/W,px=((b.x-cam.x)*cam.z+W/2)*k,py=((b.y-cam.y)*cam.z+H/2)*k;const bw=b.el.offsetWidth||80,bh=b.el.offsetHeight||24;const qx=cl(px,bw/2+3,cssW-bw/2-3),qy=Math.max(py,bh+4);b.el.style.transform=`translate(${qx.toFixed(1)}px,${qy.toFixed(1)}px) translate(-50%,-100%)`;b.el.style.opacity=cl(b.t,0,.6)/.6})}
@@ -2924,7 +2931,7 @@ const City=(function(){
  function loop(now){requestAnimationFrame(loop);if(!ok||!wrap.isConnected||document.hidden)return;if(now-last<33)return;const dt=Math.min(.1,(now-last)/1000);last=now;
   const r=cv.getBoundingClientRect(),vis=!(r.bottom<0||r.top>innerHeight);{const pw=cv.parentNode.clientWidth,land=innerWidth>innerHeight&&innerHeight<700,want=Math.round(Math.max(200,land?Math.min(pw,(innerHeight-24)*W/H):pw)*dpr);if(Math.abs(cv.width-want)>4)resize()}hslEl.style.display=(cam.z<1.12&&!area&&tourI===null)?'':'none';
   const m=M(cg);step(dt,m);if(vis){try{draw(m,dt)}catch(er){window.__twErr=String(er)}placeB()}ui(m)}
- return{attach,card,rgApply:(k,v,g)=>rgApply(k,v,g),area:()=>area,tourI:()=>tourI,tourN:TOURP.length,AR,people:()=>people(M(cg)).length,dbg:()=>({ok,shoppers:sh.length,area,cam:{x:cam.x|0,y:cam.y|0,z:+cam.z.toFixed(2)},err:window.__twErr||null,bubbles:bubs.length,m:M(cg)}),open:k=>{if(ok)openA(k)}};
+ return{attach,card,rgApply:(k,v,g)=>rgApply(k,v,g),area:()=>area,tourI:()=>tourI,tourN:TOURP.length,AR,people:()=>people(M(cg)).length,names:()=>people(M(cg)).filter(p=>!p.dog).map(p=>{const pe=persona(p.ro,tg);return pe.n}),dbg:()=>({ok,shoppers:sh.length,area,cam:{x:cam.x|0,y:cam.y|0,z:+cam.z.toFixed(2)},err:window.__twErr||null,bubbles:bubs.length,m:M(cg)}),open:k=>{if(ok)openA(k)}};
 })();
 
 function cityCard(g,gp,opt){return City.card(g,gp,opt)}
