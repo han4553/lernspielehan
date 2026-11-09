@@ -85,6 +85,7 @@ select{font:inherit;font-size:16px;padding:9px 6px;border:2px solid var(--ink);b
 .big{font-size:40px;font-weight:900;color:var(--ink)}
 .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:12px;z-index:60;font-weight:700;max-width:90vw}
 @media(max-width:380px){input.num,input.amt{width:100px}.brow input.amt{width:92px}}
+.btn.lock{opacity:.55}
 </style></head><body>
 <div id="app"></div>
 <div id="big"><div id="bigqr"></div><div class="url" id="bigurl"></div><button class="btn" onclick="document.getElementById('big').style.display='none'">Schließen</button></div>
@@ -2615,7 +2616,7 @@ function partHTML(p,i){
  else if(p.t==='match'){p.rows.forEach((r,j)=>{h+='<div class="crow"><label>'+r[0]+'</label><select data-j="'+j+'"><option value="">?</option>'+p.opts.map(o=>'<option>'+o+'</option>').join('')+'</select></div>'})}
  else if(p.t==='mc'){p.opts.forEach((o,j)=>{h+='<button class="mcb" data-act="mc" data-j="'+j+'">'+o+'</button>'})}
  h+='<div class="fb"></div>';
- if(p.t!=='mc')h+='<div class="row" style="margin-top:8px"><button class="btn sm2" data-act="check">Prüfen</button><button class="btn ghost sm2" data-act="hint">Tipp</button><button class="btn ghost sm2" data-act="solve">Lösung</button></div>';
+ if(p.t!=='mc')h+='<div class="row" style="margin-top:8px"><button class="btn sm2" data-act="check">Prüfen</button><button class="btn ghost sm2" data-act="hint">Hinweis</button><button class="btn ghost sm2" data-act="weg">Rechenweg</button><button class="btn ghost sm2" data-act="solve">Lösung</button></div>';
  return h;
 }
 function stampPart(i,f,silent){const el=document.querySelector('.part[data-i="'+i+'"]');if(!el||el.querySelector('.stamp'))return;const s=document.createElement('div');s.className='stamp'+(f>=1?'':f>0?' half':' zero');s.textContent=f>=1?'BEZAHLT ✔':f>0?'GELÖST':'GEZEIGT';el.appendChild(s);el.querySelectorAll('input,select,.btn,.mcb').forEach(x=>x.disabled=true)}
@@ -2635,7 +2636,22 @@ function check(el){
   allOk=good===tot&&extra===0;fb.className='fb '+(allOk?'g':'r');fb.textContent=allOk?'Buchungssatz stimmt!':good+' von '+tot+' Buchungszeilen richtig.'+(extra?' Rote Zeilen prüfen (Konto, Seite oder Betrag).':'')+(missing&&!extra?' Es fehlt noch eine Zeile.':'')}
  if(allOk){const f=TRY[key]===1?1:0.5;record(t,i,f);stampPart(i,f);toast(f===1?'Stark! Beim ersten Versuch richtig.':'Richtig!')}
 }
-function solve(el){const t=CUR.t,i=+el.dataset.i,p=t.parts[i];
+
+// ---- gestufte Hilfe: Hinweis sofort, Rechenweg nach 60 s, Lösung nach 180 s und nach einem Versuch
+const HELP={};const W1=60,W2=180;
+function hk(){return CUR.t&&CUR.t.id}
+function hst(i){const k=hk()+':'+i;return HELP[k]||(HELP[k]={t0:Date.now(),tries:0})}
+function hleft(i,w){const s=hst(i);const fast=window.__app&&window.__app.fast;return fast?0:Math.max(0,w-Math.floor((Date.now()-s.t0)/1000))}
+function hupd(){document.querySelectorAll('.part').forEach(el=>{const i=+el.dataset.i;if(!CUR.t||!CUR.t.parts[i]||CUR.t.parts[i].t==='mc')return;const w=el.querySelector('[data-act=weg]'),s=el.querySelector('[data-act=solve]');if(!w||!s)return;const l1=hleft(i,W1),l2=hleft(i,W2),tr=hst(i).tries||(window.__app&&window.__app.fast);const m=x=>Math.floor(x/60)+':'+String(x%60).padStart(2,'0');w.textContent=l1?'Rechenweg in '+m(l1):'Rechenweg';w.classList.toggle('lock',!!l1);s.textContent=l2?'Lösung in '+m(l2):(tr?'Lösung':'Lösung: erst Prüfen');s.classList.toggle('lock',!!l2||!tr)})}
+setInterval(hupd,1000);
+function weg(part){const i=+part.dataset.i,p=CUR.t.parts[i];if(hleft(i,W1)){toast('Probiere es noch ein wenig selbst.');return}
+ let txt='';
+ if(p.t==='calc'){const r=p.rows[0];txt='Rechenweg, erste Zeile: '+r[0]+' = '+fmt(r[1])+(r[2]?' '+r[2]:'')}
+ else if(p.t==='book'){const n=x=>x.map(r=>r[0]+' '+(D.AN[r[0]]||'')).join(', ');txt='Rechenweg: Soll-Konten: '+n(p.soll)+'. Haben-Konten: '+n(p.haben)+'. Die Beträge rechnest du selbst.'}
+ else if(p.t==='match'){const r=p.rows[0];txt='Rechenweg, erste Zeile: „'+r[0]+'“ gehört zu '+r[1]}
+ let tp=part.querySelector('.tip2');if(!tp){tp=document.createElement('div');tp.className='tip';tp.classList.add('tip2');part.querySelector('.fb').after(tp)}tp.textContent=txt}
+function solve(el){const i0=+el.dataset.i;if(hleft(i0,W2)){toast('Die Lösung gibt es erst nach der Wartezeit. Nutze den Hinweis.');return}if(!hst(i0).tries&&!(window.__app&&window.__app.fast)){toast('Prüfe zuerst deine eigene Lösung. Dann wird die Lösung frei.');return}
+const t=CUR.t,i=+el.dataset.i,p=t.parts[i];
  if(p.t==='calc'){el.querySelectorAll('input.num').forEach(inp=>{const r=p.rows[+inp.dataset.j];inp.value=fmt(r[1]);inp.classList.add('ok')})}
  else if(p.t==='match'){el.querySelectorAll('select[data-j]').forEach(s=>{s.value=p.rows[+s.dataset.j][1];s.classList.add('ok')})}
  else if(p.t==='book'){[['S',p.soll],['H',p.haben]].forEach(([sd,arr])=>{const box=el.querySelector('.rows[data-s="'+sd+'"]');box.innerHTML=arr.map(brow).join('');[...box.children].forEach((r,k)=>{r.querySelector('.acc').value=arr[k][0];r.querySelector('.amt').value=fmt(arr[k][1]);r.querySelectorAll('select,input').forEach(c=>c.classList.add('ok'))})})}
@@ -2649,8 +2665,8 @@ document.addEventListener('click',e=>{
  else if(a==='add'){const box=b.parentNode.querySelector('.rows');box.insertAdjacentHTML('beforeend',brow())}
  else if(a==='next'){nextTraining()}
  else{const part=b.closest('.part');if(!part)return;
-  if(a==='check')check(part);else if(a==='solve')solve(part);
-  else if(a==='hint'){const p=CUR.t.parts[+part.dataset.i];let tp=part.querySelector('.tip');if(!tp){tp=document.createElement('div');tp.className='tip';part.querySelector('.fb').after(tp)}tp.textContent='Tipp: '+(p.hint||'Rechne Schritt für Schritt.')}
+  if(a==='check'){hst(+part.dataset.i).tries++;check(part)}else if(a==='solve')solve(part);else if(a==='weg')weg(part);
+  else if(a==='hint'){const p=CUR.t.parts[+part.dataset.i];let tp=part.querySelector('.tip');if(!tp){tp=document.createElement('div');tp.className='tip';part.querySelector('.fb').after(tp)}tp.textContent='Hinweis: '+(p.hint||'Rechne Schritt für Schritt.')}
   else if(a==='mc'){const t=CUR.t,i=+part.dataset.i,p=t.parts[i],j=+b.dataset.j;const key=t.id+':'+i;TRY[key]=(TRY[key]||0)+1;const fb=part.querySelector('.fb');if(j===p.ok){b.classList.add('ok');fb.className='fb g';fb.textContent=p.why;const f=TRY[key]===1?1:0.5;record(t,i,f);stampPart(i,f);part.querySelectorAll('.mcb').forEach(x=>x.disabled=true)}else{b.classList.add('bad');b.disabled=true;fb.className='fb r';fb.textContent='Nicht ganz. Versuch es noch einmal.'}}
  }
 });
@@ -2694,7 +2710,7 @@ function genKauf0(){const v=rnd(0,3),g=v===3?pick([['ein Handscanner','089'],['e
 function training(k){CUR.kind=k;newTraining()}
 function newTraining(){CUR.counted=0;const k=CUR.kind;const t=k==='afa'?genAfa():k==='ak'?genAk():genKauf();t.id='tr-'+k+'-'+Date.now();Object.keys(TRY).forEach(x=>{if(x.indexOf('tr-')===0)delete TRY[x]});renderTask(t,'',true)}
 function nextTraining(){newTraining()}
-window.__app={route,P:()=>P,reset:()=>{P={};save()}};
+window.__app={fast:/[?&]fast/.test(location.search),route,P:()=>P,reset:()=>{P={};save()}};
 route();
 })();
 </script></body></html>
