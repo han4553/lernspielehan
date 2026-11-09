@@ -59,6 +59,22 @@ table{border-collapse:collapse;width:100%}td,th{border-bottom:2px solid #eee;pad
 .hint{background:#fff2c2;border:3px solid var(--ink);border-radius:12px;padding:8px 12px;font-weight:700}
 
 .alltag .at{padding:8px 10px;margin-top:6px;border-radius:10px;background:#fff1f0;border-left:4px solid #e5484d;font-size:14px}.alltag .at.ok{background:#ecfbef;border-left-color:#2fa84f}
+
+.tw{border:3px solid var(--ink);border-radius:12px;overflow:hidden;background:#fff}.twd{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;padding:4px;background:#f3f5f8}.twt{background:#fff;border-radius:8px;padding:4px 5px;position:relative;cursor:pointer;border:1px solid #dde3ea;min-width:0}.twl{display:block;font-size:9.5px;color:#556;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.twv{font-size:12.5px;display:block;white-space:nowrap}.dl{position:absolute;right:3px;top:2px;font-style:normal;font-size:10px;font-weight:800;color:#667}.dl.g{color:#1f9d3f}.dl.b{color:#d63031}.twc{line-height:0}.twc canvas{width:100%;display:block}.twi{font-size:13px;padding:6px 8px;background:#fffbe6;border-top:2px solid var(--ink);line-height:1.35}
+
+main{max-width:1000px}
+.tw{position:relative}.zb{position:absolute;right:6px;top:6px;display:flex;flex-direction:column;gap:4px;z-index:5}.zb button{width:34px;height:34px;border-radius:50%;border:2px solid var(--ink);background:#fff;font:700 18px/1 sans-serif;padding:0;cursor:pointer;margin:0}
+.hs{position:absolute;pointer-events:none;border:2px dashed rgba(27,27,47,.18);border-radius:8px}.hs span{position:absolute;left:50%;top:-1px;transform:translate(-50%,-100%);background:#1b1b2f;color:#fff;font-size:9px;padding:1px 5px;border-radius:6px;white-space:nowrap}
+.hsl{position:absolute;inset:0;pointer-events:none}.twb{position:absolute;inset:0;overflow:hidden;pointer-events:none}.twc{position:relative}
+.bb{position:absolute;left:0;top:0;background:#fff;border:2px solid #1b1b2f;border-radius:12px;padding:3px 8px;font-size:12px;font-weight:700;max-width:150px;line-height:1.25;box-shadow:2px 2px 0 rgba(0,0,0,.25);transition:opacity .2s}.bb.big{max-width:210px;font-weight:600;font-size:13px;pointer-events:none;z-index:4;background:#fffbe6}
+.twn{display:none;background:#1b1b2f;color:#ffe66d;overflow:hidden;font-size:12px;padding:5px 8px}.twn.on{display:block}.twn span{display:flex;gap:18px;flex-wrap:wrap}
+.twe{display:none;background:#ffe3e3;border-bottom:2px solid var(--ink);padding:5px 8px;font-size:13px}.twt.hot{outline:2px solid #e5484d;animation:hotp 1s infinite alternate}@keyframes hotp{to{background:#ffe3e3}}
+.twp{padding:6px 8px;background:#fff;border-top:2px solid var(--ink)}.chs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px}.ch{font-size:11px;padding:3px 7px;border:2px solid var(--ink);border-radius:14px;background:#f3f5f8;cursor:pointer;margin:0}.ch.on{background:#ffe66d}
+.ph{display:flex;justify-content:space-between;align-items:center;gap:6px}.bk{font-size:12px;padding:3px 8px;border:2px solid var(--ink);border-radius:10px;background:#fff;cursor:pointer;margin:0}.pi{margin-top:5px;font-size:14px}.pi.w{background:#fff2c2;border-radius:8px;padding:5px 7px}
+.rgb{margin-top:8px;background:#e8f4f8;border-radius:10px;padding:8px}.rgb input[type=range]{width:100%}
+.rrow{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #ccc}.rbt{white-space:nowrap}.rbt .btn{padding:2px 8px;margin:0 0 0 2px}.shk{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}.shk input{width:100%;box-sizing:border-box}.setg{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.podium{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px}.pod{background:#fff;border:3px solid var(--ink);border-radius:12px;padding:8px 14px;min-width:110px}.pod.p0{background:#ffe66d;transform:scale(1.08)}
+@media (orientation:landscape) and (max-height:700px){main{max-width:1300px}.tw{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);max-height:calc(100vh - 20px)}.tw .twc{grid-column:1;grid-row:1/span 6;align-self:start}.tw>:not(.twc){grid-column:2;overflow:auto}.twd{grid-template-columns:repeat(3,1fr)!important}.twp{max-height:none}}
 </style></head>
 <body>
 <header><b id="logo" data-a="home">🏬 Kabinett Kaufstadt</b></header>
@@ -2644,28 +2660,274 @@ function gauges(g,gp){return ZIELE.map((z,i)=>{const d=gp?g[i]-gp[i]:0;return `<
 function moodOf(ro,e){const w=ROLLEN[ro].w;const sw=w.reduce((a,b)=>a+b,0);const m=e.reduce((s,v,i)=>s+v*w[i],0)/sw;return m>=4?4:m>=1.5?3:m>-1.5?2:m>-4?1:0}
 function stars(w){return w.map((v,i)=>v?`<span class="pill">${ZIELE[i].ic} ${'★'.repeat(v)}</span>`:'').join('')}
 function roleCard(ro){const R=ROLLEN[ro];return `<div class="card"><div class="role"><div class="ic">${R.ic}</div><div><h3>${esc(R.n)}</h3><div class="muted">${esc(R.b)}</div></div></div><div class="hint" style="margin-top:8px">🎯 ${esc(R.a)}</div><div class="stars" style="margin-top:6px">Wichtig für dich: ${stars(R.w)}</div></div>`}
-function hintRow(s,i){const e=EV[s.r].ms[i].e;if(s.hs[s.r+"-"+i])return `<div class="hintrow">🔍 Berater: ${e.map((v,k)=>v>=3?`<span class="pill h">${ZIELE[k].ic}↑</span>`:v<=-3?`<span class="pill k">${ZIELE[k].ic}↓</span>`:"").join("")||"kaum Wirkung"}</div>`;return `<button class="btn w" style="padding:4px 10px;font-size:13px;margin:-2px 0 8px" data-a="hint" data-i="${i}" ${s.jk>0?"":"disabled"}>🔍 Berater fragen</button>`}
+function hintRow(s,i){const e=EVR(s.r).ms[i].e;if(s.hs[s.r+"-"+i])return `<div class="hintrow">🔍 Berater: ${e.map((v,k)=>v>=3?`<span class="pill h">${ZIELE[k].ic}↑</span>`:v<=-3?`<span class="pill k">${ZIELE[k].ic}↓</span>`:"").join("")||"kaum Wirkung"}</div>`;return `<button class="btn w" style="padding:4px 10px;font-size:13px;margin:-2px 0 8px" data-a="hint" data-i="${i}" ${s.jk>0?"":"disabled"}>🔍 Berater fragen</button>`}
 function conflicts(e){const up=[],dn=[];e.forEach((v,i)=>{if(v>=3)up.push(i);if(v<=-3)dn.push(i)});
   if(up.length&&dn.length){const k=up.flatMap(u=>dn.map(d=>`<span class="pill k">🔥 ${ZIELE[u].s} ↑ ↔ ${ZIELE[d].s} ↓</span>`)).join('');return `<div><b>Zielkonflikt:</b> ${k}</div>`}
   if(up.length)return `<div><b>Zielharmonie:</b> <span class="pill h">🤝 ${up.map(u=>ZIELE[u].s).join(' + ')} verbessern sich gemeinsam</span></div>`;
   if(dn.length)return `<div><b>Alle Ziele rutschen ab:</b> <span class="pill k">${dn.map(u=>ZIELE[u].s).join(', ')} ↓</span></div>`;
   return `<div><b>Zielneutralität:</b> <span class="pill nn">kaum Wirkung</span></div>`}
-function eventCard(i){const E=EV[i];return `<div class="card"><span class="tag">Runde ${i+1} von ${EV.length}</span><div class="ev"><div class="ic">${E.ic}</div><div><h2>${esc(E.t)}</h2><div>${esc(E.txt)}</div></div></div>${E.photo?`<img class="photo" src="${SHIP}" alt="Containerschiff"><div class="cred">Foto: Frank Schulenburg, CC BY-SA 4.0, Wikimedia Commons („Container ship from Hamburg passing the Golden Gate.jpg“)</div>`:''}<div class="fact" style="background:#fff2c2;border-color:var(--ink)">🏪 <b>So trifft es deinen Laden:</b> ${esc(E.ez)}</div><div class="fact">📖 <b>${esc(E.kn[0])}:</b> ${esc(E.kn[1])}</div><div class="grid g2" style="margin-top:8px"><div class="meme"><div class="e">${E.meme[2]}</div><div>${esc(E.meme[0])}</div><div style="color:#ffbe0b">${esc(E.meme[1])}</div></div><div class="fact">💡 <b>Side Fact:</b> ${esc(E.f)}</div></div></div>`}
+function eventCard(i){const E=EVR(i);return `<div class="card"><span class="tag">Runde ${i+1} von ${SC.rounds.length}</span><div class="ev"><div class="ic">${E.ic}</div><div><h2>${esc(E.t)}</h2><div>${esc(E.txt)}</div></div></div>${E.photo?`<img class="photo" src="${SHIP}" alt="Containerschiff"><div class="cred">Foto: Frank Schulenburg, CC BY-SA 4.0, Wikimedia Commons („Container ship from Hamburg passing the Golden Gate.jpg“)</div>`:''}<div class="fact" style="background:#fff2c2;border-color:var(--ink)">🏪 <b>So trifft es deinen Laden:</b> ${esc(E.ez)}</div><div class="fact">📖 <b>${esc(E.kn[0])}:</b> ${esc(E.kn[1])}</div><div class="grid g2" style="margin-top:8px"><div class="meme"><div class="e">${E.meme[2]}</div><div>${esc(E.meme[0])}</div><div style="color:#ffbe0b">${esc(E.meme[1])}</div></div><div class="fact">💡 <b>Side Fact:</b> ${esc(E.f)}</div></div></div>`}
 function radar(g){const cx=130,cy=130,R=90;const pt=(i,v)=>{const a=-Math.PI/2+i*Math.PI/3;return [cx+Math.cos(a)*R*v/100,cy+Math.sin(a)*R*v/100]};
   const ring=v=>ZIELE.map((_,i)=>pt(i,v).join(',')).join(' ');
   return `<svg viewBox="0 0 260 260" style="max-width:300px;width:100%"><polygon points="${ring(100)}" fill="#fff" stroke="#1b1b2f" stroke-width="2"/><polygon points="${ring(65)}" fill="#e6f7f1" stroke="#2a9d8f" stroke-dasharray="4 3"/><polygon points="${ring(35)}" fill="none" stroke="#e63946" stroke-dasharray="4 3"/>${ZIELE.map((_,i)=>{const p=pt(i,100);return `<line x1="${cx}" y1="${cy}" x2="${p[0]}" y2="${p[1]}" stroke="#bbb"/>`}).join('')}<polygon points="${g.map((v,i)=>pt(i,v).join(',')).join(' ')}" fill="rgba(255,190,11,.65)" stroke="#1b1b2f" stroke-width="3"/>${ZIELE.map((z,i)=>{const p=pt(i,118);return `<text x="${p[0]}" y="${p[1]}" text-anchor="middle" dominant-baseline="middle" font-size="19">${z.ic}</text>`}).join('')}</svg>`}
 function glossary(){return `<div class="card"><h3>📚 Fachbegriffe</h3>${GLOSS.map(g=>`<div><b>${g[0]}:</b> ${g[1]}</div>`).join('')}</div>`}
 function greenCount(g){return g.filter(v=>v>=65).length}
 function medal(n){return n>=5?'🥇 Wirtschaftsminister:in mit Fingerspitzengefühl':n>=3?'🥈 Solide Kabinettsarbeit':n>=1?'🥉 Politik ist eben ein Kompromiss':'🪙 Alles im roten Bereich – nächstes Mal besser!'}
-function resultBlock(r,ch,gp,g,ro){const E=EV[r],m=E.ms[ch];const e=m.e;
+function resultBlock(r,ch,gp,g,ro){const E=EVR(r),m=ch<0?{ic:'🎚️',n:'Nur Regler eingesetzt',t:'Du hast keinen Beschluss gefasst, sondern allein mit den Reglern reagiert.',e:[0,0,0,0,0,0],k:[],x:'Regler wirken auf mehrere Ziele gleichzeitig: Wer eins verbessert, verschlechtert oft ein anderes.'}:E.ms[ch];const e=m.e;
   return `${cityCard(g,gp,{role:ro})}<div class="card"><h2>${m.ic} Beschlossen: ${esc(m.n)}</h2><div class="muted">${esc(m.t)}</div>${gauges(g,gp)}</div>
-  ${chainCard(m.k)}<div class="card">${conflicts(e)}<div style="margin-top:8px">${esc(m.x)}</div><div class="muted" style="margin-top:6px">Zielkonflikt = Was dem einen Ziel hilft, schadet dem anderen. Zielharmonie = Beide Ziele werden besser.</div></div>`+
+  ${m.k.length?chainCard(m.k):''}<div class="card">${conflicts(e)}<div style="margin-top:8px">${esc(m.x)}</div><div class="muted" style="margin-top:6px">Zielkonflikt = Was dem einen Ziel hilft, schadet dem anderen. Zielharmonie = Beide Ziele werden besser.</div></div>`+
   (ro!=null?`<div class="card role"><div class="mood">${MOODS[moodOf(ro,e)]}</div><div><b>${esc(ROLLEN[ro].n)}</b><div>${esc(ROLLEN[ro].m[moodOf(ro,e)>=3?1:0])}</div></div></div>`:'')+alltag(ro,g,'So spürst du das jetzt')}
 function endBlock(g,h){const n=greenCount(g);return `${cityCard(g)}<div class="card" style="text-align:center"><h2>🏁 Zeugnis des Kabinetts</h2>${radar(g)}<div style="font-size:20px;font-weight:800">${medal(n)}</div><div>${n} von 6 Zielen im grünen Bereich (≥ 65)</div></div><div class="card"><h3>Eure Beschlüsse</h3>${h.map((c,r)=>`<div>${EV[r].ic} <b>${esc(EV[r].t)}:</b> ${EV[r].ms[c].ic} ${esc(EV[r].ms[c].n)}</div>`).join('')}</div><div class="card"><h3>🗣️ Zum Weiterdenken</h3><div>• Welches Ziel hat euer Kabinett am stärksten vernachlässigt – und wer hat darunter gelitten?</div><div>• Gibt es überhaupt eine Politik, die alle sechs Ziele gleichzeitig erreicht? Warum heißt das Viereck „magisch“?</div><div>• Welche Maßnahme hätte euren Ausbildungsbetrieb besonders getroffen?</div></div>`+glossary()}
 
 /* ---------- 3D-Stadt „Kaufstadt live“ (isometrisch, three.js eingebettet) ---------- */
-const City={attach(){}};
-function cityCard(g,gp,opt){return ''}
+const City=(function(){
+ const W=360,H=300,noAnim=/[?&]no3d/.test(location.search);
+ let uz=1,ux=180,uy=150,dragged=false,ptrs=new Map(),pd0=0,hslEl,tourI=null,lastTourI=-1,sel=null,craneX=276,wrap,cv,cx,infoEl,panel,bbl,newsEl,evEl,tiles={},ok=false,dpr=1,sc=1,cssW=340,tg=[50,50,50,50,50,50],cg=tg.slice(),chips={},chipT=0,last=0,tm=0,area=null,tour=false,rg={z:2,s:5,a:5,mv:0,max:2,ro:false},cam={x:180,y:150,z:1},first0=true,bubT=2,cb=null;
+ const lerp=(a,b,t)=>a+(b-a)*t,e=t=>t*t*(3-2*t),cl=(v,a,b)=>Math.min(b,Math.max(a,v)),rnd=a=>a[Math.random()*a.length|0],fm=n=>Math.round(n).toLocaleString('de-DE'),dc=(v,d)=>v.toFixed(d).replace('.',',');
+ function M(g){const kk=.5*g[0]+.3*g[5]+.2*g[2],infl=cl(2+(50-g[0])*.16,.5,12),ums=Math.round(8000*(.4+kk/100*1.2)/100)*100,avg=10*(1+infl/10),stk=Math.round(ums/avg);
+  const al=Math.round(40*(.03+.3*Math.pow((100-g[1])/100,1.2))),ob=Math.round(cl((38-Math.min(g[1],g[5]+10))/38,0,1)*5),base=12*(.5+g[2]/100),d=(100-g[3])/100*.4;
+  return{kk,infl,ums,stk,al,be:40-al,ob,gw:cl((g[2]-50)*.09+1.2,-4,6),top:Math.round(35+(100-g[5])*.4),imp:Math.round(base*(1+d)),exp:Math.round(base*(1-d)),quote:Math.round(al/40*100)}}
+ const AR=[
+ {k:'laeden',ic:'🛍️',n:'Geschäfte',c:[125,112],z:1.45,r:[8,72,234,80],
+  i:['In den Läden kauft Kaufstadt ein: Supermarkt, Modehaus und Elektrohandel. Du siehst Kundschaft, Preisschilder am Fenster und Verkäuferinnen hinter der Scheibe.','Wichtig: Stabile Preise (Preisschild grün), genug Kaufkraft und Personal. Steigen die Preise zu schnell, bleibt der Einkaufswagen leer.'],
+  l:(m,g)=>[`Heute gehen ${fm(m.stk)} Stück über die Theke. Umsatz: ${fm(m.ums)} €. Preise: +${dc(m.infl,1)} % im Jahr.`,m.infl>6?'Die Kundschaft schimpft: „Alles zu teuer!“ Viele gehen mit leeren Händen.':m.infl<3?'Die Preise sind ruhig. Wer einkauft, kann planen.':'Es wird teurer, aber noch erträglich.',g[1]<35?'Hinter den Scheiben stehen weniger Beschäftigte.':'']},
+ {k:'hafen',ic:'🚢',n:'Hafen',c:[270,140],z:2,r:[248,96,112,92],
+  i:['Im Hafen kommen Importwaren an und Exportgüter fahren hinaus. Ein Kran lädt Container von Schiff zu Kai und zurück.','Wichtig: Außenwirtschaftliches Gleichgewicht. Import und Export sollten sich etwa die Waage halten. Große Schieflage führt zu Streit und Zöllen.'],
+  l:(m,g)=>[`Pro Tag kommen ${m.imp} Container an und ${m.exp} fahren hinaus.`,Math.abs(m.imp-m.exp)>5?(m.imp>m.exp?'Mehr Import als Export: Wir kaufen viel, verkaufen wenig.':'Mehr Export als Import: Handelspartner werden sauer.'):'Import und Export halten sich fast die Waage. Prima!',g[3]<35?'Zölle und Gebühren bremsen den Hafen.':'']},
+ {k:'bank',ic:'🏦',n:'Bank',c:[100,222],z:2.2,r:[68,186,62,56],reg:'z',
+  i:['In der Bank bekommen Betriebe und Familien Kredite. Das Schild zeigt den Zinssatz. Das Sparschwein auf dem Dach freut sich über Zinsen.','Wichtig: Hier hast du einen Regler: den Leitzins! Hohe Zinsen bremsen die Inflation, machen aber Kredite teurer. Niedrige Zinsen fördern Wachstum und Jobs, können aber die Preise antreiben.'],
+  l:(m,g)=>[`Leitzins: ${dc(rg.z,1)} %.`,rg.z>=4?'Kredite sind teuer: Bauprojekte stehen still, viele Anträge werden abgelehnt. Dafür lohnt sich Sparen wieder.':rg.z<=1?'Kredite sind günstig: Baustellen, neue Läden – aber die Preise können anziehen.':'Mittlere Zinsen: ein Kompromiss zwischen Preisen und Wachstum.']},
+ {k:'haus',ic:'🏠',n:'Wohnviertel',c:[181,222],z:2.2,r:[136,186,90,56],reg:'s',
+  i:['In den Wohnhäusern leben die Menschen von Kaufstadt. Was am Monatsende übrig bleibt, entscheidet, was im Laden gekauft wird. Hier zeigt sich auch die Verteilung von Einkommen und Vermögen: Bei Ungerechtigkeit gibt es Superreiche mit Villa und Menschen, die betteln.','Wichtig: Gerechte Einkommens- und Vermögensverteilung. Hier hast du den Steuer-Regler. Hohe Abgaben füllen die Staatskasse und gleichen aus, lassen aber weniger Geld im Portemonnaie.'],
+  l:(m,g)=>[`Kaufkraft der Haushalte: ${Math.round(m.kk)} von 100. Steuer- und Abgabenlast: Stufe ${rg.s} von 10.`,m.kk<35?'Am Monatsende wird gezählt: Die Familien verzichten und sparen am Essen.':m.kk>60?'Die Familien können sich etwas gönnen: Eis, Ausflug, neue Schuhe.':'Es reicht, aber ohne große Sprünge.',g[5]<35?'Die Schere geht auf: Wenige haben viel, viele haben wenig.':'']},
+ {k:'arbeit',ic:'🔍',n:'Arbeitsagentur',c:[95,222],z:1.9,r:[4,186,60,104],reg:'a',
+  i:['Wer keine Arbeit hat, geht zur Arbeitsagentur. Vor dem Gebäude siehst du die Warteschlange der Arbeitslosen und, falls es ganz schlimm wird, das Zeltlager der Obdachlosen.','Wichtig: Hoher Beschäftigungsstand. Hier hast du den Regler Staatsausgaben: Mehr Ausgaben schaffen Aufträge und Jobs, können aber die Preise anheizen.'],
+  l:(m,g)=>[`${m.be} von 40 Erwerbspersonen haben Arbeit, ${m.al} suchen eine Stelle (${m.quote} %). Staatsausgaben: Stufe ${rg.a} von 10.`,m.ob?`${m.ob} Menschen leben auf der Straße. Wer lange ohne Job ist und kaum Unterstützung hat, verliert die Wohnung.`:'Niemand muss auf der Straße leben. Das Netz hält.',m.al>8?'Die Schlange wird länger. Jeder Arbeitslose kauft weniger ein – das spürt der Laden.':'']},
+ {k:'park',ic:'🌳',n:'Park & Umwelt',c:[265,225],z:2.2,r:[232,186,66,100],
+  i:['Im Park erholt sich Kaufstadt: Bäume, Teich, Enten und ein Picknick. Der Himmel, das Wasser im Hafen und der Müll auf den Straßen zeigen, wie es der Umwelt geht.','Wichtig: Umweltschutz und gerechte Verteilung. Wird Umwelt vernachlässigt, wird der Himmel braun und die Bäume sterben. Bei starker Ungleichheit steht eine Luxusvilla neben dem Zeltlager.'],
+  l:(m,g)=>[g[4]>=65?'Saubere Luft, grüne Bäume, glückliche Enten.':g[4]<35?'Smog, kahle Bäume, Müll. Die Enten husten.':'Der Park hält sich noch.',g[5]<40?'Eine Luxusvilla ragt auf, daneben das Zeltlager: ungerechte Verteilung.':g[5]>=55?'Verschiedene Menschen picknicken zusammen: eine ausgewogene Stadt.':'']}];
+ const RG={z:{n:'Leitzins',ic:'🏦',min:0,max:8,step:1,K:[4,-3,-3,-2,3,-1],f:v=>dc(v,1)+' %'},s:{n:'Steuern & Abgaben',ic:'🧾',min:0,max:10,step:1,K:[1.5,-1.5,-2,0,.5,1.5],f:v=>'Stufe '+v},a:{n:'Staatsausgaben',ic:'🏗️',min:0,max:10,step:1,K:[-2,3,3,-1,-.5,1],f:v=>'Stufe '+v}};
+ const NEWS={z:[['📰 Inflation wird gebremst – die Preise steigen langsamer','🛍️ Die Leute können sich mehr leisten …','🏦 … aber Kredite werden teurer: Bauprojekte pausieren'],['🏦 Günstige Kredite – Läden bauen an, Baukräne drehen sich','📈 Mehr Jobs und Wachstum …','🏷️ … aber die Preise ziehen an']],
+  s:[['🧾 Höhere Abgaben: Der Staat hat mehr Geld …','🏠 … aber die Haushalte weniger im Portemonnaie'],['🧾 Weniger Abgaben: Mehr Netto vom Brutto …','🛍️ … die Läden spüren mehr Kundschaft']],
+  a:[['🏗️ Der Staat investiert: Baustellen, Aufträge, neue Jobs …','🏷️ … aber die Nachfrage heizt die Preise an'],['✂️ Sparkurs: Der Staat bestellt weniger …','👷 … Aufträge fallen weg, Jobs wackeln']]};
+ function rgApply(k,v,g){const old=rg[k],K=RG[k].K,d=v-old,ng=g.map((x,i)=>cl(Math.round((x+K[i]*d)*10)/10,0,100));return{g:ng,news:NEWS[k][d>0?0:1]}}
+ const T=[
+  ['stk','🛍️','Verkäufe/Tag',m=>fm(m.stk)+' Stück','Wie viele Waren pro Tag über die Ladentheke gehen. Weniger Kaufkraft und höhere Preise bedeuten weniger Stück im Einkaufskorb.',[0]],
+  ['ums','💶','Umsatz/Tag',m=>fm(m.ums)+' €','Umsatz = Preis × Menge. Bei Inflation steigt der Umsatz auf dem Papier, aber es wandern weniger Stück über die Theke.',[2]],
+  ['infl','🏷️','Preise',m=>'+'+dc(m.infl,1)+' %/J','Preissteigerung pro Jahr. Rund 2 % gelten als stabil. Je weiter das Ziel Preisniveaustabilität sinkt, desto teurer wird der Einkauf.',[0]],
+  ['be','👷','Beschäftigte',m=>m.be+' von 40','Das Ziel Hoher Beschäftigungsstand: Wie viele der 40 Erwerbspersonen haben Arbeit?',[1]],
+  ['al','🔍','Arbeitslose',m=>m.al+' ('+m.quote+' %)','Wer keine Stelle hat, steht vor der Arbeitsagentur. Weniger Einkommen bedeutet weniger Umsatz im Laden.',[1]],
+  ['ob','🏚️','Obdachlos',m=>m.ob+(m.ob?' ⚠️':''),'Steigt nur, wenn Beschäftigung und Verteilung gleichzeitig schlecht sind.',[1,5]],
+  ['imp','📥','Import',m=>m.imp+' Cont.','Container, die im Hafen ankommen. Beim Außenwirtschaftlichen Gleichgewicht sind Import und Export etwa gleich.',[3]],
+  ['exp','📤','Export',m=>m.exp+' Cont.','Container, die Kaufstadt verlassen. Große Schieflage = Streit und Zölle.',[3]],
+  ['wach','📈','Wachstum',m=>(m.gw>=0?'+':'')+dc(m.gw,1)+' % BIP','Das reale Wirtschaftswachstum (BIP). Stetig und angemessen heißt: nicht zu schwach (Jobs) und nicht zu stark (Preise, Umwelt).',[2]],
+  ['umw','🌱','Umwelt',m=>tg[4]>=65?'sauber 🌿':tg[4]>=35?'mäßig 😐':'verdreckt 🗑️','Sauberkeit der Stadt: Müll auf der Straße, Luft, Wasser im Hafen, Bäume im Park. Wird Umweltschutz vernachlässigt, verdreckt die Stadt sichtbar.',[4]],
+  ['ver','⚖️','Top 10 %',m=>m.top+' % Verm.','So viel vom gesamten Vermögen besitzen die reichsten 10 %. Je ungerechter Einkommen und Vermögen verteilt sind, desto mehr Superreiche und desto mehr Menschen, die betteln müssen.',[5]],
+  ['zins','🎚️','Leitzins',m=>dc(rg.z,1)+' %','Der Zins der Zentralbank: Hoch bremst Inflation, verteuert aber Kredite. Niedrig fördert Wachstum, kann aber die Preise anheizen. Regler in der Bank.',[]]];
+ const GOOD={stk:1,ums:1,be:1,al:-1,ob:-1,infl:-1,imp:0,exp:0};
+ const VAL=m=>({stk:m.stk,ums:m.ums,infl:Math.round(m.infl*10)/10,be:m.be,al:m.al,ob:m.ob,imp:m.imp,exp:m.exp});
+ const COLS=['#e5484d','#3b82f6','#f59e0b','#8b5cf6','#10b981','#ec4899','#14b8a6'],DX=[45,125,205],X0=[8,88,168],SC=['#ffd166','#f78fb3','#6ab0ff'],NM=['SUPERMARKT','MODEHAUS','ELEKTRO'];
+ const richW={x:40,d:1},sh=[],parts=[],bubs=[],birds=[];let spawnT=0,cyc={t:0,imp:true,x0:276,len:7,td:false},trucks=[],OPEN=[1,1,1],cloud=0,dog={x:30,d:1,t:0,bark:0},duck=0,build=0;
+ const SX=326,QX=276;
+ function mk(){wrap=document.createElement('div');wrap.className='tw';
+  wrap.innerHTML='<div class="twn"></div><div class="twe"></div><div class="twd">'+T.map(t=>`<div class="twt" data-k="${t[0]}"><span class="twl">${t[1]} ${t[2]}</span><b class="twv"></b><i class="dl"></i></div>`).join('')+'</div><div class="twc"><canvas></canvas><div class="twb"></div><div class="hsl"></div><div class="zb"><button data-z="+" aria-label="Hineinzoomen">＋</button><button data-z="-" aria-label="Herauszoomen">−</button><button data-z="0" aria-label="Ganze Stadt">⤢</button></div></div><div class="twi">👆 Tippe auf einen Bereich der Stadt – oder auf eine Zahl oben.</div><div class="twp"></div>';
+  cv=wrap.querySelector('canvas');cx=cv.getContext('2d');infoEl=wrap.querySelector('.twi');panel=wrap.querySelector('.twp');bbl=wrap.querySelector('.twb');hslEl=wrap.querySelector('.hsl');newsEl=wrap.querySelector('.twn');evEl=wrap.querySelector('.twe');
+  wrap.querySelector('.hsl').innerHTML=AR.map(a=>`<div class="hs" style="left:${a.r[0]/W*100}%;top:${a.r[1]/H*100}%;width:${a.r[2]/W*100}%;height:${a.r[3]/H*100}%"><span>${a.ic} ${a.n}${a.reg?' 🎚️':''}</span></div>`).join('');
+  T.forEach(t=>{const el=wrap.querySelector(`[data-k="${t[0]}"]`);tiles[t[0]]={el,v:el.querySelector('.twv'),d:el.querySelector('.dl'),last:''}});
+  wrap.addEventListener('click',ev=>{const a=ev.target.closest('[data-ar]');if(a){openA(a.dataset.ar);return}if(ev.target.closest('[data-back]')){openA(null);return}const k=ev.target.closest('[data-k]');if(!k)return;const t=T.find(x=>x[0]===k.dataset.k);infoEl.innerHTML='<b>'+t[1]+' '+t[2]+':</b> '+t[4]});
+  const free=()=>{if(tourI!==null)return false;if(area){area=null;uz=cam.z;ux=cam.x;uy=cam.y;hslEl.style.display='none';updPanel();infoEl.innerHTML='👆 Tippe auf Gebäude oder Menschen. Mit Ziehen verschiebst du die Karte.'}return true},
+   clampU=()=>{uz=cl(uz,1,3.5);const hw=W/2/uz,hh=H/2/uz;ux=cl(ux,hw,W-hw);uy=cl(uy,hh,H-hh);cv.style.touchAction=uz>1.05?'none':'pan-y'};
+  const zoomBy=(f)=>{if(!free())return;uz*=f;clampU()};
+  wrap.querySelector('.zb').addEventListener('click',ev=>{const b=ev.target.closest('[data-z]');if(!b)return;ev.stopPropagation();if(b.dataset.z==='+')zoomBy(1.4);else if(b.dataset.z==='-')zoomBy(1/1.4);else{if(tourI!==null)return;area=null;uz=1;ux=180;uy=150;clampU();updPanel()}});
+  cv.style.touchAction='pan-y';
+  cv.addEventListener('pointerdown',ev=>{ptrs.set(ev.pointerId,{x:ev.clientX,y:ev.clientY,sx:ev.clientX,sy:ev.clientY});dragged=false;if(ptrs.size===2){const a=[...ptrs.values()];pd0=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y)}});
+  cv.addEventListener('pointermove',ev=>{const p=ptrs.get(ev.pointerId);if(!p)return;const dx=ev.clientX-p.x,dy=ev.clientY-p.y;
+   if(ptrs.size===2){p.x=ev.clientX;p.y=ev.clientY;const a=[...ptrs.values()],d=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y);if(pd0>0&&free()){uz*=d/pd0;clampU();dragged=true}pd0=d;return}
+   if(Math.hypot(ev.clientX-p.sx,ev.clientY-p.sy)>7){if(uz>1.05||area){if(free()){const k=cssW/W*cam.z;ux-=dx/k;uy-=dy/k;clampU();dragged=true;cam.x=ux;cam.y=uy;cam.z=uz}}}
+   p.x=ev.clientX;p.y=ev.clientY});
+  const pend=ev=>{ptrs.delete(ev.pointerId);pd0=0;setTimeout(()=>{dragged=false},60)};cv.addEventListener('pointerup',pend);cv.addEventListener('pointercancel',pend);
+  cv.addEventListener('wheel',ev=>{if(!(ev.ctrlKey||ev.metaKey||uz>1.05))return;if(tourI!==null)return;ev.preventDefault();zoomBy(ev.deltaY<0?1.15:1/1.15)},{passive:false});
+  cv.addEventListener('click',ev=>{if(dragged){dragged=false;return}const r=cv.getBoundingClientRect(),fx=(ev.clientX-r.left)/r.width*W,fy=(ev.clientY-r.top)/r.height*H,wx=(fx-W/2)/cam.z+cam.x,wy=(fy-H/2)/cam.z+cam.y,m=M(cg);let best=null,bd=14/cam.z;people(m).forEach(p=>{const d=Math.hypot(p.x-wx,(p.y-6)-wy);if(d<bd){bd=d;best=p}});
+   if(best){sel=best;bubs.filter(b=>b.pin).forEach(b=>b.t=0);if(best.dog)say(best.x,best.y-6,'Wuff! 🐶 Ich bin Waldi und liebe alle Menschen in Kaufstadt ❤️',best,null,5,true);else{const pe=persona(best.ro,tg);say(best.x,best.y-12,personaHtml(pe),best,true,8,true)}return}
+   const a=AR.find(a=>wx>=a.r[0]&&wx<=a.r[0]+a.r[2]&&wy>=a.r[1]&&wy<=a.r[1]+a.r[3]);if(a){sel=null;openA(a.k)}else if(area){sel=null}});
+  wrap.addEventListener('input',ev=>{const r=ev.target.closest('[data-rg]');if(r){const v=wrap.querySelector('#rgv-'+r.dataset.rg);if(v)v.textContent=RG[r.dataset.rg].f(Number(r.value))}});
+  wrap.addEventListener('change',ev=>{const r=ev.target.closest('[data-rg]');if(r&&cb){const ok2=cb(r.dataset.rg,Number(r.value));if(ok2===false){r.value=rg[r.dataset.rg]}}});
+  ok=true;requestAnimationFrame(loop)}
+ function openA(k){area=k;const a=AR.find(x=>x.k===k);wrap.querySelector('.hsl').style.display=k?'none':'';updPanel();if(k)infoEl.innerHTML=tour?'🎓 Stadtrundgang':'👆 Tippe auf eine Zahl oder lass die Menschen reden. Unten siehst du, was hier los ist.';else infoEl.innerHTML='👆 Tippe auf einen Bereich der Stadt – oder auf eine Zahl oben.'}
+ function updPanel(){const m=M(cg),a=AR.find(x=>x.k===area);if(tourI!==null){const t=TOURP[tourI],p=persona(t.ro,[50,50,50,50,50,50]);panel.innerHTML=`<div class="ph"><b>${RL[t.ro].ic} ${RL[t.ro].n}</b></div><div class="pi"><span class="pill">${t.goal}</span></div><div class="pi">${t.txt}</div><div class="pi w"><b>Darauf achten:</b> ${t.w}</div>`;return}
+  let h='<div class="chs">'+AR.map(x=>`<button class="ch${x.k===area?' on':''}" data-ar="${x.k}">${x.ic} ${x.n}${x.reg?' 🎚️':''}</button>`).join('')+'</div>';
+  if(a){h+=`<div class="ph"><b>${a.ic} ${a.n}</b> <button class="bk" data-back="1">⬅ Zurück zur Stadt</button></div>`;
+   if(tour)h+=`<div class="pi"><b>Was passiert hier?</b> ${a.i[0]}</div><div class="pi w"><b>Was ist wichtig?</b> ${a.i[1].replace(/^Wichtig: /,'')}</div>`;
+   else{h+=a.l(m,tg).filter(Boolean).map(t=>`<div class="pi">${t}</div>`).join('');h+=`<div class="pi w"><b>Wichtig:</b> ${a.i[1].replace(/^Wichtig: /,'')}</div>`;
+    if(a.reg){const R=RG[a.reg],dis=rg.ro||rg.mv>=rg.max;h+=`<div class="rgb"><div>${R.ic} <b>${R.n}</b>: <b id="rgv-${a.reg}">${R.f(rg[a.reg])}</b></div><input type="range" data-rg="${a.reg}" min="${R.min}" max="${R.max}" step="${R.step}" value="${rg[a.reg]}" ${dis?'disabled':''}><div class="muted">${rg.ro?'Die Lehrkraft stellt die Regler.':'Eingriffe in dieser Runde: '+'●'.repeat(Math.min(rg.mv,rg.max))+'○'.repeat(Math.max(0,rg.max-rg.mv))+(rg.mv>=rg.max?' – verbraucht, nächste Runde wieder frei':' – Regler loslassen, dann wirkt es')}</div></div>`}}}
+  else h+='<div class="pi">Tippe auf einen Bereich, um hinein zu zoomen. Dort siehst du, was passiert und was wichtig ist. Mit 🎚️ markierte Bereiche enthalten deine Regler.</div>';
+  panel.innerHTML=h}
+ function resize(){const pw=cv.parentNode.clientWidth||340,land=innerWidth>innerHeight&&innerHeight<700;cssW=Math.max(200,land?Math.min(pw,(innerHeight-24)*W/H):pw);cv.style.width=cssW+'px';cv.style.margin='0 auto';dpr=Math.min(2,window.devicePixelRatio||1);cv.style.aspectRatio=W+'/'+H;cv.style.display='block';cv.width=Math.round(cssW*dpr);cv.height=Math.round(cssW*dpr*H/W);sc=cv.width/W}
+ function setTarget(g,from){const mp=M(from),mn=M(g),a=VAL(mp),b=VAL(mn);chips={};for(const k in a){const d=Math.round((b[k]-a[k])*10)/10;if(d)chips[k]={d,good:GOOD[k]===0?0:(d*GOOD[k]>0?1:-1)}}chipT=6;tg=g.slice();if(area)updPanel()}
+ function news(lines){newsEl.innerHTML=lines&&lines.length?'<span>'+lines.map(l=>'<b>'+l+'</b>').join('')+'</span>':'';newsEl.style.display=lines&&lines.length?'':'none';newsEl.className='twn'+(lines&&lines.length?' on':'')}
+ function card(g,gp,opt){opt=opt||{};if(!ok&&!noAnim)mk();if(!ok)return '';
+  if(opt.rg)rg=Object.assign({z:2,s:5,a:5,mv:0,max:2,ro:false},opt.rg);cb=opt.onrg||cb;if(opt.tourp!==undefined){tourI=opt.tourp;area=null;wrap.querySelector('.hsl').style.display='none';sel=null}else if(tourI!==null){tourI=null;lastTourI=-1;sel=null;bubs.filter(b=>b.pin).forEach(b=>b.t=0);wrap.querySelector('.hsl').style.display=area?'none':''}
+  if(gp){cg=gp.slice();tg=gp.slice();setTimeout(()=>setTarget(g,gp),600)}else{tg=g.slice();if(first0){cg=g.slice();first0=false}}
+  evEl.innerHTML=opt.ev?`⚡ <b>Ereignis: ${opt.ev.t}</b> – ${opt.ev.txt}`:'';evEl.style.display=opt.ev?'':'none';
+  const hot=new Set();(opt.focus||[]).forEach((v,i)=>{if(v<0)(T.filter(t=>t[5].includes(i))).forEach(t=>hot.add(t[0]))});T.forEach(t=>tiles[t[0]].el.classList.toggle('hot',hot.has(t[0])));
+  news(opt.news);if(opt.open!==undefined&&opt.open!==area)setTimeout(()=>{if(ok){openA(opt.open)}},0);else if(opt.open===undefined&&opt.keep!==true&&opt.reset)openA(null);else updPanel();
+  return `<div class="card"><h3>🏙️ Kaufstadt live</h3><div id="tw-slot"></div><div class="muted" style="margin-top:6px">Modellrechnung für eine kleine Stadt mit 40 Erwerbspersonen – keine echten Daten.</div></div>`}
+ function attach(){const sl=document.getElementById('tw-slot');if(!sl||!ok)return;sl.appendChild(wrap);resize()}
+ /* Zeichnen */
+ const R=(x,y,w,h,c)=>{cx.fillStyle=c;cx.fillRect(x,y,w,h)},C=(x,y,r,c)=>{cx.fillStyle=c;cx.beginPath();cx.arc(x,y,r,0,7);cx.fill()};
+ function P(x,y,c,a,sit,ph){cx.globalAlpha=a==null?1:a;const b=ph?Math.abs(Math.sin(ph))*1.2:0,s=sit?3:0;y-=b;R(x-1.6,y-10+s,3.2,3,'#e9b98f');R(x-2.2,y-7+s,4.4,sit?3:5,c);if(!sit){const l=ph?Math.sin(ph)*1.2:0;R(x-2+l,y-2,1.7,2+b,'#333');R(x+.3-l,y-2,1.7,2+b,'#333')}else R(x-2.5,y-1,5,1.6,'#333');cx.globalAlpha=1}
+ function TX(s,x,y,c,f){cx.fillStyle=c;cx.font='bold '+(f||6.5)+'px sans-serif';cx.textAlign='center';cx.fillText(s,x,y)}
+ function tree(x,y,gc){R(x-1,y-8,2,8,'#7a5230');C(x,y-12,6,gc||'#3fa34d');C(x-2,y-14,3.5,gc?'#b08a4a':'#56bd5f')}
+ function part(x,y,ch,vy){parts.push({x,y,vx:(Math.random()-.5)*8,vy:vy||-14,t:1.3,ch})}
+ function say(x,y,txt,f,html,ttl,pin){bubs.push({x,y,f,t:ttl||3.2,txt,html,pin,el:null})}
+ const EXTRA=[{n:'Jule, Kassiererin',ic:'🧾',w:[3,2,1,0,0,2]},{n:'Herr Kaya, Geschäftsinhaber',ic:'🏪',w:[1,2,3,1,0,0]},{n:'Ole, Hafenarbeiter',ic:'⚓',w:[0,2,1,3,1,1]},{n:'Herr Berger, Bankberater',ic:'🏦',w:[2,1,3,0,0,0]},{n:'Sabine, Hausfrau',ic:'👩‍👧',w:[3,1,0,0,2,3]},{n:'Max, arbeitssuchend',ic:'🔍',w:[0,3,1,0,0,2]}],RL=ROLLEN.concat(EXTRA);
+ const TOURP=[
+  {ro:8,pos:()=>({x:X0[0]+11,y:123}),hi:'Hallo, ich bin Jule!',goal:'🏷️ Preisniveaustabilität',txt:'Ich sitze im Supermarkt an der Kasse. Ich merke sofort, wenn die Preise steigen: Dann bleiben die Leute stehen und rechnen nach. Stabile Preise heißen: Die Kundschaft kann planen und kauft mit gutem Gefühl.',w:'Das Preisschild im Schaufenster: grün = stabil, rot = die Preise laufen davon. Verkäufe und Umsatz siehst du in der Zahlenleiste.'},
+  {ro:9,pos:()=>({x:X0[1]+11,y:123}),hi:'Guten Tag, Kaya mein Name!',goal:'📈 Stetiges, angemessenes Wachstum',txt:'Mir gehört das Modehaus. Läuft die Wirtschaft, kommt Kundschaft und ich stelle Leute ein. Wächst nichts, muss ich Stunden kürzen. Aber Vorsicht: Zu schnelles Wachstum heizt die Preise an und belastet die Umwelt.',w:'Die Skyline hinter den Läden: Je mehr Wachstum, desto höher die Häuser. Läden schließen, wenn die Kaufkraft zu niedrig ist.'},
+  {ro:10,pos:()=>({x:262,y:150}),hi:'Moin, ich bin Ole!',goal:'🚢 Außenwirtschaftliches Gleichgewicht',txt:'Ich arbeite im Hafen. Hier kommen Waren aus aller Welt an und unsere Exporte fahren hinaus. Importieren wir viel mehr als wir exportieren, gibt es Streit mit den Handelspartnern und Zölle.',w:'Der Kran: Blaue Container sind Importe, orange Container Exporte. Die Zahlen für Import und Export sollten ähnlich groß sein.'},
+  {ro:11,pos:()=>({x:100,y:238}),hi:'Berger, Ihre Bank!',goal:'🎚️ Zinsen: dein erster Regler',txt:'Ich vergebe Kredite an Betriebe und Familien. Steigen die Zinsen, bremst das die Inflation, aber Kredite werden teuer, und Bauprojekte stehen still. Fallen die Zinsen, wird gebaut, aber die Preise können anziehen.',w:'Das Zinsschild an der Bank und die Baustelle daneben. Im Spiel stellst du den Leitzins selbst ein. Du hast pro Runde 2 Eingriffe.'},
+  {ro:12,pos:()=>({x:158,y:248}),hi:'Hallo, ich bin Sabine!',goal:'⚖️ Gerechte Einkommens- und Vermögensverteilung',txt:'Ich bin Hausfrau und Mutter von zwei Kindern. Am Monatsende muss das Geld reichen. Mich ärgert, wenn wenige Superreiche in Villen leben, während andere betteln müssen. Gerechte Verteilung von Einkommen und Vermögen ist mir wichtig.',w:'Bettler am Straßenrand und Superreiche mit goldenem Auto zeigen, dass die Verteilung kippt. Steuern gleichen aus, kosten aber Kaufkraft: dein zweiter Regler.'},
+  {ro:13,pos:()=>({x:70,y:258}),hi:'Ich bin Max, suche Arbeit.',goal:'👷 Hoher Beschäftigungsstand',txt:'Ich suche seit Monaten Arbeit. Die Schlange vor der Arbeitsagentur wird länger, wenn es der Wirtschaft schlecht geht. Hoher Beschäftigungsstand heißt: Wer arbeiten will, findet Arbeit. Ohne Job und Hilfe landet man schlimmstenfalls auf der Straße.',w:'Die Warteschlange, das Zeltlager und die Zahl der Beschäftigten. Staatsausgaben schaffen Aufträge und Jobs: dein dritter Regler.'},
+  {ro:6,pos:()=>({x:256,y:266}),hi:'Hi, ich bin Klara!',goal:'🌱 Umweltschutz und Nachhaltigkeit',txt:'Ich engagiere mich für saubere Umwelt. Siehst du den Müll, den Smog und die kahlen Bäume? Wenn Umwelt zu kurz kommt, verdreckt die Stadt. Nachhaltigkeit heißt: Wir wirtschaften so, dass auch morgen noch Luft, Wasser und Natur da sind.',w:'Himmel, Fabrikrauch, Müll auf der Straße, das Wasser im Hafen und die Bäume im Park: Hier siehst du, wie es der Umwelt geht.'}];
+ const GT=[['Alles wird immer teurer!','stabile Preise','Die Preise sind ruhig.'],['Ich habe Angst um meinen Job.','sichere Arbeitsplätze','Mein Job ist sicher.'],['Kaum Aufträge, nichts wächst.','Aufschwung und neue Aufträge','Hier geht richtig was voran!'],['Zölle und Stau im Hafen.','fairen, freien Handel','Der Handel läuft.'],['Überall Müll und dicke Luft!','saubere Luft und eine grüne Stadt','Frische Luft und grüne Bäume.'],['Wenige haben alles, viele zu wenig.','eine gerechte Verteilung von Einkommen und Vermögen','Es geht gerecht zu in Kaufstadt.']];
+ function persona(ro,g){if(ro===-1)return{n:'Superreicher',ic:'🎩',mood:'😎',an:g[5]<40?'Steuern auf Vermögen sind eine Zumutung!':null,good:'Ich zahle gern meinen fairen Anteil.',wish:g[5]<40?'noch weniger Steuern für uns Reiche':'dass alle eine Chance haben'};
+  if(ro===-2)return{n:'Mensch ohne Wohnung',ic:'🧍',mood:'😢',an:'Nachts ist es kalt und die Miete war nicht mehr zu zahlen.',wish:'ein Dach über dem Kopf und eine faire Chance'};
+  const w=RL[ro].w,R0=RL[ro],sc=g.map((v,i)=>({i,s:(w[i]+.3)*(65-v)})).sort((a,b)=>b.s-a.s),wi=sc[0].i,v=g[wi],nm=R0.n.split(',')[0]+','+R0.n.split(',')[1];
+  if(v>=65){const bi=g.map((x,i)=>({i,x:x*(w[i]+.3)})).sort((a,b)=>b.x-a.x)[0].i;return{n:nm,ic:R0.ic,mood:'😊',good:GT[bi][2],wish:'dass es so bleibt'}}
+  return{n:nm,ic:R0.ic,mood:v<35?'😠':'😕',an:GT[wi][0],wish:GT[wi][1],an2:g[sc[1].i]<45?GT[sc[1].i][0]:null}}
+ function personaHtml(p){return `<b>${p.ic} ${p.n}</b> ${p.mood}<br>${p.an?'😠 '+p.an:'😊 '+p.good}${p.an2?'<br>😠 '+p.an2:''}<br>🙏 <i>Ich wünsche mir: ${p.wish}.</i>`}
+ const RICHT=['Mein dritter Zweitwohnsitz… 🏝️','Steuern? Dafür gibt es Anwälte! 💼','Champagner zum Frühstück 🥂'],BEGT=['Haben Sie etwas Kleingeld? 🙏','Brrr, so kalt heute…','Danke für den Kaffee ☕'];
+ function people(m){const L=[],g=tg;
+  OPEN.forEach((o,i)=>{if(o){const n=Math.max(1,Math.round(m.be/40*4));for(let k=0;k<n;k++)L.push({x:X0[i]+11+k*7.5,y:123,ro:k===0?(i===0?8:i===1?9:2):2})}});
+  sh.forEach(s=>{if(s.st!==1)L.push({x:s.x,y:s.y,ro:s.ro,ref:s})});
+  for(let i=0;i<Math.min(12,m.al);i++){const r=i%6,rw=i<6?0:1;L.push({x:70+r*10+rw*4,y:258-rw*10,ro:i===0?13:[3,2,1,4,7,5][r]})}
+  for(let i=0;i<m.ob;i++)L.push({x:194+i*9,y:264,ro:-2});
+  const nb=Math.round(cl((55-g[5])/55,0,1)*3);[[236,157],[56,157],[20,157]].slice(0,nb).forEach(b=>L.push({x:b[0],y:b[1],ro:-2}));
+  const nr=Math.round(cl((45-g[5])/45,0,1)*3);if(nr>=1)L.push({x:296,y:248,ro:-1});if(nr>=2)L.push({x:richW.x,y:157,ro:-1,ref:richW});
+  L.push({x:100,y:238,ro:11},{x:158,y:248,ro:12},{x:168,y:248,ro:3},{x:176,y:248,ro:4},{x:craneX,y:106,ro:10},{x:262,y:150,ro:10},{x:256,y:266,ro:6});
+  if(g[5]>=55)L.push({x:258,y:284,ro:6},{x:268,y:284,ro:3});
+  L.push({x:dog.x,y:dog.y||160,dog:1,ref:dog});return L}
+ function house(x,y,w,c,lit){R(x,y-26,w,26,c);cx.fillStyle='#b5503c';cx.beginPath();cx.moveTo(x-3,y-26);cx.lineTo(x+w/2,y-38);cx.lineTo(x+w+3,y-26);cx.fill();R(x+w/2-3,y-12,6,12,'#6b4a2b');for(const wx of[x+3,x+w-9]){R(wx,y-22,6,6,lit?'#ffe27a':'#7a8896')}}
+ function draw(m,dt){cx.setTransform(1,0,0,1,0,0);cx.clearRect(0,0,cv.width,cv.height);const z=cam.z*sc;cx.setTransform(z,0,0,z,(W/2-cam.x*cam.z)*sc,(H/2-cam.y*cam.z)*sc);
+  const avg=(cg[0]+cg[1]+cg[2]+cg[3]+cg[4]+cg[5])/6,smog=cl((100-cg[4])/100*.55,0,.55),g=cx.createLinearGradient(0,0,0,170);g.addColorStop(0,avg<38?'#8aa0b2':'#7ec8ff');g.addColorStop(1,avg<38?'#cfd6dc':'#e8f6ff');cx.fillStyle=g;cx.fillRect(0,0,W,176);
+  /* Sonne mit Gesicht */
+  C(326,26,12,avg<38?'#d9d2a0':'#ffe66d');cx.fillStyle='#7a5a00';cx.fillRect(321,23,2,2);cx.fillRect(329,23,2,2);cx.beginPath();cx.arc(326,29,avg<38?0:4,0,3.2);cx.strokeStyle='#7a5a00';cx.lineWidth=1;cx.stroke();if(avg<38){R(322,32,8,1.3,'#7a5a00')}
+  cloud=(cloud+dt*4)%460;cx.fillStyle='rgba(255,255,255,.85)';[[0,22],[170,40],[300,14]].forEach(c=>{const x=(c[0]+cloud)%460-50;cx.beginPath();cx.ellipse(x,c[1],18,6,0,0,7);cx.ellipse(x+10,c[1]-3,10,6,0,0,7);cx.fill()});
+  if(avg>=60&&cg.every(v=>v>=50)){for(let i=0;i<5;i++){cx.strokeStyle=['#ff6b6b','#ffb347','#ffe66d','#6bcf7f','#6bb5ff'][i];cx.lineWidth=2;cx.beginPath();cx.arc(190,100,50-i*2.2,3.4,6.0);cx.stroke()}}
+  /* Skyline (Wachstum) */
+  [[4,18],[30,28],[58,14],[110,30],[150,20],[200,26]].forEach(b=>{const h=8+(b[1]/30)*cl(cg[2]/100,.1,1)*46;R(b[0],72-h,22,h,'#7f8fa3');for(let r=0;r<h/8;r++)for(let c=0;c<3;c++)if((r+c+(tm*.4|0))%3)R(b[0]+3+c*6,72-h+3+r*8,3,4,'#ffe27a')});
+  if(cg[2]>60){R(120,28,2,44,'#d97706');R(108,28,34,2,'#d97706');R(130+Math.sin(tm)*6,30,1,12,'#555');R(128+Math.sin(tm)*6,42,5,4,'#3b82f6')}
+  R(222,30,6,42,'#6b6f76');R(232,38,6,34,'#6b6f76');for(let k=0;k<5;k++){const t2=(tm*8+k*9)%45,a2=cl(.15+(100-cg[4])/100*.65,.15,.8)*(1-t2/45);C(225+t2*.35+Math.sin(k+tm)*2,30-t2,3+t2/9,cg[4]>70?'rgba(235,235,240,'+a2+')':'rgba(70,65,60,'+a2+')')}
+  cx.fillStyle='rgba(120,95,60,'+smog+')';cx.fillRect(0,0,W,176);
+  if(avg<38)for(let i=0;i<14;i++){const rx=(i*27+tm*40)%W,ry=(tm*90+i*41)%150;R(rx,ry,1,5,'rgba(70,100,140,.6)')}
+  /* Boden */
+  R(0,150,300,24,'#6b6f76');R(0,150,300,4,'#b8bcc2');for(let x=4;x<300;x+=26)R(x,166,13,1.5,'#e8e8e8');
+  const gr=cl(cg[4]/100,0,1);R(0,174,300,126,'rgb('+Math.round(lerp(190,140,gr))+','+Math.round(lerp(190,201,gr))+','+Math.round(lerp(130,114,gr))+')');
+  /* Läden */
+  for(let i=0;i<3;i++){const x=X0[i],open=OPEN[i];R(x,80,74,70,open?SC[i]:'#9aa0a6');R(x,72,74,9,open?'#2d3a4f':'#6b7077');TX(open?NM[i]:'GESCHLOSSEN',x+37,79,'#fff',6);
+   for(let s=0;s<6;s++)R(x+s*12.3,82,12.3,6,s%2?'#fff':open?'#e5484d':'#888');
+   R(x+6,92,34,32,open?'#dff3ff':'#707680');R(x+46,112,16,38,'#7a5230');
+   if(open){const n=Math.round(m.be/40*4);for(let k=0;k<n;k++)P(x+11+k*7.5,123,'#2d6cdf',1,false,k===1?tm*3:0);
+    const col=cg[0]>=65?'#2fa84f':cg[0]>=35?'#f1c40f':'#e5484d';R(x+16,94,24,9,col);TX('+'+dc(m.infl,1)+' %',x+28,101,'#fff',6)}
+   else{R(x+6,104,34,3,'#4a3a2a');R(x+8,96,30,3,'#4a3a2a')}}
+  /* Hafen */
+  R(248,150,52,24,'#b9bcc1');R(248,150,52,3,'#d5d8dc');
+  const wg=cx.createLinearGradient(0,165,0,300);wg.addColorStop(0,'#4aa6d8');wg.addColorStop(1,'#1d5f96');cx.fillStyle=wg;cx.fillRect(300,163,60,137);R(300,163,60,2,'#8fd0f0');
+  for(let k=0;k<6;k++){R(302+((tm*10+k*17)%54),172+k*14,8,1,'rgba(255,255,255,.4)')}
+  const bob=Math.sin(tm*1.4)*1.2;cx.fillStyle='#2b3440';cx.beginPath();cx.moveTo(296,166+bob);cx.lineTo(358,166+bob);cx.lineTo(350,182+bob);cx.lineTo(302,182+bob);cx.closePath();cx.fill();R(296,164+bob,62,3,'#c0392b');
+  const nd=cl(Math.round(m.imp/5),1,3);['#e5484d','#3b82f6','#f59e0b'].slice(0,nd).forEach((c,k)=>R(300+k*13,156+bob,12,9,c));R(344,150+bob,10,16,'#f2f2f2');R(346,153+bob,6,3,'#7ec8ff');
+  const ns=cl(Math.round(m.exp/5),0,3);for(let k=0;k<3;k++){R(252+k*15,141,13,9,k<2?'#3b82f6':'#aab');if(k<ns)R(254+k*15,132,11,9,'#f08a24')}
+  R(250,112,3,38,'#555');TX('HAFEN',251,108,'#c0392b',6.5);
+  R(256,104,5,46,'#c0392b');R(268,104,5,46,'#c0392b');R(256,100,98,5,'#c0392b');
+  const p=cyc.t/cyc.len,sx=cyc.imp?SX:QX,dx=cyc.imp?QX:SX,sh1=cyc.imp?156:140,dh=cyc.imp?140:156;let x,y,car=false;const top=108;
+  if(p<.15){x=lerp(cyc.x0,sx,e(p/.15));y=top}else if(p<.3){x=sx;y=lerp(top,sh1,e((p-.15)/.15))}else if(p<.35){x=sx;y=sh1;car=p>.33}else if(p<.5){x=sx;y=lerp(sh1,top,e((p-.35)/.15));car=true}else if(p<.7){x=lerp(sx,dx,e((p-.5)/.2));y=top;car=true}else if(p<.85){x=dx;y=lerp(top,dh,e((p-.7)/.15));car=true}else{x=dx;y=lerp(dh,top,e((p-.85)/.15))}
+  R(x-3,102,6,4,'#333');R(x-.5,106,1,y-106,'#222');if(car)R(x-6,y,12,8,cyc.imp?'#3b82f6':'#f08a24');else R(x-1.5,y,3,2,'#222');
+  craneX=x;P(x,106,'#f59e0b');if(p>.9||p<.05){R(x+2,97,1.4,5,'#e9b98f')}
+  TX(cyc.imp?'📥 IMPORT':'📤 EXPORT',305,96,cyc.imp?'#1d4ed8':'#c2410c',7);
+  P(262,150,'#f59e0b',1,false,Math.sin(tm)>.6?tm*4:0);
+  trucks.forEach(t=>{const y=170;R(t.x,y-9,17,9,'#f4f4f4');R(t.x+(t.v>0?14:-5),y-7,5,7,'#e5484d');R(t.x+2,y-8,11,5,t.imp?'#3b82f6':'#f08a24');R(t.x+2,y-1,3,2,'#222');R(t.x+11,y-1,3,2,'#222')});
+  birds.forEach(b=>{const wy=Math.sin(tm*14+b.o)*2.5;cx.strokeStyle='#fff';cx.lineWidth=1.3;cx.beginPath();cx.moveTo(b.x-4,b.y+wy);cx.lineTo(b.x,b.y);cx.lineTo(b.x+4,b.y+wy);cx.stroke()});
+  /* Arbeitsagentur */
+  R(6,190,58,50,'#e8dcc8');R(6,184,58,8,'#2d6cdf');TX('ARBEITSAGENTUR',35,190.5,'#fff',5.5);R(28,214,14,26,'#7a5230');R(11,202,12,12,'#dff3ff');R(47,202,12,12,'#dff3ff');
+  for(let i=0;i<Math.min(12,m.al);i++){const r=i%6,rw=i<6?0:1;P(70+r*10+rw*4,258-rw*10,'#5b6b82',1,false,i===2?tm*2:0)}
+  R(112,246,6,8,'#8a8f99');
+  /* Bank */
+  R(70,192,60,48,'#f3ead3');cx.fillStyle='#c9a24a';cx.beginPath();cx.moveTo(66,192);cx.lineTo(100,178);cx.lineTo(134,192);cx.fill();for(let k=0;k<4;k++)R(74+k*13,196,5,36,'#fff');R(88,218,24,22,'#7a5230');
+  R(82,200,36,10,'#1d3557');TX('ZINS '+dc(rg.z,1)+' %',100,208,'#ffe66d',6.5);
+  const pw=Math.sin(tm*6)*(rg.z>=4?3:1);C(100,176+0,0,'#000');cx.save();cx.translate(100,174);cx.rotate(pw*.03);C(0,0,7,'#f7a8b8');C(7,-1,3,'#f7a8b8');R(-3,-8,2,3,'#e68a9c');R(-4,6,2,3,'#e68a9c');R(3,6,2,3,'#e68a9c');R(-1,-4,3,1,'#9a4b5c');C(4,-1,.8,'#222');cx.restore();
+  if(rg.z>=4&&((tm*1.2)|0)%2===0)TX('🪙',100+Math.sin(tm*5)*3,160-((tm*30)%10),'#fc0',8);
+  /* Baustelle */
+  if(rg.z<=3){build=(build+dt*(cl(1.2-rg.z*.3,.2,1)))%4;const hh=Math.min(20,build*6);R(244,242-hh,24,hh,'#d6b48a');R(240,226,2,16,'#d97706');R(240,226,30,2,'#d97706');R(264,226,1,6+Math.sin(tm*2)*2,'#444')}else{R(246,236,22,6,'#d97706');TX('🚧 BAUSTOPP',257,232,'#c0392b',6)}
+  P(100,239,'#1d3557');R(98.5,230,3,2,'#e5484d');
+  /* Häuser */
+  [[138,236,24,'#f4d6a0'],[168,236,26,'#c8e0f0'],[200,236,24,'#f1b8b8']].forEach((h,i)=>{house(h[0],h[1],h[2],h[3],cg[1]>35||i!==2||true);if(((tm*.8+i)|0)%3===0){P(h[0]+6,h[1]-16,'#ec4899',1);R(h[0]+10,h[1]-24,1.5,4,'#e9b98f')}});
+  cx.fillStyle='rgba(180,180,190,.7)';for(let i=0;i<3;i++)C(150+((tm*8+i*7)%10),195-((tm*12+i*9)%18),2,'rgba(200,200,210,'+(.7-((tm*12+i*9)%18)/26)+')');
+  P(168,248,'#3b82f6',1,false,tm*3);P(176,248,'#f59e0b',1,false,tm*3+1);cx.fillStyle='#fff';C(190,248+Math.abs(Math.sin(tm*3))*-4,2.3,'#ff6b6b');
+  if(m.kk>55){part(130+Math.random()*100,224,'❤️')}
+  P(158,248,'#ec4899',1,false,tm*2);R(161,243,4,5,'#f59e0b');R(155,243,1.4,5,'#e9b98f');
+  /* Park */
+  const nt=Math.round(cg[4]/100*4);for(let i=0;i<4;i++)tree(240+i*14,232-(i%2)*4,i<nt?null:'#8a7a55');
+  cx.fillStyle='#5fb3e8';cx.beginPath();cx.ellipse(270,270,22,8,0,0,7);cx.fill();duck=(duck+dt*8)%40;C(262+duck*.5,270+Math.sin(tm*2)*1,3,'#ffe66d');R(265+duck*.5,270,2.5,1.4,'#f08a24');
+  if(cg[5]<40){R(278,204,18,36,'#e6d4a3');cx.fillStyle='#8b5a2b';cx.beginPath();cx.moveTo(276,204);cx.lineTo(287,192);cx.lineTo(298,204);cx.fill();R(283,224,7,16,'#6b4a2b');R(278,242,14,5,'#fbbf24');C(281,247,2,'#222');C(289,247,2,'#222');P(296,248,'#111');TX('🎩',296,236,'#000',8)}
+  else if(cg[5]>=55){R(252,284,22,8,'#ef4444');P(258,284,'#3b82f6',1,true);P(268,284,'#ec4899',1,true);if(((tm|0)%3)===0)part(263,276,'💕',-8)}
+  P(256,266,'#10b981',1,false,0);if(((tm*.5)|0)%2)R(259,262,1.5,4,'#e9b98f');
+  if(cg[4]>50)for(let i=0;i<3;i++){const bx=240+i*20+Math.sin(tm*2+i)*6,by=250+Math.cos(tm*1.5+i)*5;C(bx,by,1.4,['#ff9ff3','#ffd32a','#7bed9f'][i])}
+  else for(let i=0;i<4;i++)R(238+i*13,282+(i%2)*3,3,2,'#6b7280');
+  /* Obdachlosen-Camp */
+  if(m.ob){cx.fillStyle='#2d6cdf';cx.beginPath();cx.moveTo(150,262);cx.lineTo(168,244);cx.lineTo(186,262);cx.fill();R(162,254,8,8,'#143a7a');for(let i=0;i<m.ob;i++)P(194+i*9,264,'#7a5a3a',1,true);R(210,260,8,5,'#aaa');R(100,246,0,0,'#000');C(190,264,0,'#000')}
+  /* Müll (Umwelt) */
+  const nT=Math.round(cl((75-cg[4])/75,0,1)*46);for(let i=0;i<nT;i++){let tx=(i*53.7)%350+5,ty=i%3===0?156+(i*7)%13:182+(i*37)%108;if(ty>162&&tx>296)tx-=70;if(i%4===0)tx+=Math.sin(tm*.6+i)*3;R(tx,ty,i%2?3:2,i%3?2:3,['#8a8f99','#e5e1d2','#6fa8dc','#c9a24a','#7a5230'][i%5])}
+  R(236,142,7,9,'#3b7a57');if(cg[4]<45){R(235,139,9,3,'#8a8f99');R(237,136,4,3,'#6fa8dc');R(242,138,3,2,'#c9a24a')}
+  if(cg[4]<30&&((tm*2|0)%2))TX('🐟',326,176,'#000',7);
+  if(cg[4]<50){cx.fillStyle='rgba(110,90,40,'+((50-cg[4])/50*.45)+')';cx.fillRect(300,163,60,137)}
+  /* Bettler und Superreiche (Verteilung) */
+  const nb2=Math.round(cl((55-cg[5])/55,0,1)*3);[[236,157],[56,157],[20,157]].slice(0,nb2).forEach(b=>{P(b[0],b[1],'#6b5d4a',1,true);R(b[0]+5,b[1]-1,4,3,'#c9a24a');R(b[0]-12,b[1]-6,9,6,'#e8dcc8');TX('Hilfe',b[0]-7.5,b[1]-1.5,'#a33',4)});
+  const nr2=Math.round(cl((45-cg[5])/45,0,1)*3);
+  if(nr2>=1){P(296,248,'#111');R(293.5,235,5,2,'#000');R(294.5,232,3,4,'#000');for(let i=0;i<3;i++)TX('💰',286+i*5,252,'#000',6)}
+  if(nr2>=2){richW.x+=richW.d*10*dt;if(richW.x>230||richW.x<20)richW.d*=-1;P(richW.x,157,'#111',1,false,tm*4);R(richW.x-2.5,144,5,2,'#000');R(richW.x-1.5,141,3,4,'#000');if(((tm*2)|0)%5===0)part(richW.x,142,'✨',-5)}
+  if(nr2>=1&&cg[5]<40){const cxx=((tm*22)%420)-40;R(cxx,164,20,7,'#e6b800');R(cxx+4,160,11,5,'#f5d442');R(cxx+3,170,4,3,'#222');R(cxx+13,170,4,3,'#222');if(((tm*6)|0)%3===0)part(cxx+10,158,'✨',-4)}
+  /* Hund Waldi */
+  dog.t+=dt;dog.x+=dog.d*18*dt;if(dog.x>240||dog.x<10)dog.d*=-1;const dy=162+Math.sin(dog.t*10)*.8;dog.y=dy;R(dog.x-4,dy-5,9,4,'#c08a4a');R(dog.x+(dog.d>0?4:-7),dy-8,4,4,'#c08a4a');R(dog.x-(dog.d>0?5:-5)+(dog.d>0?0:-1),dy-6+Math.sin(dog.t*20)*1.5,2,1.2,'#8b5a2b');R(dog.x-3,dy-1,1.5,3,'#8b5a2b');R(dog.x+3,dy-1,1.5,3,'#8b5a2b');
+  /* Shopper */
+  sh.forEach(s=>{if(s.st===1)return;P(s.x,s.y,s.col,1,false,tm*8+s.o);if(s.bag)R(s.x+(s.d>0?2:-5),s.y-5,3.5,5,'#f59e0b')});
+  if(sel){const sx2=sel.ref?sel.ref.x:sel.x,sy2=(sel.ref&&sel.ref.y!==undefined?sel.ref.y:sel.y)-6;cx.strokeStyle='#ff3d71';cx.lineWidth=1.2;cx.beginPath();cx.arc(sx2,sy2,7+Math.sin(tm*6),0,7);cx.stroke()}
+  parts.forEach(q=>{cx.globalAlpha=cl(q.t,0,1);cx.font='8px sans-serif';cx.textAlign='center';cx.fillText(q.ch,q.x,q.y);cx.globalAlpha=1});
+  cx.setTransform(1,0,0,1,0,0)}
+ function speakers(m){const L=[],g=tg;
+  OPEN.forEach((o,i)=>{if(o)L.push({k:'clerk',x:X0[i]+14,y:112})});
+  sh.forEach(s=>{if(s.st!==1)L.push({k:s.say?'no':s.bag?'yes':'walk',x:s.x,y:s.y-10,ref:s})});
+  for(let i=0;i<Math.min(6,m.al);i++)L.push({k:'al',x:70+i*10,y:248});
+  if(m.ob)L.push({k:'ob',x:194,y:256});L.push({k:'bank',x:100,y:236},{k:'dog',x:dog.x,y:dog.d?152:152,ref:dog},{k:'port',x:262,y:140},{k:'haus',x:150,y:222},{k:'park',x:270,y:262});
+  return L}
+ const TXT={clerk:m=>m.kk>55?['Die Kasse klingelt! 🔔','Wir brauchen Verstärkung!','Guten Tag! Kann ich helfen? 😊']:m.kk<35?['Kaum Kundschaft heute…','Hoffentlich bleiben meine Stunden','Alles so teuer geworden…']:['Schönes Wetter, was?','Heute läuft es okay'],
+  yes:()=>['Schnäppchen! 😍','Ka-ching! Heute gönn ich mir was','Mein Brötchen ist noch bezahlbar 🥐'],no:()=>['Schon wieder teurer! 💸','Zu teuer – ich warte lieber','Mein Geld reicht nicht…'],walk:m=>m.kk>50?['Herrlich, shoppen! 🛍️','Heute ist ein guter Tag']:['Mal sehen, was es kostet…','Hoffentlich nicht schon wieder teurer'],
+  al:m=>m.al>7?['50 Bewerbungen, keine Antwort 😔','Wieder eine Absage…','Wer stellt mich ein?']:['Ich such Arbeit!','Vielleicht klappt’s morgen 🍀'],ob:()=>['Brrr, kalt heute…','Hat jemand Kleingeld? 🪙','Die Miete war zu hoch…','Danke für den Kaffee ☕'],
+  bank:()=>rg.z>=4?['Kredit? Bei dem Zins?! 😱','Sparbuch lohnt sich wieder 🐷','Leider abgelehnt…']:rg.z<=1?['Kredit bewilligt! 🎉','Günstig bauen – jetzt zuschlagen!']:['Zins ist okay – wir rechnen mal'],
+  dog:()=>['Wuff! 🐶','Wau wau! ❤️','*schwanzwedel*'],port:(m)=>Math.abs(m.imp-m.exp)>5?['Zu viel Import, zu wenig Export!','Zölle fressen den Gewinn']:['Moin! Neue Ware da! 📦','Tuuut! 🚢'],
+  haus:m=>m.kk>55?['Heute gibt es Eis für alle! 🍦','Ausflug am Wochenende!']:m.kk<35?['Am Monatsende wird es knapp','Wir müssen jeden Euro umdrehen']:rg.s>=7?['Steuern, Steuern, Steuern…']:['Alles im grünen Bereich 🙂'],
+  park:()=>tg[4]>=60?['Hach, frische Luft 🌳','Die Enten sind glücklich 🦆']:tg[4]<35?['*hust* Smog! 😷','Hier liegt überall Müll!']:['Der Park ist noch okay']};
+ function step(dt,m){tm+=dt;for(let i=0;i<6;i++)cg[i]+=(tg[i]-cg[i])*Math.min(1,dt*2.5);let a=AR.find(x=>x.k===area),tz=a?a.z:uz,tx=a?a.c[0]:ux,ty=a?a.c[1]:uy;if(tourI!==null){const p=TOURP[tourI].pos(),hw=W/2/2.7,hh=H/2/2.7;tz=2.7;tx=cl(p.x,hw,W-hw);ty=cl(p.y-8,hh,H-hh);if(lastTourI!==tourI){lastTourI=tourI;bubs.filter(b=>b.pin).forEach(b=>b.t=0);say(p.x,p.y-16,'👋 '+TOURP[tourI].hi,null,false,600,true);sel={x:p.x,y:p.y}}}const f=Math.min(1,dt*4);cam.x+=(tx-cam.x)*f;cam.y+=(ty-cam.y)*f;cam.z+=(tz-cam.z)*f;
+  OPEN=[1,m.kk>22?1:0,m.kk>32?1:0];
+  spawnT-=dt;if(spawnT<=0){spawnT=cl(2.2-m.kk/60,.45,2.2)*(.7+Math.random()*.6);if(sh.length<9){const op=[0,1,2].filter(i=>OPEN[i]);if(op.length){const L=Math.random()<.5;sh.push({x:L?-6:230+Math.random()*60,d:L?1:-1,y:158+(Math.random()*4|0)*2,shop:rnd(op),st:0,t:0,o:Math.random()*6,ro:Math.random()*8|0,buy:Math.random()<cl(.2+m.kk/100*.8,.15,.95),col:rnd(COLS),bag:false,say:null})}}}
+  for(let i=sh.length-1;i>=0;i--){const s=sh[i];if(s.st===0){const tx=DX[s.shop];s.x+=Math.sign(tx-s.x)*24*dt;if(Math.abs(tx-s.x)<2){s.st=1;s.t=.8+Math.random()}}else if(s.st===1){s.t-=dt;if(s.t<=0){s.st=2;s.bag=s.buy;s.say=!s.buy;s.t=1.2;s.d=Math.random()<.5?1:-1;if(s.buy){part(s.x,s.y-12,rnd(['❤️','💰','⭐']));if(Math.random()<.3)part(s.x+5,s.y-12,'💕')}else part(s.x,s.y-12,'💸')}}else{s.x+=s.d*24*dt;s.t-=dt;if(s.x<-10||s.x>300)sh.splice(i,1)}}
+  cyc.t+=dt;const p=cyc.t/cyc.len;if(!cyc.td&&((cyc.imp&&p>.9)||(!cyc.imp&&p<.05))){cyc.td=true;trucks.push(cyc.imp?{x:262,v:-1,imp:true}:{x:-20,v:1,imp:false})}
+  if(cyc.t>=cyc.len){cyc.x0=cyc.imp?QX:SX;cyc.t=0;cyc.td=false;cyc.imp=Math.random()<m.imp/Math.max(1,m.imp+m.exp);cyc.len=cl(10-(m.imp+m.exp)/6,4,10);part(340,150,'💨',-6)}
+  trucks.forEach(t=>t.x+=t.v*36*dt);for(let i=trucks.length-1;i>=0;i--)if(trucks[i].x<-30||trucks[i].x>262&&trucks[i].v>0)trucks.splice(i,1);
+  if(birds.length<3&&Math.random()<dt*.4)birds.push({x:-10,y:20+Math.random()*50,o:Math.random()*6,v:20+Math.random()*15});for(let i=birds.length-1;i>=0;i--){birds[i].x+=birds[i].v*dt;if(birds[i].x>380)birds.splice(i,1)}
+  parts.forEach(q=>{q.t-=dt;q.x+=q.vx*dt;q.y+=q.vy*dt});for(let i=parts.length-1;i>=0;i--)if(parts[i].t<=0)parts.splice(i,1);
+  if(Math.random()<dt*.25&&cg[2]>40)part(24+Math.random()*30,150,'🕊️',-4);
+  bubT-=dt;if(bubT<=0){bubT=area?2.2:3.2;const lim=tourI!==null?0:area?3:2;if(bubs.filter(b=>!b.pin).length<lim){const vx0=cam.x-W/2/cam.z,vx1=cam.x+W/2/cam.z,vy0=cam.y-H/2/cam.z,vy1=cam.y+H/2/cam.z;const c=people(m).filter(s=>s.x>vx0+10&&s.x<vx1-10&&s.y>vy0+14&&s.y<vy1-2);if(c.length){const s=rnd(c);let t;if(s.dog)t=rnd(['Wuff! 🐶','Wau wau! ❤️','*schwanzwedel*']);else if(s.ro===-1)t=rnd(RICHT);else if(s.ro===-2)t=rnd(BEGT);else{const p=persona(s.ro,tg);t=p.mood+' '+(p.an||p.good)}say(s.x,s.y-14,t,s.ref)}}}
+  for(let i=bubs.length-1;i>=0;i--){const b=bubs[i];b.t-=dt;if(b.f&&b.f.x!==undefined){b.x=b.f.x;if(b.f.y!==undefined)b.y=b.f.y-14}if(b.t<=0){if(b.el)b.el.remove();bubs.splice(i,1)}}
+  if(chipT>0){chipT-=dt;if(chipT<=0)chips={}}}
+ function placeB(){bubs.forEach(b=>{if(!b.el){b.el=document.createElement('div');b.el.className='bb'+(b.pin?' big':'');if(b.html===true)b.el.innerHTML=b.txt;else b.el.textContent=b.txt;bbl.appendChild(b.el)}const k=cssW/W,px=((b.x-cam.x)*cam.z+W/2)*k,py=((b.y-cam.y)*cam.z+H/2)*k;const bw=b.el.offsetWidth||80,bh=b.el.offsetHeight||24;const qx=cl(px,bw/2+3,cssW-bw/2-3),qy=Math.max(py,bh+4);b.el.style.transform=`translate(${qx.toFixed(1)}px,${qy.toFixed(1)}px) translate(-50%,-100%)`;b.el.style.opacity=cl(b.t,0,.6)/.6})}
+ function ui(m){T.forEach(t=>{const o=tiles[t[0]],s=t[3](m);if(o.last!==s){o.v.textContent=s;o.last=s}const c=chips[t[0]],cs=c?((c.d>0?'+':'−')+Math.abs(c.d).toString().replace('.',',')):'';if(o.d.textContent!==cs){o.d.textContent=cs;o.d.className='dl'+(c?(c.good>0?' g':c.good<0?' b':''):'')}})}
+ function loop(now){requestAnimationFrame(loop);if(!ok||!wrap.isConnected||document.hidden)return;if(now-last<33)return;const dt=Math.min(.1,(now-last)/1000);last=now;
+  const r=cv.getBoundingClientRect(),vis=!(r.bottom<0||r.top>innerHeight);{const pw=cv.parentNode.clientWidth,land=innerWidth>innerHeight&&innerHeight<700,want=Math.round(Math.max(200,land?Math.min(pw,(innerHeight-24)*W/H):pw)*dpr);if(Math.abs(cv.width-want)>4)resize()}hslEl.style.display=(cam.z<1.12&&!area&&tourI===null)?'':'none';
+  const m=M(cg);step(dt,m);if(vis){try{draw(m,dt)}catch(er){window.__twErr=String(er)}placeB()}ui(m)}
+ return{attach,card,rgApply:(k,v,g)=>rgApply(k,v,g),area:()=>area,tourI:()=>tourI,tourN:TOURP.length,AR,people:()=>people(M(cg)).length,dbg:()=>({ok,shoppers:sh.length,area,cam:{x:cam.x|0,y:cam.y|0,z:+cam.z.toFixed(2)},err:window.__twErr||null,bubbles:bubs.length,m:M(cg)}),open:k=>{if(ok)openA(k)}};
+})();
+
+function cityCard(g,gp,opt){return City.card(g,gp,opt)}
 
 /* ---------- Zustand ---------- */
 let M='home',solo=null,kc=null,T=null,ST=null,pollT=null,lastHash='',lern=null;
@@ -2676,63 +2938,115 @@ function set(html){$('#app').innerHTML=html;window.scrollTo(0,0);City.attach()}
 
 /* ---------- Ansichten ---------- */
 function vHome(){const p=new URLSearchParams(location.search);const code=(p.get('raum')||'').toUpperCase();
- return `<div class="card" style="background:var(--y)"><h1 style="font-size:34px">🏬 Kabinett Kaufstadt</h1><div style="font-size:18px">Wirtschaftspolitische Ziele und ihre Konflikte – aus Sicht des Einzelhandels. Ihr regiert die Stadt Kaufstadt: Acht Krisen, vier Maßnahmen pro Krise, sechs Ziele im Blick.</div></div>
- <div class="card" style="background:#e8f4f8"><h3>📖 Schritt 1: Lernpfad – die Ziele Schritt für Schritt</h3><div>Erst die sechs Ziele einzeln kennenlernen (mit Beispielen aus dem Laden), dann sehen, wie sie zusammenhängen – danach macht das Spiel richtig Sinn.</div><button class="btn big r" data-a="lern-start">Lernpfad starten</button></div><div class="grid g3"><div class="card"><h3>🎮 Einzelspiel</h3><div class="muted">Du bist Wirtschaftsminister:in. Wähle eine Rolle und steuere durch 8 Krisen.</div><button class="btn big r" data-a="solo-start">Direkt spielen</button></div>
+ return `<div class="card" style="background:var(--y)"><h1 style="font-size:34px">🏬 Kabinett Kaufstadt</h1><div style="font-size:18px">Wirtschaftspolitische Ziele und ihre Konflikte – aus Sicht des Einzelhandels. Ihr regiert die Stadt Kaufstadt: Krisen lesen, mit Reglern und Beschlüssen reagieren, sechs Ziele im Blick.</div></div>
+ <div class="card" style="background:#e8f4f8"><h3>📖 Schritt 1: Lernpfad – die Ziele Schritt für Schritt</h3><div>Erst die sechs Ziele einzeln kennenlernen (mit Beispielen aus dem Laden), dann sehen, wie sie zusammenhängen – danach macht das Spiel richtig Sinn.</div><button class="btn big r" data-a="lern-start">Lernpfad starten</button></div><div class="grid g3"><div class="card"><h3>🎮 Einzelspiel</h3><div class="muted">Du bist Politiker:in von Kaufstadt: Lerne die Menschen kennen, lies die Lage, entscheide mit Reglern und rette die Stadt.</div><button class="btn big r" data-a="solo-start">Direkt spielen</button></div>
  <div class="card"><h3>🔎 Konflikt-Check</h3><div class="muted">10 Blitzfragen: Zielkonflikt, Zielharmonie oder Zielneutralität?</div><button class="btn big t" data-a="kc-start">Training</button></div>
- <div class="card"><h3>👩‍🏫 Klassenmodus</h3><div class="muted">Lehrkraft eröffnet einen Raum, alle bekommen eine Rolle und stimmen ab.</div><button class="btn big n" data-a="t-create">Raum eröffnen</button></div></div>
+ <div class="card"><h3>👩‍🏫 Klassenmodus</h3><div class="muted">Lehrkraft erstellt ein Szenario mit Runden. Alle spielen in ihrer eigenen Stadt, sammeln Punkte, und am Ende gibt es eine Siegerehrung.</div><button class="btn big n" data-a="t-create">Raum eröffnen</button></div></div>
  <div class="card"><h3>🙋 Einem Raum beitreten</h3><input id="jc" placeholder="Raumcode" maxlength="4" value="${esc(code)}" style="width:130px;text-transform:uppercase"><input id="jn" placeholder="Dein Name" maxlength="20"><button class="btn" data-a="join">Beitreten</button><div id="jerr" class="bad"></div></div>
  <div class="card"><h3>🔷 Das magische Sechseck</h3><div class="grid g3">${ZIELE.map(z=>`<div style="border:3px solid var(--ink);border-radius:12px;padding:8px;background:#fffdf4"><div style="font-size:30px">${z.ic}</div><b>${z.n}</b><div class="muted">${z.f}</div></div>`).join('')}</div></div>`}
 
-function vSolo(){const s=solo;
- if(s.ph==='role')return `<div class="card"><h2>Welche Rolle übernimmst du?</h2><div class="muted">Jede Rolle hat eigene Interessen. Du entscheidest aber für ganz Kaufstadt!</div></div><div class="grid g2">${ROLLEN.map((R,i)=>`<div class="card rolechoice" data-a="role" data-i="${i}"><div class="role"><div class="ic">${R.ic}</div><div><h3>${esc(R.n)}</h3><div class="muted">${esc(R.b)}</div><div class="stars">${stars(R.w)}</div></div></div></div>`).join('')}</div><button class="btn" data-a="role" data-i="${Math.floor(Math.random()*ROLLEN.length)}">🎲 Zufällige Rolle</button>`;
- if(s.ph==='vote'){const E=EV[s.r];return eventCard(s.r)+`${cityCard(s.g,null,{focus:EV[s.r].sc,role:s.role,hint:s.hint!=null?EV[s.r].ms[s.hint].e:null})}<div class="card"><h3>📊 Lage der Stadt</h3>${gauges(s.g)}<div class="muted">Grün ab 65 · Gelb · Rot unter 35</div></div>`+roleCard(s.role)+alltag(s.role,s.g)+`<div class="card"><h3>Was beschließt das Kabinett?</h3><div class="muted">🔍 Berater-Joker: ${s.jk} übrig. Ein Joker zeigt, welche Ziele eine Maßnahme verbessert (↑) oder verschlechtert (↓). Jeder übrige Joker bringt am Ende +5 Punkte.</div>${E.ms.map((m,i)=>`<button class="ms" data-a="pick" data-i="${i}"><b>${m.ic} ${esc(m.n)}</b><small>${esc(m.t)}</small></button>${hintRow(s,i)}`).join('')}</div>`}
- if(s.ph==='result'){const E=EV[s.r],q=E.q;const done=s.qa!==null;
-  return resultBlock(s.r,s.ch,s.gp,s.g,s.role)+`<div class="card"><h3>❓ Kurzquiz (+10 Punkte)</h3><div>${esc(q.q)}</div>${q.o.map((o,i)=>`<button class="ms ${done?(i===q.c?'sel':(i===s.qa?'chosen':'')):''}" data-a="quiz" data-i="${i}" ${done?'disabled':''}><b>${esc(o)}</b></button>`).join('')}${done?`<div class="${s.qa===q.c?'ok':'bad'}">${s.qa===q.c?'Richtig! +10':'Leider falsch.'} ${esc(q.x)}</div>`:''}</div><div class="card"><div class="fact">🗣️ <b>Diskussion:</b> ${esc(E.dq)}</div></div><button class="btn big r" data-a="next" ${done?'':'disabled'}>${s.r<EV.length-1?'Nächste Krise ▶':'Zum Zeugnis 🏁'}</button>`}
- if(s.ph==='end'){const n=greenCount(s.g);const pts=s.pts+n*10+s.jk*5;return endBlock(s.g,s.h)+alltag(s.role,s.g,'Dein Alltag nach der Amtszeit')+`<div class="card"><h3>Punkte</h3><div style="font-size:24px;font-weight:900">${pts} Punkte</div><div class="muted">Quiz ${s.pts} + ${n} grüne Ziele × 10 + ${s.jk} Joker × 5</div></div><button class="btn big r" data-a="solo-start">Nochmal spielen</button><button class="btn big" data-a="home">Startseite</button>`}}
+/* ---------- Szenario & Spiel-Engine ---------- */
+const clone=o=>JSON.parse(JSON.stringify(o));
+const INTRO_STD='Kaufstadt hat 40 Erwerbspersonen, drei Läden, einen Hafen, eine Bank und viele Haushalte. Du bist die Politikerin oder der Politiker, der die Stadt durch Krisen führt. Lies in jeder Runde zuerst die Lage. Dann entscheidest du mit Beschlüssen und mit drei Reglern (Zinsen, Steuern, Staatsausgaben). Ziel: möglichst viele der sechs wirtschaftspolitischen Ziele im grünen Bereich halten. Punkte gibt es für jedes Ziel am Ende jeder Runde: grün 10, gelb 4, rot 0.';
+const HORMUS={c:{t:'Straße von Hormus gesperrt',txt:'Gedankenspiel: Ein Konflikt im Persischen Golf blockiert die Straße von Hormus, eine der wichtigsten Seestraßen für Öl und Gas. Tanker bleiben aus, Frachtraten und Energiepreise steigen, Lieferketten stocken.',wirk:'Öl und Gas werden teurer: Transport, Heizung und Plastikverpackungen verteuern sich, die Preise im Regal steigen (Preisniveaustabilität ↓). Waren aus Asien kommen verspätet, Regale bleiben leer, der Handel wird erschwert (Außenwirtschaft ↓). Betriebe haben höhere Kosten und weniger Umsatz, Jobs wackeln (Beschäftigung ↓, Wachstum ↓). Wer wenig verdient, trifft es am härtesten (Verteilung ↓).',sc:[-16,-6,-10,-14,2,-6]}};
+const SC_STD={n:'Standard: 8 Krisen',intro:INTRO_STD,rounds:EV.map((_,i)=>({e:i})),g0:[50,50,50,50,50,50],mult:1,eing:2,jok:3,reg:true};
+const PRESETS=[()=>clone(SC_STD),()=>Object.assign(clone(SC_STD),{n:'Kurz: 4 Krisen',rounds:[0,2,4,6].map(e=>({e}))}),()=>Object.assign(clone(SC_STD),{n:'Handelskrise Hormus',intro:'Gedankenspiel: Ein Konflikt im Persischen Golf trifft den Welthandel. Kaufstadt hängt an Importen und Energie. '+INTRO_STD,rounds:[HORMUS,{e:3},{e:4},{e:0},{e:5}].map(clone)})];
+let SC=SC_STD;
+function EVR(i){const r=SC.rounds[i];if(r.e!=null)return EV[r.e];const c=r.c;return{t:c.t,ic:'⚡',txt:c.txt,wirk:c.wirk||'',sc:c.sc,ez:'Überlege: Was bedeutet das für Einkaufspreise, Kundschaft und Personal in deinem Laden?',kn:['Regler','Zinsen, Steuern und Staatsausgaben wirken auf mehrere Ziele zugleich, meist mit Nebenwirkungen.'],f:'Krisen treffen selten nur ein Ziel. Meist rutschen mehrere gleichzeitig ab.',meme:['Krise!','Jetzt sind die Regler dran','🎚️'],dq:'Wie habt ihr mit Zinsen, Steuern und Staatsausgaben reagiert, und was war der Preis dafür?',ms:[],q:null,cust:true}}
+const shock=i=>EVR(i).sc.map(v=>Math.round(v*SC.mult));
+const roundPts=g=>g.reduce((a,v)=>a+(v>=65?10:v>=35?4:0),0);
+function shockChips(i){const sc=shock(i);const l=sc.map((v,k)=>Math.abs(v)>=3?`<span class="pill ${v<0?'k':'h'}">${ZIELE[k].ic} ${ZIELE[k].s} ${v<0?'−':'+'}${Math.abs(v)}</span>`:'').join('');return l||'<span class="muted">Kaum direkte Wirkung auf die Ziele</span>'}
+function rgOpt(s){return{rg:Object.assign({},s.rg,{mv:s.mv,max:SC.reg?SC.eing:0,ro:!SC.reg||s.ph!=='vote'||s.mv>=SC.eing}),onrg:soloRg}}
+function soloRg(k,v){const s=solo;if(!s||s.ph!=='vote'||!SC.reg||s.mv>=SC.eing)return false;const R=City.rgApply(k,v,s.g);s.rgp=s.g.slice();s.g=R.g;s.rg[k]=v;s.mv++;s.news=R.news;{const y=window.scrollY;render();window.scrollTo(0,y)}return true}
+function newPlay(sc,cls){SC=sc||SC_STD;return{ph:'tour',tour:0,r:0,g:SC.g0.slice(),pts:0,h:[],qa:null,jk:SC.jok,hs:{},hint:null,rg:{z:2,s:5,a:5},mv:0,news:null,rgp:null,role:null,cls:cls||null,lp:0}}
+function startRound(i){const s=solo;if(i===0){s.g=SC.g0.slice();s.jk=SC.jok}s.r=i;s.rgp=null;s.mv=0;s.news=null;s.hint=null;s.qa=null;s.ph='brief'}
+function afterTour(){const s=solo;s.ph='intro'}
+function afterIntro(){const s=solo;if(M==='student'&&!(ST.meta.ph==='play'&&ST.meta.open>0)){s.ph='wait';s.nx=0}else startRound(0)}
+const totalPts=s=>s.pts+(s.ph==='end'?s.jk*5:0);
+function report(){if(M!=='student'||!ST||!solo)return;const s=solo;try{store.set('wp-p',JSON.stringify(s))}catch(e){}api('score',{c:ST.code,n:ST.name,p:{r:Math.min(SC.rounds.length,s.r+(['result','end'].includes(s.ph)||s.ph==='wait'&&s.nx>s.r?1:0)),pts:totalPts(s),gn:greenCount(s.g),d:s.ph==='end',g:s.g.map(Math.round)}})}
+function ptsCard(s){return `<div class="card"><b>⭐ ${totalPts(s)} Punkte</b> <span class="muted">pro Runde: Ziel grün 10 · gelb 4 · rot 0, Quiz +10, Joker am Ende +5</span></div>`}
+function vSolo(){const s=solo,N=SC.rounds.length;
+ if(s.ph==='tour'){const i=s.tour,last=i===City.tourN-1;return `<div class="card"><h2>🏙️ Willkommen in Kaufstadt!</h2><div>Lerne zuerst die Menschen kennen, die hier leben. Danach bist du ihre Politikerin oder ihr Politiker und musst die Stadt retten.</div><div class="muted">Station ${i+1} von ${City.tourN}</div></div>${cityCard(s.g,null,{tourp:i})}<button class="btn big r" data-a="tour-next">${last?'🎩 Amt übernehmen':'Weiter ▶'}</button><button class="btn w" data-a="tour-skip">Rundgang überspringen</button>`}
+ if(s.ph==='intro')return `<div class="card" style="background:#fff2c2"><h2>🎩 Deine Aufgabe als Politiker:in</h2><div style="white-space:pre-line">${esc(SC.intro)}</div><div class="muted" style="margin-top:6px">Szenario: ${esc(SC.n)} · ${N} Runden</div></div>${cityCard(s.g,null,Object.assign({keep:true},rgOpt(s)))}<div class="card"><h3>📊 Ausgangslage der Stadt</h3>${gauges(s.g)}</div><button class="btn big r" data-a="intro-ok">✅ Gelesen – los geht’s</button>`;
+ if(s.ph==='wait')return `<div class="card hint">⏳ Warte, bis deine Lehrkraft Runde ${s.nx+1} freigibt … Schau dich in der Stadt um und klicke auf Menschen und Gebäude!</div>${cityCard(s.g,null,Object.assign({},rgOpt(s)))}<div class="card"><h3>📊 Lage der Stadt</h3>${gauges(s.g)}</div>${ptsCard(s)}`;
+ if(s.ph==='brief'){const E=EVR(s.r);return eventCard(s.r)+(E.wirk?`<div class="card chain"><h3>🔎 So wirkt es sich aus</h3><div>${esc(E.wirk)}</div></div>`:'')+`<div class="card"><h3>📈 Erwartete Wirkung auf die Ziele</h3><div>${shockChips(s.r)}</div><div class="muted" style="margin-top:6px">So stark trifft die Krise die Ziele, sobald du weiterklickst.</div></div>${cityCard(s.g,null,Object.assign({ev:E},rgOpt(s)))}<div class="card"><h3>📊 Lage der Stadt (vor der Krise)</h3>${gauges(s.g)}</div><button class="btn big r" data-a="read">📖 Gelesen – Krise trifft die Stadt</button>`}
+ if(s.ph==='vote'){const E=EVR(s.r),gp=s.rgp;s.rgp=null;const left=Math.max(0,SC.eing-s.mv);
+  return eventCard(s.r)+`${cityCard(s.g,gp||s.gp,Object.assign({focus:shock(s.r),ev:E,news:s.news,hint:s.hint!=null?E.ms[s.hint].e:null},rgOpt(s)))}<div class="card"><h3>📊 Lage der Stadt</h3>${gauges(s.g)}<div class="muted">Grün ab 65 · Gelb · Rot unter 35</div></div>${SC.reg?`<div class="card" style="background:#e8f4f8"><h3>🎚️ Deine Regler</h3><div>Klicke in der Stadt auf die <b>Bank</b> (Zinsen), das <b>Wohnviertel</b> (Steuern) oder die <b>Arbeitsagentur</b> (Staatsausgaben). Du hast noch <b>${left}</b> Eingriff${left===1?'':'e'} in dieser Runde.</div></div>`:''}`+(E.ms.length?`<div class="card"><h3>Was beschließt du?</h3><div class="muted">🔍 Berater-Joker: ${s.jk} übrig. Ein Joker zeigt, welche Ziele eine Maßnahme verbessert (↑) oder verschlechtert (↓). Jeder übrige Joker bringt am Ende +5 Punkte.</div>${E.ms.map((m,i)=>`<button class="ms" data-a="pick" data-i="${i}"><b>${m.ic} ${esc(m.n)}</b><small>${esc(m.t)}</small></button>${hintRow(s,i)}`).join('')}</div>`:`<div class="card"><div>Bei dieser Krise gibt es keinen Beschluss. Du reagierst nur mit den Reglern.</div></div><button class="btn big r" data-a="pick" data-i="-1">✅ Runde abschließen</button>`)+ptsCard(s)}
+ if(s.ph==='result'){const E=EVR(s.r),q=E.q;const done=s.qa!==null||!q;
+  return resultBlock(s.r,s.ch,s.gp,s.g,null)+`<div class="card"><h3>⭐ Punkte dieser Runde: +${s.lp}</h3><div class="muted">${s.g.map((v,i)=>ZIELE[i].ic+' '+(v>=65?'grün +10':v>=35?'gelb +4':'rot 0')).join(' · ')}</div></div>`+(q?`<div class="card"><h3>❓ Kurzquiz (+10 Punkte)</h3><div>${esc(q.q)}</div>${q.o.map((o,i)=>`<button class="ms ${s.qa!==null?(i===q.c?'sel':(i===s.qa?'chosen':'')):''}" data-a="quiz" data-i="${i}" ${s.qa!==null?'disabled':''}><b>${esc(o)}</b></button>`).join('')}${s.qa!==null?`<div class="${s.qa===q.c?'ok':'bad'}">${s.qa===q.c?'Richtig! +10':'Leider falsch.'} ${esc(q.x)}</div>`:''}</div>`:'')+`<div class="card"><div class="fact">🗣️ <b>Diskussion:</b> ${esc(E.dq)}</div></div>${ptsCard(s)}<button class="btn big r" data-a="next" ${done?'':'disabled'}>${s.r<N-1?'Nächste Krise ▶':'Zum Zeugnis 🏁'}</button>`}
+ if(s.ph==='end'){return endBlock(s.g,s.h)+`<div class="card"><h3>🏆 Dein Ergebnis</h3><div style="font-size:26px;font-weight:900">${totalPts(s)} Punkte</div><div class="muted">${s.pts} Rundenpunkte + ${s.jk} Joker × 5</div></div>`+(s.cls?`<div class="card hint">Warte auf die Siegerehrung deiner Lehrkraft …</div>`:`<button class="btn big r" data-a="solo-start">Nochmal spielen</button><button class="btn big" data-a="home">Startseite</button>`)}}
+
 
 function vKC(){const k=kc;if(k.i>=KC.length)return `<div class="card" style="text-align:center"><h2>Training geschafft!</h2><div style="font-size:30px;font-weight:900">${k.score} von ${KC.length}</div><div>${k.score>=9?'🥇 Konflikt-Profi':k.score>=6?'🥈 Gut dabei':'🥉 Weiter üben'}</div></div>${glossary()}<button class="btn big r" data-a="kc-start">Nochmal</button><button class="btn big" data-a="home">Startseite</button>`;
  const c=KC[k.i],d=k.ans!==null;const lab=['Zielkonflikt 🔥','Zielharmonie 🤝','Zielneutralität 😐'];
  return `<div class="card"><span class="tag">Frage ${k.i+1} von ${KC.length}</span><h2>${c.a} ↔ ${c.b}</h2><div style="font-size:18px">${esc(c.s)}</div></div><div class="card"><div class="muted">Wie stehen die beiden Ziele zueinander?</div>${lab.map((l,i)=>`<button class="ms ${d?(i===c.ans?'sel':(i===k.ans?'chosen':'')):''}" data-a="kc-ans" data-i="${i}" ${d?'disabled':''}><b>${l}</b></button>`).join('')}${d?`<div class="${k.ans===c.ans?'ok':'bad'}">${k.ans===c.ans?'Richtig!':'Nicht ganz.'} ${esc(c.x)}</div><button class="btn big r" data-a="kc-next">${k.i<KC.length-1?'Weiter ▶':'Ergebnis'}</button>`:''}</div>`}
 
-function vTeacher(){const t=T,m=t.meta;let h='';
+/* ---------- Klassenmodus: Lehrkraft ---------- */
+const lib=EV.map((e,i)=>`<option value="${i}">${e.ic} ${esc(e.t)}</option>`).join('');
+function dv(k,d){return esc((T.draft&&T.draft[k]!==undefined)?T.draft[k]:(d===undefined?'':d))}
+function scEditor(t){const sc=t.sc,N=sc.rounds.length;
+ const rows=sc.rounds.map((r,i)=>{const e=r.e!=null?EV[r.e]:null;return `<div class="rrow"><span class="num">${i+1}</span><span>${e?e.ic+' '+esc(e.t)+' <small class="muted">(Bibliothek)</small>':'⚡ '+esc(r.c.t)+' <small class="muted">(eigene Krise, nur Regler)</small>'}</span><span class="rbt"><button class="btn w" data-a="t-up" data-i="${i}" ${i?'':'disabled'}>↑</button><button class="btn w" data-a="t-dn" data-i="${i}" ${i<N-1?'':'disabled'}>↓</button><button class="btn w" data-a="t-del" data-i="${i}">🗑</button></span></div>`}).join('')||'<div class="muted">Noch keine Runde. Füge unten Krisen hinzu.</div>';
+ const so=(k,vals,cur,lab)=>`<label>${lab} <select data-sc="${k}">${vals.map(v=>`<option value="${v[0]}" ${String(v[0])===String(cur)?'selected':''}>${v[1]}</option>`).join('')}</select></label>`;
+ return `<div class="card"><h3>🧩 Szenario zusammenstellen</h3>
+ <div class="muted">Vorlagen (ersetzen die Runden):</div><button class="btn w" data-a="t-preset" data-i="0">Standard (8 Krisen)</button><button class="btn w" data-a="t-preset" data-i="1">Kurz (4 Krisen)</button><button class="btn w" data-a="t-preset" data-i="2">🛢️ Handelskrise Hormus</button>
+ <div class="muted" style="margin-top:8px">Name des Szenarios</div><input data-sc="n" value="${esc(sc.n)}" maxlength="40" style="width:100%">
+ <div class="muted" style="margin-top:8px">Einführungstext (alle müssen ihn zuerst lesen)</div><textarea data-sc="intro" rows="4" style="width:100%">${esc(sc.intro)}</textarea>
+ <h4 style="margin:10px 0 4px">Runden (${N})</h4>${rows}
+ <div style="margin-top:8px">➕ Aus der Bibliothek: <select id="addlib">${lib}</select> <button class="btn w" data-a="t-addlib">Hinzufügen</button></div>
+ <details id="cdet" ${t.dopen?'open':''} style="margin-top:8px"><summary><b>➕ Eigene Krise anlegen</b> (z. B. Straße von Hormus gesperrt)</summary>
+  <div class="muted">Titel</div><input id="cn" data-dr="cn" value="${dv('cn')}" maxlength="60" style="width:100%">
+  <div class="muted">Lage (was ist passiert?)</div><textarea id="ct" data-dr="ct" rows="3" style="width:100%">${dv('ct')}</textarea>
+  <div class="muted">So wirkt es sich aus (Erklärung für die Schüler)</div><textarea id="cw" data-dr="cw" rows="3" style="width:100%">${dv('cw')}</textarea>
+  <div class="muted">Schock auf die Ziele (−30 bis +30)</div><div class="shk">${ZIELE.map((z,k)=>`<label>${z.ic}<input type="number" id="cs${k}" data-dr="cs${k}" min="-30" max="30" value="${dv('cs'+k,0)}"></label>`).join('')}</div>
+  <button class="btn r" data-a="t-addcust">Krise hinzufügen</button></details>
+ <h4 style="margin:10px 0 4px">Einstellungen</h4>
+ <div class="muted">Startwerte der Ziele (0–100)</div><div class="shk">${ZIELE.map((z,k)=>`<label>${z.ic}<input type="number" data-sc="g0-${k}" min="0" max="100" value="${sc.g0[k]}"></label>`).join('')}</div>
+ <div class="setg">${so('mult',[[.5,'sanft ×0,5'],[1,'normal ×1'],[1.5,'hart ×1,5']],sc.mult,'Härte der Krisen')}${so('eing',[[0,'0'],[1,'1'],[2,'2'],[3,'3'],[4,'4']],sc.eing,'Regler-Eingriffe pro Runde')}${so('jok',[[0,'0'],[1,'1'],[2,'2'],[3,'3'],[5,'5']],sc.jok,'Berater-Joker')}<label><input type="checkbox" data-sc="reg" ${sc.reg?'checked':''}> Regler aktiv</label></div></div>`}
+function board(t,m){const N=m.sc.rounds.length;const rows=t.pl.map(p=>({n:p.n,s:p.s||{r:0,pts:0,gn:0,d:0,g:[]}})).sort((a,b)=>b.s.pts-a.s.pts||b.s.gn-a.s.gn);
+ if(!rows.length)return '<div class="muted">Noch niemand da.</div>';
+ return `<table><tr><th>#</th><th>Name</th><th>Runden</th><th>Ziele grün</th><th>Punkte</th><th>Status</th><th></th></tr>${rows.map((p,i)=>`<tr><td>${['🥇','🥈','🥉'][i]||i+1}</td><td>${esc(p.n)}</td><td>${p.s.r}/${N}</td><td>${p.s.gn}/6</td><td><b>${p.s.pts}</b></td><td>${p.s.d?'✅ fertig':p.s.r>=m.open?'⏳ wartet':'🎮 spielt'}</td><td><button class="btn w" style="padding:2px 8px;margin:0" data-a="t-kick" data-n="${esc(p.n)}">✕</button></td></tr>`).join('')}</table>`}
+function vTeacher(){const t=T,m=t.meta;SC=m.sc||t.sc;let h='';
  const link=location.origin+location.pathname+'?raum='+t.code;
  h+=`<div class="card"><span class="tag">Lehrkraft</span> <b>Raumcode:</b> <span class="code">${t.code}</span> <button class="btn w" data-a="copy">Link kopieren</button><button class="btn n" data-a="t-close">Raum schließen</button></div>`;
  if(m.ph==='lobby'){let qr='';try{const q=qrcode(0,'M');q.addData(link);q.make();qr=q.createSvgTag({cellSize:6,margin:2,scalable:true})}catch(e){}
-  h+=`<div class="grid g2"><div class="card" style="text-align:center"><h3>Scannen & beitreten</h3><div class="qrbox">${qr}</div><div class="muted" style="word-break:break-all">${esc(link)}</div></div><div class="card"><h3>👥 ${t.pl.length} Spieler:innen</h3>${plTable(t,false)}<button class="btn big r" data-a="t-start" ${t.pl.length?'':'disabled'}>Runde 1 starten ▶</button></div></div>`}
- else if(m.ph==='vote'){const n=t.pl.length,cnt=[0,0,0,0];Object.values(t.votes).forEach(v=>cnt[v]++);const tot=cnt.reduce((a,b)=>a+b,0);const E=EV[m.r];const top=Math.max(...cnt);const maj=cnt.indexOf(top);
-  h+=eventCard(m.r)+`${cityCard(m.g,null,{focus:EV[m.r].sc})}<div class="card"><h3>📊 Lage der Stadt</h3>${gauges(m.g)}</div><div class="card"><h3>🗳️ Abstimmung: ${tot} von ${n}</h3>${E.ms.map((x,i)=>`<div class="vbar"><div style="width:62%"><b>${x.ic} ${esc(x.n)}</b></div><div class="b"><i style="width:${tot?cnt[i]/tot*100:0}%"></i></div><b>${cnt[i]}</b></div>`).join('')}<div style="margin-top:8px">Beschluss: <select id="ovr">${E.ms.map((x,i)=>`<option value="${i}" ${i===maj?'selected':''}>${x.ic} ${esc(x.n)}${i===maj&&tot?' (Mehrheit)':''}</option>`).join('')}</select> <button class="btn r" data-a="t-eval">Auswerten ▶</button></div></div><div class="card"><h3>Spieler:innen</h3>${plTable(t,true)}</div>`}
- else if(m.ph==='result'){const mo=t.pl.map(p=>`<span class="pill">${MOODS[moodOf(p.r,EV[m.r].ms[m.ch].e)]} ${esc(p.n)} <small>(${ROLLEN[p.r].ic})</small></span>`).join('');
-  h+=eventCard(m.r)+resultBlock(m.r,m.ch,m.gp,m.g,null)+`<div class="card"><h3>🎭 Stimmungsbild der Rollen</h3>${mo||'–'}<div class="muted" style="margin-top:6px">Stimmen: ${EV[m.r].ms.map((x,i)=>x.ic+' '+(m.ct[i]||0)).join(' · ')}</div></div><div class="card"><div class="fact">🗣️ <b>Diskussion:</b> ${esc(EV[m.r].dq)}</div></div><button class="btn big r" data-a="t-next">${m.r<EV.length-1?'Nächste Runde ▶':'Zum Zeugnis 🏁'}</button>`}
- else h+=endBlock(m.g,m.h)+`<button class="btn big" data-a="t-close">Raum schließen & zur Startseite</button>`;
+  h+=`<div class="grid g2"><div class="card" style="text-align:center"><h3>Scannen & beitreten</h3><div class="qrbox">${qr}</div><div class="muted" style="word-break:break-all">${esc(link)}</div></div><div class="card"><h3>👥 ${t.pl.length} Spieler:innen</h3>${plTable(t)}</div></div>`+scEditor(t)+`<button class="btn big r" data-a="t-start" ${t.sc.rounds.length?'':'disabled'}>Szenario starten ▶ (Runde 1 freigeben)</button><div class="muted">Die Schüler können schon beitreten und den Stadtrundgang machen. Sie spielen allein in ihrer eigenen Stadt. Du gibst die Runden frei.</div>`}
+ else if(m.ph==='play'){const N=m.sc.rounds.length,cur=EVR(Math.max(0,m.open-1));
+  const gs=t.pl.filter(p=>p.s&&p.s.g&&p.s.g.length===6),avg=gs.length?[0,1,2,3,4,5].map(k=>Math.round(gs.reduce((a,p)=>a+p.s.g[k],0)/gs.length)):null;
+  const wait=t.pl.filter(p=>p.s&&p.s.r>=m.open&&!p.s.d).length;
+  h+=`<div class="card"><h3>🎬 ${esc(m.sc.n)}</h3><div><b>Runde ${m.open} von ${N} freigegeben:</b> ${cur.ic} ${esc(cur.t)}</div><div class="muted">${wait} von ${t.pl.length} warten auf die nächste Runde.</div><button class="btn big r" data-a="t-open" ${m.open>=N?'disabled':''}>▶ Runde ${Math.min(N,m.open+1)} freigeben</button><button class="btn w" data-a="t-openall" ${m.open>=N?'disabled':''}>Alle Runden freigeben</button><button class="btn n" data-a="t-end">🏁 Spiel beenden und Siegerehrung</button></div>`;
+  h+=`<div class="card"><h3>🏆 Rangliste (live)</h3>${board(t,m)}</div>`;
+  if(avg)h+=`<div class="card"><h3>📊 Durchschnitt aller Städte</h3>${gauges(avg)}<div class="muted">Auf welches Ziel achten die Schüler zu wenig?</div></div>`;
+  h+=`<div class="card"><div class="fact">🗣️ <b>Diskussion zur freigegebenen Krise:</b> ${esc(cur.dq)}</div></div>`}
+ else{const rows=t.pl.map(p=>({n:p.n,s:p.s||{pts:0,gn:0}})).sort((a,b)=>b.s.pts-a.s.pts||b.s.gn-a.s.gn),top=rows.slice(0,3);
+  h+=`<div class="card" style="text-align:center;background:#fff2c2"><h2>🏆 Siegerehrung</h2>${top.length?`<div style="font-size:26px;font-weight:900">${esc(top[0].n)}</div><div>ist der oder die beste Politiker:in mit ${top[0].s.pts} Punkten!</div>`:''}<div class="podium">${top.map((p,i)=>`<div class="pod p${i}"><div style="font-size:34px">${['🥇','🥈','🥉'][i]}</div><b>${esc(p.n)}</b><div>${p.s.pts} Punkte</div><div class="muted">${p.s.gn}/6 Ziele grün</div></div>`).join('')}</div></div><div class="card"><h3>Gesamtwertung</h3>${board(t,m)}</div><button class="btn big" data-a="t-close">Raum schließen & zur Startseite</button>`}
  return h}
-function plTable(t,votes){if(!t.pl.length)return '<div class="muted">Noch niemand da – QR-Code scannen lassen …</div>';return `<table><tr><th>Name</th><th>Rolle</th>${votes?'<th>Stimme</th>':''}<th></th></tr>${t.pl.map(p=>`<tr><td>${esc(p.n)}</td><td>${ROLLEN[p.r].ic} ${esc(ROLLEN[p.r].n.split(',')[0])}</td>${votes?`<td>${t.votes[p.n]!==undefined?'✅':'…'}</td>`:''}<td><button class="btn w" style="padding:2px 8px;margin:0" data-a="t-kick" data-n="${esc(p.n)}">✕</button></td></tr>`).join('')}</table>`}
+function plTable(t){if(!t.pl.length)return '<div class="muted">Noch niemand da – QR-Code scannen lassen …</div>';return `<table><tr><th>Name</th><th></th></tr>${t.pl.map(p=>`<tr><td>${esc(p.n)}</td><td><button class="btn w" style="padding:2px 8px;margin:0" data-a="t-kick" data-n="${esc(p.n)}">✕</button></td></tr>`).join('')}</table>`}
 
-function vStudent(){const s=ST,m=s.meta;const hd=`<div class="card"><span class="tag">Raum ${s.code}</span> <b>${esc(s.name)}</b></div>`;
- if(m.ph==='lobby')return hd+roleCard(s.role)+`<div class="card hint">⏳ Warte, bis die Lehrkraft das Spiel startet … (${s.n} im Raum)</div>`;
- if(m.ph==='vote'){const E=EV[m.r];return hd+eventCard(m.r)+`${cityCard(m.g,null,{focus:EV[m.r].sc,role:s.role})}<div class="card"><h3>📊 Lage der Stadt</h3>${gauges(m.g)}</div>`+roleCard(s.role)+alltag(s.role,m.g)+`<div class="card"><h3>Wofür stimmst du?</h3><div class="muted">Du darfst deine Stimme ändern, solange die Runde offen ist.</div>${E.ms.map((x,i)=>`<button class="ms ${s.my===i?'sel':''}" data-a="s-vote" data-i="${i}"><b>${x.ic} ${esc(x.n)}</b><small>${esc(x.t)}</small></button>`).join('')}${s.my!==null?'<div class="ok">✅ Deine Stimme ist abgegeben.</div>':''}</div>`}
- if(m.ph==='result')return hd+resultBlock(m.r,m.ch,m.gp,m.g,s.role)+`<div class="card"><div class="muted">Stimmen: ${EV[m.r].ms.map((x,i)=>x.ic+' '+(m.ct[i]||0)).join(' · ')}</div><div class="fact">🗣️ <b>Diskussion:</b> ${esc(EV[m.r].dq)}</div></div><div class="card hint">Warte auf die nächste Runde …</div>`;
- return hd+endBlock(m.g,m.h)+alltag(s.role,m.g,'Dein Alltag nach der Amtszeit')}
+/* ---------- Klassenmodus: Schüler ---------- */
+function vStudent(){const s=ST,m=s.meta;const hd=`<div class="card"><span class="tag">Raum ${s.code}</span> <b>${esc(s.name)}</b>${solo?` · ⭐ ${totalPts(solo)} Punkte`:''}</div>`;
+ if(m.ph==='end'){const md=['🥇','🥈','🥉'];return hd+`<div class="card" style="text-align:center"><h2>🏁 Siegerehrung</h2>${s.rank?`<div style="font-size:22px">Du bist auf Platz <b>${s.rank}</b>${s.total?' von '+s.total:''} mit ${solo?totalPts(solo):0} Punkten.</div>`:''}<div style="margin-top:8px">${(s.top||[]).map((p,i)=>`<div style="font-size:20px">${md[i]} ${esc(p.n)}: ${p.pts} Punkte</div>`).join('')}</div></div><button class="btn big" data-a="home">Zur Startseite</button>`}
+ return hd+vSolo()}
 
 function render(){if(M==='home')set(vHome());else if(M==='lern')set(vLern());else if(M==='solo')set(vSolo());else if(M==='kc')set(vKC());else if(M==='teacher')set(vTeacher());else if(M==='student')set(vStudent())}
 
 /* ---------- Klassenmodus: Lehrkraft ---------- */
-async function tCreate(){const r=await api('create',{});if(!r.ok){alert(r.err);return}T={code:r.c,hk:r.hk,meta:r.meta,pl:[],votes:{}};store.set('wp-t',JSON.stringify({c:r.c,hk:r.hk}));M='teacher';stopPoll();render();pollT=setInterval(tPoll,3000)}
+async function tCreate(){const r=await api('create',{});if(!r.ok){alert(r.err);return}T={code:r.c,hk:r.hk,meta:r.meta,pl:[],sc:clone(SC_STD),draft:{}};store.set('wp-t',JSON.stringify({c:r.c,hk:r.hk}));M='teacher';stopPoll();render();pollT=setInterval(tPoll,3000)}
 async function tPoll(){if(!T)return;const r=await api('state',{c:T.code,hk:T.hk});if(!r.ok){if(r.err==='Raum nicht gefunden'){alert('Raum abgelaufen.');tLeave()}return}
- const h=JSON.stringify([r.meta,r.pl,r.votes]);if(h===lastHash)return;
- const ae=document.activeElement;if(ae&&ae.tagName==='SELECT'&&ae.id==='ovr'&&r.meta.ph==='vote'&&T.meta.ph==='vote'&&T.meta.r===r.meta.r){T.pl=r.pl;T.votes=r.votes;T.meta=r.meta;lastHash=h;return}
- lastHash=h;T.meta=r.meta;T.pl=r.pl;T.votes=r.votes;render()}
+ const h=JSON.stringify([r.meta,r.pl]);if(h===lastHash)return;
+ const ae=document.activeElement;if(ae&&/INPUT|SELECT|TEXTAREA/.test(ae.tagName)&&T.meta.ph==='lobby'&&r.meta.ph==='lobby'){T.pl=r.pl;T.meta=r.meta;lastHash=h;return}
+ lastHash=h;T.meta=r.meta;T.pl=r.pl;if(r.meta.sc)T.sc=r.meta.sc;{const y=window.scrollY;render();window.scrollTo(0,y)}}
 function tLeave(){stopPoll();T=null;store.del('wp-t');M='home';render()}
 async function tSetMeta(m){const r=await api('set',{c:T.code,hk:T.hk,meta:m});if(!r.ok){alert(r.err);return false}T.meta=m;lastHash='';return true}
-async function tStartRound(r){const prev=T.meta;const base=prev.ph==='lobby'?[50,50,50,50,50,50]:prev.g;const g=addv(base,EV[r].sc);const ok=await tSetMeta({ph:'vote',r,g,h:prev.h||[]});if(ok){T.votes={};render()}}
-async function tEval(){const ch=Number($('#ovr').value);const r0=await api('state',{c:T.code,hk:T.hk});const votes=r0.ok?r0.votes:T.votes;const ct=[0,0,0,0];Object.values(votes).forEach(v=>ct[v]++);const m=T.meta;const g=addv(m.g,EV[m.r].ms[ch].e);const ok=await tSetMeta({ph:'result',r:m.r,gp:m.g,g,ch,ct,h:(m.h||[]).concat([ch])});if(ok){T.votes=votes;render()}}
-async function tNext(){const m=T.meta;if(m.r<EV.length-1)await tStartRound(m.r+1);else{if(await tSetMeta({ph:'end',r:m.r,g:m.g,h:m.h}))render()}}
-
-/* ---------- Klassenmodus: Schüler ---------- */
-async function sJoin(code,name){const r=await api('join',{c:code,n:name});if(!r.ok)return r;ST={code,name,role:r.role,meta:{ph:'lobby'},my:null,n:0};store.set('wp-s',JSON.stringify({c:code,n:name}));M='student';stopPoll();await sPoll(true);pollT=setInterval(sPoll,3000);return r}
+async function sJoin(code,name){const r=await api('join',{c:code,n:name});if(!r.ok)return r;ST={code,name,meta:{ph:'lobby'},n:0,top:null,rank:null,total:null};store.set('wp-s',JSON.stringify({c:code,n:name}));M='student';stopPoll();
+ let sv=null;try{sv=JSON.parse(store.get('wp-p')||'null')}catch(e){}
+ solo=(sv&&sv.cls===code&&sv.nm===name)?sv:newPlay(SC_STD,code);solo.nm=name;
+ await sPoll(true);pollT=setInterval(sPoll,3000);return r}
 async function sPoll(force){if(!ST)return;const r=await api('state',{c:ST.code,n:ST.name});if(!r.ok){if(r.err==='Raum nicht gefunden'){alert('Der Raum ist nicht mehr da.');sLeave()}return}
  if(r.me===null){alert('Du wurdest aus dem Raum entfernt.');sLeave();return}
- const h=JSON.stringify([r.meta,r.n,r.my]);if(h===lastHash&&!force)return;lastHash=h;ST.meta=r.meta;ST.n=r.n;ST.my=r.my;ST.role=r.me;render()}
-function sLeave(){stopPoll();ST=null;store.del('wp-s');M='home';render()}
+ const h=JSON.stringify([r.meta,r.top,r.rank]);let rr=h!==lastHash||force;lastHash=h;ST.meta=r.meta;ST.n=r.n;ST.top=r.top||null;ST.rank=r.rank||null;ST.total=r.total||null;if(r.meta.sc)SC=r.meta.sc;
+ if(solo&&solo.ph==='wait'&&r.meta.ph==='play'&&r.meta.open>solo.nx){startRound(solo.nx);rr=true;report()}
+ if(rr){const y=window.scrollY;render();window.scrollTo(0,y)}}
+function sLeave(){stopPoll();ST=null;store.del('wp-s');store.del('wp-p');solo=null;M='home';render()}
 
 /* ---------- Aktionen ---------- */
 document.addEventListener('click',async e=>{const b=e.target.closest('[data-a]');if(!b||b.disabled)return;const a=b.dataset.a,i=Number(b.dataset.i);
@@ -2743,31 +3057,41 @@ document.addEventListener('click',async e=>{const b=e.target.closest('[data-a]')
   case 'lern-prev':lern.st--;render();break;
   case 'lern-q':if(lern.qa[lern.st]!==undefined)return;lern.qa[lern.st]=i;{const y=window.scrollY;render();window.scrollTo(0,y)}break;
   case 'rel':lern.rx=Number(b.dataset.x);lern.ry=Number(b.dataset.y);{const y=window.scrollY;render();window.scrollTo(0,y)}break;
-  case 'lern-play':solo={ph:'role'};M='solo';render();break;
-  case 'solo-start':solo={ph:'role'};M='solo';render();break;
-  case 'role':solo={role:i,r:0,g:[50,50,50,50,50,50],ph:'vote',pts:0,h:[],qa:null,jk:3,hs:{},hint:null};solo.g=addv(solo.g,EV[0].sc);solo.gp=solo.g.slice();render();break;
+  case 'solo-start':case 'lern-play':solo=newPlay(SC_STD);M='solo';render();break;
+  case 'tour-next':{const s=solo;if(s.tour<City.tourN-1)s.tour++;else afterTour();render();break}
+  case 'tour-skip':afterTour();render();break;
+  case 'intro-ok':afterIntro();render();report();break;
+  case 'read':{const s=solo,E=EVR(s.r),sc=shock(s.r);s.rgp=s.g.slice();s.g=addv(s.g,sc);const bad=sc.map((v,k)=>({v,k})).filter(o=>o.v<=-3).sort((a,b)=>a.v-b.v).slice(0,2).map(o=>'📉 '+ZIELE[o.k].s+' rutscht ab');const good=sc.map((v,k)=>({v,k})).filter(o=>o.v>=3).slice(0,1).map(o=>'📈 '+ZIELE[o.k].s+' legt zu');s.news=['⚡ '+E.t].concat(bad,good);s.ph='vote';render();break}
   case 'hint':{const key=solo.r+'-'+i;if(!solo.hs[key]){if(solo.jk<=0)return;solo.jk--;solo.hs[key]=1}solo.hint=i;{const y=window.scrollY;render();window.scrollTo(0,y)}break}
-  case 'pick':{solo.hint=null;solo.ch=i;solo.gp=solo.g.slice();solo.g=addv(solo.g,EV[solo.r].ms[i].e);solo.h.push(i);solo.qa=null;solo.ph='result';render();break}
-  case 'quiz':if(solo.qa!==null)return;solo.qa=i;if(i===EV[solo.r].q.c)solo.pts+=10;{const y=window.scrollY;render();window.scrollTo(0,y)}break;
-  case 'next':if(solo.r<EV.length-1){solo.r++;solo.g=addv(solo.g,EV[solo.r].sc);solo.gp=solo.g.slice();solo.ph='vote'}else solo.ph='end';render();break;
+  case 'pick':{const s=solo,E=EVR(s.r);s.hint=null;s.ch=i;s.gp=s.g.slice();if(i>=0)s.g=addv(s.g,E.ms[i].e);s.h.push(i);s.lp=roundPts(s.g);s.pts+=s.lp;s.qa=null;s.news=null;s.ph='result';render();report();break}
+  case 'quiz':if(solo.qa!==null)return;solo.qa=i;if(i===EVR(solo.r).q.c)solo.pts+=10;{const y=window.scrollY;render();window.scrollTo(0,y)}report();break;
+  case 'next':{const s=solo;if(s.r<SC.rounds.length-1){const n=s.r+1;if(M==='student'&&!(ST.meta.ph==='play'&&ST.meta.open>n)){s.ph='wait';s.nx=n}else startRound(n)}else s.ph='end';render();report();break}
+  case 't-start':tSetMeta({ph:'play',sc:T.sc,open:1}).then(ok=>{if(ok)render()});break;
+  case 't-open':{const m=T.meta,N=m.sc.rounds.length;tSetMeta({ph:'play',sc:m.sc,open:Math.min(N,m.open+1)}).then(()=>render());break}
+  case 't-openall':{const m=T.meta;tSetMeta({ph:'play',sc:m.sc,open:m.sc.rounds.length}).then(()=>render());break}
+  case 't-end':if(!confirm('Spiel beenden und Siegerehrung zeigen?'))return;tSetMeta({ph:'end',sc:T.meta.sc,open:T.meta.open}).then(()=>render());break;
+  case 't-preset':T.sc=PRESETS[i]();render();break;
+  case 't-addlib':T.sc.rounds.push({e:Number($('#addlib').value)});render();break;
+  case 't-addcust':{const g=id=>($('#'+id)||{}).value||'',t=g('cn').trim();if(!t){alert('Bitte einen Titel eingeben.');return}const c2=v=>Math.max(-30,Math.min(30,Math.round(Number(v)||0)));T.sc.rounds.push({c:{t:t.slice(0,60),txt:g('ct').slice(0,500),wirk:g('cw').slice(0,600),sc:[0,1,2,3,4,5].map(k=>c2(g('cs'+k)))}});T.draft={};T.dopen=false;render();break}
+  case 't-up':{const r=T.sc.rounds;if(i>0){[r[i-1],r[i]]=[r[i],r[i-1]]}render();break}
+  case 't-dn':{const r=T.sc.rounds;if(i<r.length-1){[r[i+1],r[i]]=[r[i],r[i+1]]}render();break}
+  case 't-del':T.sc.rounds.splice(i,1);render();break;
   case 'kc-start':kc={i:0,score:0,ans:null};M='kc';render();break;
   case 'kc-ans':if(kc.ans!==null)return;kc.ans=i;if(i===KC[kc.i].ans)kc.score++;{const y=window.scrollY;render();window.scrollTo(0,y)}break;
   case 'kc-next':kc.i++;kc.ans=null;render();break;
   case 't-create':tCreate();break;
-  case 't-start':tStartRound(0);break;
-  case 't-eval':tEval();break;
-  case 't-next':tNext();break;
   case 't-kick':await api('kick',{c:T.code,hk:T.hk,n:b.dataset.n});lastHash='';tPoll();break;
   case 't-close':if(!confirm('Raum schließen? Alle Daten werden gelöscht.'))return;await api('close',{c:T.code,hk:T.hk});tLeave();break;
   case 'copy':{const l=location.origin+location.pathname+'?raum='+T.code;try{await navigator.clipboard.writeText(l);b.textContent='✓ kopiert'}catch(x){prompt('Link kopieren:',l)}break}
   case 'join':{const c=($('#jc').value||'').trim().toUpperCase(),n=($('#jn').value||'').trim();if(!c||!n){$('#jerr').textContent='Bitte Code und Namen eingeben.';return}const r=await sJoin(c,n);if(!r.ok)$('#jerr').textContent=r.err;break}
-  case 's-vote':{ST.my=i;{const y=window.scrollY;render();window.scrollTo(0,y)}const r=await api('vote',{c:ST.code,n:ST.name,r:ST.meta.r,v:i});if(!r.ok){alert(r.err);lastHash='';sPoll(true)}break}
  }});
 
+document.addEventListener('change',e=>{if(!T)return;const dr=e.target.closest('[data-dr]');if(dr){T.draft=T.draft||{};T.draft[dr.dataset.dr]=dr.value;return}const el=e.target.closest('[data-sc]');if(!el)return;const k=el.dataset.sc,sc=T.sc;if(k==='n')sc.n=el.value.slice(0,40);else if(k==='intro')sc.intro=el.value.slice(0,700);else if(k.startsWith('g0-'))sc.g0[Number(k.slice(3))]=clamp(Number(el.value)||0);else if(k==='mult')sc.mult=Number(el.value);else if(k==='eing')sc.eing=Number(el.value);else if(k==='jok')sc.jok=Number(el.value);else if(k==='reg')sc.reg=el.checked});
+document.addEventListener('toggle',e=>{if(T&&e.target.id==='cdet')T.dopen=e.target.open},true);
 /* ---------- Start ---------- */
 (async function init(){const p=new URLSearchParams(location.search);
  const st=store.get('wp-t'),ss=store.get('wp-s');
- if(p.has('lehrer')||st){if(st){try{const o=JSON.parse(st);const r=await api('state',{c:o.c,hk:o.hk});if(r.ok&&r.host){T={code:o.c,hk:o.hk,meta:r.meta,pl:r.pl,votes:r.votes};M='teacher';render();pollT=setInterval(tPoll,3000);return}}catch(e){}store.del('wp-t')}}
+ if(p.has('lehrer')||st){if(st){try{const o=JSON.parse(st);const r=await api('state',{c:o.c,hk:o.hk});if(r.ok&&r.host){T={code:o.c,hk:o.hk,meta:r.meta,pl:r.pl,sc:r.meta.sc||clone(SC_STD),draft:{}};M='teacher';render();pollT=setInterval(tPoll,3000);return}}catch(e){}store.del('wp-t')}}
  if(ss){try{const o=JSON.parse(ss);if(!p.get('raum')||p.get('raum').toUpperCase()===o.c){const r=await sJoin(o.c,o.n);if(r.ok)return}}catch(e){}store.del('wp-s')}
  render()})();
 </script></body></html>

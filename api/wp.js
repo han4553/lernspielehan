@@ -44,7 +44,7 @@ module.exports = async (req, res) => {
         const hk = rnd(14, ALPHA + '23456789');
         const got = await r('SET', key(code, 'hk'), hk, 'NX', 'EX', TTL);
         if (got === 'OK') {
-          const meta = { ph: 'lobby', r: 0, g: [50, 50, 50, 50, 50, 50], h: [] };
+          const meta = { ph: 'lobby', open: 0 };
           await r('SET', key(code, 'meta'), JSON.stringify(meta), 'EX', TTL);
           return res.json({ ok: true, c: code, hk, meta });
         }
@@ -61,15 +61,26 @@ module.exports = async (req, res) => {
       const host = await isHost();
       const pl = pairs(await r('HGETALL', key(c, 'pl')));
       const out = { ok: true, meta, n: Object.keys(pl).length };
-      let votes = {};
-      if (meta.ph === 'vote' || meta.ph === 'result') votes = pairs(await r('HGETALL', key(c, 'v:' + meta.r)));
+      const scs = pairs(await r('HGETALL', key(c, 'sc')));
+      const parse = (n) => {
+        try {
+          return scs[n] ? JSON.parse(scs[n]) : null;
+        } catch (e) {
+          return null;
+        }
+      };
       if (host) {
         out.host = true;
-        out.pl = Object.keys(pl).map((n) => ({ n, r: Number(pl[n]) }));
-        out.votes = votes;
+        out.pl = Object.keys(pl).map((n) => ({ n, s: parse(n) }));
       } else if (b.n) {
-        out.me = pl[b.n] === undefined ? null : Number(pl[b.n]);
-        out.my = votes[b.n] === undefined ? null : Number(votes[b.n]);
+        out.me = pl[b.n] === undefined ? null : 1;
+        if (meta.ph === 'end') {
+          const all = Object.keys(pl).map((n) => ({ n, pts: (parse(n) || {}).pts || 0 })).sort((x, y) => y.pts - x.pts);
+          out.top = all.slice(0, 3);
+          const k = all.findIndex((x) => x.n === b.n);
+          out.rank = k < 0 ? null : k + 1;
+          out.total = all.length;
+        }
       }
       return res.json(out);
     }
@@ -90,22 +101,27 @@ module.exports = async (req, res) => {
       return res.json({ ok: true, role });
     }
 
-    if (a === 'vote') {
-      const rr = Number(b.r);
-      const v = Number(b.v);
-      if (meta.ph !== 'vote' || meta.r !== rr) return res.json({ ok: false, err: 'Abstimmung ist nicht offen' });
-      if (!(v >= 0 && v <= 3)) return res.json({ ok: false, err: 'Ungültige Wahl' });
+    if (a === 'score') {
       const known = await r('HGET', key(c, 'pl'), String(b.n || ''));
       if (known === null) return res.json({ ok: false, err: 'Spieler unbekannt' });
-      await r('HSET', key(c, 'v:' + rr), String(b.n), String(v));
-      await r('EXPIRE', key(c, 'v:' + rr), TTL);
+      const p = b.p || {};
+      const o = {
+        r: Number(p.r) || 0,
+        pts: Number(p.pts) || 0,
+        gn: Number(p.gn) || 0,
+        d: p.d ? 1 : 0,
+        g: Array.isArray(p.g) ? p.g.slice(0, 6).map((v) => Number(v) || 0) : [],
+        t: Date.now(),
+      };
+      await r('HSET', key(c, 'sc'), String(b.n), JSON.stringify(o));
+      await r('EXPIRE', key(c, 'sc'), TTL);
       return res.json({ ok: true });
     }
 
     if (a === 'set') {
       if (!(await isHost())) return res.json({ ok: false, err: 'Kein Zugriff' });
       const m = b.meta;
-      if (!m || typeof m !== 'object' || JSON.stringify(m).length > 4000) return res.json({ ok: false, err: 'Ungültig' });
+      if (!m || typeof m !== 'object' || JSON.stringify(m).length > 14000) return res.json({ ok: false, err: 'Ungültig' });
       await r('SET', key(c, 'meta'), JSON.stringify(m), 'EX', TTL);
       await r('EXPIRE', key(c, 'hk'), TTL);
       await r('EXPIRE', key(c, 'pl'), TTL);
@@ -115,13 +131,13 @@ module.exports = async (req, res) => {
     if (a === 'kick') {
       if (!(await isHost())) return res.json({ ok: false, err: 'Kein Zugriff' });
       await r('HDEL', key(c, 'pl'), String(b.n || ''));
+      await r('HDEL', key(c, 'sc'), String(b.n || ''));
       return res.json({ ok: true });
     }
 
     if (a === 'close') {
       if (!(await isHost())) return res.json({ ok: false, err: 'Kein Zugriff' });
-      const keys = [key(c, 'meta'), key(c, 'hk'), key(c, 'pl')];
-      for (let i = 0; i < 8; i++) keys.push(key(c, 'v:' + i));
+      const keys = [key(c, 'meta'), key(c, 'hk'), key(c, 'pl'), key(c, 'sc')];
       await r('DEL', ...keys);
       return res.json({ ok: true });
     }
