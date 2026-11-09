@@ -2458,6 +2458,25 @@ T({id:'t5',lvl:6,no:'6',page:'L11',title:'Bilanzkonto oder Erfolgskonto?',text:'
  match('Zuordnung',ZO,[['051 Bebaute Grundstücke',ZO[0]],['081 Ladenausstattung',ZO[0]],['084 Fuhrpark',ZO[0]],['240 Forderungen aus LL',ZO[1]],['282 Kasse',ZO[1]],['3001 Privat',ZO[2]],['420 Kurzfristige Bankverbindlichkeiten',ZO[3]],['484 Verbindl. gegenüber Sozialversicherungsträgern',ZO[3]],['501 Umsatzerlöse Warengruppe II',ZO[5]],['571 Zinserträge',ZO[5]],['605 Energie und Treibstoffe',ZO[4]],['654 Abschreibungen auf GWG',ZO[4]],['690 Versicherungsbeiträge',ZO[4]],['702 Grundsteuer',ZO[4]]]),
  calc('Gewinn: Erträge 8.400 €, Aufwendungen 7.100 €',[['Gewinn',1300,'€']],'Ertrag minus Aufwand.'),
  mc('Wo wird der Gewinn zuerst ermittelt und wohin wird er übernommen?',['Auf 802 GuV, dann auf 340 bzw. das Eigenkapital 300','Auf 650, dann auf die Bank 280','Auf 480 Umsatzsteuer, dann auf 260 Vorsteuer'],0,'Erfolgskonten werden über 802 GuV abgeschlossen. Der Saldo geht ins Eigenkapital.')]});
+// ---- Positionen zuordnen (vorangestellte Teilaufgabe)
+const KS=(side,acc)=>side+' '+acc+' '+AN[acc];
+const MH='Gekauftes Gut und Vorsteuer stehen im Soll. Schulden und Zahlungen stehen im Haben.';
+const mpos=(label,rows,opts,hint)=>({t:'match',label,opts,rows,hint:hint||MH});
+const LB='Zuerst: Ordne die Rechnungsposten dem Konto und der Seite zu';
+const AKO=['Anschaffungskosten (+)','Anschaffungskosten (−)','Vorsteuer 260 (nicht AK)'];
+const AKH='Alles, was den Preis des Guts bis zur Betriebsbereitschaft erhöht, zählt dazu. Rabatte mindern. Die USt ist Vorsteuer.';
+const PRE={
+ t1_1:mpos(LB,[['Nettopreis 9.600 € (Kühltheke)',KS('Soll','081')],['Umsatzsteuer 1.824 €',KS('Soll','260')],['Rechnungsbetrag 11.424 € (noch nicht bezahlt)',KS('Haben','44')]],[KS('Soll','081'),KS('Soll','260'),KS('Haben','44'),KS('Haben','280'),KS('Haben','260')]),
+ t1_2:mpos(LB,[['Nettopreis 6.500 € (Notstromaggregat)',KS('Soll','080')],['Umsatzsteuer 1.235 €',KS('Soll','260')],['Darlehen der Bank 3.000 €',KS('Haben','425')],['Banküberweisung 4.735 €',KS('Haben','280')]],[KS('Soll','080'),KS('Soll','260'),KS('Haben','425'),KS('Haben','280'),KS('Haben','44')]),
+ t1_3:mpos(LB,[['Nettopreis 3.400 € (Lastenfahrrad)',KS('Soll','084')],['Umsatzsteuer 646 €',KS('Soll','260')],['Rechnungsbetrag 4.046 € (Zahlung nach 30 Tagen)',KS('Haben','44')]],[KS('Soll','084'),KS('Soll','260'),KS('Haben','44'),KS('Haben','280'),KS('Soll','081')]),
+ t1_4:mpos(LB,[['Nettopreis 5.800 € (fest eingebaute Tür)',KS('Soll','057')],['Umsatzsteuer 1.102 €',KS('Soll','260')],['Sofortige Banküberweisung 6.902 €',KS('Haben','280')]],[KS('Soll','057'),KS('Soll','260'),KS('Haben','280'),KS('Soll','053'),KS('Haben','44')]),
+ t1_5:mpos(LB,[['Nettopreis 180 € (Preisauszeichner)',KS('Soll','089')],['Umsatzsteuer 34,20 €',KS('Soll','260')],['Barzahlung 214,20 €',KS('Haben','282')]],[KS('Soll','089'),KS('Soll','260'),KS('Haben','282'),KS('Haben','280'),KS('Soll','081')]),
+ t1_6:mpos(LB,[['Nettopreis 52.000 € (Anbau Kühllager)',KS('Soll','053')],['Umsatzsteuer 9.880 €',KS('Soll','260')],['Rechnungsbetrag 61.880 € (Zahlung nach 30 Tagen)',KS('Haben','44')]],[KS('Soll','053'),KS('Soll','260'),KS('Haben','44'),KS('Soll','050'),KS('Haben','280')]),
+ t1_7:mpos(LB,[['Kaufpreis 48.000 € einschließlich Grunderwerbsteuer',KS('Soll','050')],['Grundschuld 20.000 €',KS('Haben','425')],['Banküberweisung 28.000 €',KS('Haben','280')]],[KS('Soll','050'),KS('Haben','425'),KS('Haben','280'),KS('Soll','260'),KS('Soll','051')],'Die Grunderwerbsteuer gehört zu den AK und ist keine Vorsteuer.'),
+ t2_1:mpos('Zuerst: Was gehört zu den Anschaffungskosten?',[['Listenpreis 7.200 €',AKO[0]],['Rabatt 15 % (1.080 €)',AKO[1]],['Anlieferung 250 €',AKO[0]],['Inbetriebnahme und Einweisung 150 €',AKO[0]],['19 % Umsatzsteuer',AKO[2]]],AKO,AKH),
+ t2_2:mpos('Zuerst: Ordne die Positionen zu',[['Kaufpreis Boden 126.000 €','AK Boden (051)'],['Kaufpreis Gebäude 294.000 €','AK Gebäude (053)'],['Grunderwerbsteuer 21.000 €','Nebenkosten, im Verhältnis 30 : 70 aufteilen'],['Notar und Grundbuch 6.300 €','Nebenkosten, im Verhältnis 30 : 70 aufteilen'],['Grundschuld 280.000 €','Finanzierung (Haben 425)']],['AK Boden (051)','AK Gebäude (053)','Nebenkosten, im Verhältnis 30 : 70 aufteilen','Finanzierung (Haben 425)','Aufwand'],'Die Nebenkosten werden auf Boden und Gebäude verteilt. Die Grundschuld ist die Finanzierung.'),
+ t4:mpos('Zuerst: Was gehört zu den Anschaffungskosten?',[['Listenpreis 8.900 €',AKO[0]],['Rabatt 10 % (890 €)',AKO[1]],['Installation und Datenübernahme 600 €',AKO[0]],['19 % Umsatzsteuer',AKO[2]]],AKO,AKH)};
+TASKS.forEach(x=>{if(PRE[x.id])x.parts.unshift(PRE[x.id])});
 // Seitenübersicht der Lösungsseiten
 const PAGES=[['L1','Karten: Bilanz und Erfolgskonten'],['L2','Karten: Anlagen-Detektiv und AK-Check'],['L3','Aufgabe 2.1 und 2.2'],['L4','Aufgabe 2.3'],['L5','Aufgabe 3.1 bis 3.3'],['L6','Aufgabe 3.4 bis 3.7'],['L7','Aufgabe 4.1 und 4.2'],['L8','Aufgabe 4.3 und 4.4'],['L9','Aufgabe 4.5 und 4.6'],['L10','Aufgabe 5 (Gesamtfall)'],['L11','Aufgabe 6 (Abschluss)']];
 // ---- Sortieraufgaben (App)
@@ -2498,7 +2517,7 @@ function solTask(t){return '<section class="stask"><h3>Aufgabe '+t.no+': '+t.tit
 const LET='ABCDEFGHIJKLM';
 function solSort(o){const cn={};o.cats.forEach((c,i)=>cn[c[0]]=LET[i]+' = '+c[1]);return '<section class="stask"><h3>'+o.title+'</h3><table class="st">'+o.cards.map(c=>'<tr><td>'+c[0]+'</td><td><b>'+cn[c[1]]+'</b></td></tr>').join('')+'</table></section>';}
 function solPage(id){return SORTS.filter(s=>s.page===id).map(solSort).join('')+TASKS.filter(t=>t.page===id).map(solTask).join('');}
-const DATA={LET,ACC,AN,TASKS,SORTS,PAGES,solPart,solTask,solSort,solPage,fmt,CK};
+const DATA={KS,mpos,AKO,AKH,LET,ACC,AN,TASKS,SORTS,PAGES,solPart,solTask,solSort,solPage,fmt,CK};
 root.DATA=DATA;if(typeof module!=='undefined')module.exports=DATA;
 })(typeof window!=='undefined'?window:globalThis);
 </script>
@@ -2521,7 +2540,7 @@ const INFO={
 3:'<details class="info"><summary>📖 Info: So buchst du einen Kauf</summary><div class="formel">Rechnung: Anlagekonto (Soll) + 260 Vorsteuer (Soll) an 44 (Haben)<br>Zahlung: 44 (Soll) an 280 Bank (Haben)<br>Sofortzahlung: Anlagekonto + 260 an 280 oder 282 Kasse<br>Darlehen: 425 im Haben</div></details>',
 4:'<details class="info"><summary>📖 Info: Lineare Abschreibung</summary><div class="formel">Jahresbetrag = AK : Nutzungsdauer<br>Satz = 100 % : Nutzungsdauer<br>Kaufjahr = Jahresbetrag × Monate : 12<br>(der Kaufmonat zählt voll)<br>Buchung: 650 an Anlagekonto</div><img alt="Buchwert sinkt jedes Jahr" src="'+IMG.buchwert+'"><div class="merke"><b>Merke:</b> Buchwert = AK minus bisherige Abschreibungen. GWG (derzeit bis 800 € netto, bitte Stand prüfen) werden sofort abgeschrieben: 654 an 089.</div></details>'};
 // ---- storage
-const KEY='anlagencheck-v1';let P={};
+const KEY='anlagencheck-v2';let P={};
 try{P=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){P={}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}}
 const $=s=>document.querySelector(s);const app=$('#app');
@@ -2658,17 +2677,20 @@ function genAfa(){const g=pick(GUT),ak=rnd(40,600)*50,nd=pick([4,5,6,8,10]),m=rn
  return{id:'tr',title:'Abschreibung',no:'',lvl:0,text:'Für '+g[0]+' (Konto '+g[1]+') betragen die AK '+fmt(ak)+' €, die Nutzungsdauer '+nd+' Jahre. Gekauft im '+MON[m-1]+' (der Kaufmonat zählt voll).',parts:[
  {t:'calc',label:'Berechne',rows:[['Abschreibungssatz',r2(100/nd),'%'],['Abschreibung pro Jahr',r2(j),'€'],['Monate im Kaufjahr',mo,''],['Abschreibung im Kaufjahr',r2(kj),'€'],['Buchwert am 31.12.',r2(ak-r2(kj)),'€']],hint:'Satz = 100 : ND. Jahr = AK : ND. Kaufjahr = Jahr × Monate : 12.'},
  {t:'book',label:'Buche die Abschreibung zum 31.12.',soll:[['650',r2(kj)]],haben:[[g[1],r2(kj)]],hint:'650 im Soll, Anlagekonto im Haben.'}]}}
-function genAk(){const g=pick(GUT),lp=rnd(30,300)*100,rb=pick([5,10,15,20]),fr=rnd(1,8)*50,mo=rnd(1,6)*50,rab=r2(lp*rb/100),ak=r2(lp-rab+fr+mo),us=r2(ak*0.19),br=r2(ak+us);
- return{id:'tr',title:'Anschaffungskosten',no:'',lvl:0,text:'Für '+g[0]+' (Konto '+g[1]+') gilt: Listenpreis '+fmt(lp)+' € netto, '+rb+' % Rabatt, Fracht '+fmt(fr)+' € netto, Montage '+fmt(mo)+' € netto, dazu 19 % USt auf den gesamten Nettobetrag.',parts:[
+function genAk(){const d=genAk0();d.parts.unshift(D.mpos('Zuerst: Was gehört zu den Anschaffungskosten?',d._pos,D.AKO,D.AKH));delete d._pos;return d}
+function genAk0(){const g=pick(GUT),lp=rnd(30,300)*100,rb=pick([5,10,15,20]),fr=rnd(1,8)*50,mo=rnd(1,6)*50,rab=r2(lp*rb/100),ak=r2(lp-rab+fr+mo),us=r2(ak*0.19),br=r2(ak+us);
+ return{_pos:[['Listenpreis '+fmt(lp)+' €',D.AKO[0]],['Rabatt '+rb+' % ('+fmt(rab)+' €)',D.AKO[1]],['Fracht '+fmt(fr)+' €',D.AKO[0]],['Montage '+fmt(mo)+' €',D.AKO[0]],['19 % Umsatzsteuer',D.AKO[2]]],id:'tr',title:'Anschaffungskosten',no:'',lvl:0,text:'Für '+g[0]+' (Konto '+g[1]+') gilt: Listenpreis '+fmt(lp)+' € netto, '+rb+' % Rabatt, Fracht '+fmt(fr)+' € netto, Montage '+fmt(mo)+' € netto, dazu 19 % USt auf den gesamten Nettobetrag.',parts:[
  {t:'calc',label:'Berechne',rows:[['Rabatt in €',rab,'€'],['Anschaffungskosten',ak,'€'],['Umsatzsteuer 19 %',us,'€'],['Rechnungsbetrag',br,'€']],hint:'AK = Listenpreis − Rabatt + Fracht + Montage.'},
  {t:'book',label:'Buche die Eingangsrechnung',soll:[[g[1],ak],['260',us]],haben:[['44',br]],hint:'Anlagegut und Vorsteuer im Soll, 44 im Haben.'}]}}
-function genKauf(){const v=rnd(0,3),g=v===3?pick([['ein Handscanner','089'],['ein Preisauszeichner','089'],['ein Taschenrechner','089'],['eine Schreibtischlampe','089']]):pick(GUT);
+function genKauf(){const d=genKauf0();const b=d.parts[0].soll,h=d.parts[0].haben;const K=D.KS;const rows=[];const o=new Set();
+ d._pos.forEach(r=>{rows.push([r[0],K(r[1],r[2])]);o.add(K(r[1],r[2]))});['Haben 260','Soll 280'].forEach(x=>{const a=x.split(' ');o.add(K(a[0],a[1]))});d.parts.unshift(D.mpos('Zuerst: Ordne die Rechnungsposten dem Konto und der Seite zu',rows,[...o]));delete d._pos;return d}
+function genKauf0(){const v=rnd(0,3),g=v===3?pick([['ein Handscanner','089'],['ein Preisauszeichner','089'],['ein Taschenrechner','089'],['eine Schreibtischlampe','089']]):pick(GUT);
  const ne=v===3?rnd(40,390):rnd(5,200)*100+pick([0,0,500]),us=r2(ne*0.19),br=r2(ne+us);
  const base='Kauf von '+g[0]+' (Konto '+g[1]+'): '+fmt(ne)+' € netto + '+fmt(us)+' € USt = '+fmt(br)+' €. ';let parts;
- if(v===0)return{id:'tr',title:'Buchungssätze',no:'',lvl:0,text:base+'Zahlung nach 14 Tagen per Banküberweisung.',parts:[{t:'book',label:'a) Eingangsrechnung',soll:[[g[1],ne],['260',us]],haben:[['44',br]],hint:'Anlagekonto und 260 im Soll, 44 im Haben.'},{t:'book',label:'b) Zahlung',soll:[['44',br]],haben:[['280',br]],hint:'44 an 280.'}]};
- if(v===1)return{id:'tr',title:'Buchungssätze',no:'',lvl:0,text:base+'Sofortige Zahlung per Banküberweisung.',parts:[{t:'book',label:'Buchung',soll:[[g[1],ne],['260',us]],haben:[['280',br]],hint:'Bank 280 im Haben.'}]};
- if(v===2){const d=Math.round(br*0.4/100)*100,rest=r2(br-d);return{id:'tr',title:'Buchungssätze',no:'',lvl:0,text:base+'Sofort bezahlt: '+fmt(d)+' € über ein Darlehen der Bank, der Rest per Banküberweisung.',parts:[{t:'book',label:'Buchung',soll:[[g[1],ne],['260',us]],haben:[['425',d],['280',rest]],hint:'Darlehen = 425 im Haben. Rest = Rechnungsbetrag minus Darlehen.'}]}}
- return{id:'tr',title:'Buchungssätze',no:'',lvl:0,text:base+'Bezahlt wird bar aus der Kasse. Das Gut ist ein GWG.',parts:[{t:'book',label:'Buchung',soll:[['089',ne],['260',us]],haben:[['282',br]],hint:'GWG auf 089, Kasse 282 im Haben.'}]}}
+ if(v===0)return{_pos:[['Nettopreis '+fmt(ne)+' € ('+g[0]+')','Soll',g[1]],['Umsatzsteuer '+fmt(us)+' €','Soll','260'],['Rechnungsbetrag '+fmt(br)+' € (Zahlung nach 14 Tagen)','Haben','44']],id:'tr',title:'Buchungssätze',no:'',lvl:0,text:base+'Zahlung nach 14 Tagen per Banküberweisung.',parts:[{t:'book',label:'a) Eingangsrechnung',soll:[[g[1],ne],['260',us]],haben:[['44',br]],hint:'Anlagekonto und 260 im Soll, 44 im Haben.'},{t:'book',label:'b) Zahlung',soll:[['44',br]],haben:[['280',br]],hint:'44 an 280.'}]};
+ if(v===1)return{_pos:[['Nettopreis '+fmt(ne)+' € ('+g[0]+')','Soll',g[1]],['Umsatzsteuer '+fmt(us)+' €','Soll','260'],['Banküberweisung '+fmt(br)+' €','Haben','280']],id:'tr',title:'Buchungssätze',no:'',lvl:0,text:base+'Sofortige Zahlung per Banküberweisung.',parts:[{t:'book',label:'Buchung',soll:[[g[1],ne],['260',us]],haben:[['280',br]],hint:'Bank 280 im Haben.'}]};
+ if(v===2){const d=Math.round(br*0.4/100)*100,rest=r2(br-d);return{_pos:[['Nettopreis '+fmt(ne)+' € ('+g[0]+')','Soll',g[1]],['Umsatzsteuer '+fmt(us)+' €','Soll','260'],['Darlehen der Bank '+fmt(d)+' €','Haben','425'],['Banküberweisung '+fmt(rest)+' €','Haben','280']],id:'tr',title:'Buchungssätze',no:'',lvl:0,text:base+'Sofort bezahlt: '+fmt(d)+' € über ein Darlehen der Bank, der Rest per Banküberweisung.',parts:[{t:'book',label:'Buchung',soll:[[g[1],ne],['260',us]],haben:[['425',d],['280',rest]],hint:'Darlehen = 425 im Haben. Rest = Rechnungsbetrag minus Darlehen.'}]}}
+ return{_pos:[['Nettopreis '+fmt(ne)+' € ('+g[0]+')','Soll','089'],['Umsatzsteuer '+fmt(us)+' €','Soll','260'],['Barzahlung '+fmt(br)+' €','Haben','282']],id:'tr',title:'Buchungssätze',no:'',lvl:0,text:base+'Bezahlt wird bar aus der Kasse. Das Gut ist ein GWG.',parts:[{t:'book',label:'Buchung',soll:[['089',ne],['260',us]],haben:[['282',br]],hint:'GWG auf 089, Kasse 282 im Haben.'}]}}
 function training(k){CUR.kind=k;newTraining()}
 function newTraining(){CUR.counted=0;const k=CUR.kind;const t=k==='afa'?genAfa():k==='ak'?genAk():genKauf();t.id='tr-'+k+'-'+Date.now();Object.keys(TRY).forEach(x=>{if(x.indexOf('tr-')===0)delete TRY[x]});renderTask(t,'',true)}
 function nextTraining(){newTraining()}
