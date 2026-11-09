@@ -1,6 +1,20 @@
 {
   "rewrites": [
-    { "source": "/wirtschaftspolitik", "destination": "/wirtschaftspolitik/Kabinett_Kaufstadt.html" },
-    { "source": "/wirtschaftspolitik/", "destination": "/wirtschaftspolitik/Kabinett_Kaufstadt.html" }
+    {
+      "source": "/wirtschaftspolitik",
+      "destination": "/wirtschaftspolitik/Kabinett_Kaufstadt.html"
+    },
+    {
+      "source": "/wirtschaftspolitik/",
+      "destination": "/wirtschaftspolitik/Kabinett_Kaufstadt.html"
+    },
+    {
+      "source": "/anlagen-check",
+      "destination": "/anlagen-check/Anlagen_Check.html"
+    },
+    {
+      "source": "/anlagen-check/",
+      "destination": "/anlagen-check/Anlagen_Check.html"
+    }
   ]
 }
