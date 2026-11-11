@@ -1,0 +1,2755 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Sternenfracht – Mission Supercell</title>
+<style>
+:root{--bg:#060a1c;--pan:#0f1838;--pan2:#17234d;--line:#2b3d7a;--cy:#3df5d0;--or:#ffa13d;--li:#c6ff4f;--re:#ff5d5d;--tx:#e9efff;--mu:#93a2d1}
+*{box-sizing:border-box}html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--tx);font-family:"Trebuchet MS","Segoe UI",system-ui,sans-serif;font-size:16px;line-height:1.45;overflow-x:hidden}
+#stars{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at 20% 10%,#1b2a6b55,transparent 50%),radial-gradient(ellipse at 85% 80%,#0d5c6b44,transparent 50%),var(--bg)}
+#stars i{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;animation:tw 3s infinite}
+@keyframes tw{50%{opacity:.2}}
+#app{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:12px 12px 40px}
+h1,h2,h3{margin:.2em 0 .4em;line-height:1.2}h1{font-size:clamp(28px,6vw,48px);letter-spacing:.5px}
+h2{font-size:22px;color:var(--cy)}h3{font-size:17px;color:var(--or)}
+p{margin:.4em 0 .7em}.sub{color:var(--mu);font-size:14px}
+.card{background:linear-gradient(160deg,var(--pan),#0b1230);border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 0;box-shadow:0 0 0 1px #0006,0 8px 30px #0008}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+.btn{display:inline-block;background:var(--cy);color:#04221c;font-weight:800;border-radius:12px;padding:12px 18px;margin:4px 6px 4px 0;box-shadow:0 4px 0 #1a9c83;transition:transform .05s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #1a9c83}
+.btn.o{background:var(--or);color:#2b1500;box-shadow:0 4px 0 #b86a14}.btn.g{background:var(--pan2);color:var(--tx);box-shadow:0 4px 0 #0a1130;border:1px solid var(--line)}
+.btn.r{background:var(--re);color:#2b0000;box-shadow:0 4px 0 #a52c2c}.btn.s{padding:7px 11px;font-size:14px;border-radius:9px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+input,textarea{font:inherit;background:#050a20;color:var(--tx);border:2px solid var(--line);border-radius:10px;padding:10px 12px;width:100%;max-width:340px}
+input:focus{outline:none;border-color:var(--cy)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}.grow{flex:1}
+.hero{text-align:center;padding:10px 0}.hero svg{width:min(420px,80vw);height:auto;filter:drop-shadow(0 0 22px #3df5d055)}
+.tag{display:inline-block;background:#3df5d022;border:1px solid var(--cy);color:var(--cy);border-radius:99px;padding:2px 10px;font-size:13px;font-weight:700}
+.hud{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;gap:6px;align-items:center;background:#060a1ce8;border:1px solid var(--line);border-radius:14px;padding:8px 10px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:14px}
+.hud b{color:var(--cy)}.hud .t{font-size:20px;font-weight:800;color:var(--li);min-width:64px}.hud .t.low{color:var(--re);animation:tw 1s infinite}
+.hud .c{font-size:18px;font-weight:800;color:var(--or)}
+.scene{position:relative;width:100%;aspect-ratio:16/9;min-height:280px;border-radius:18px;border:2px solid var(--line);overflow:hidden;margin-top:10px}
+@media(orientation:landscape){.scene{max-height:76vh}}
+.scene .win{position:absolute;left:8%;right:8%;top:8%;height:38%;border-radius:60px 60px 12px 12px;border:4px solid #46589c;background:radial-gradient(circle at 70% 40%,#274a9b,#050817 70%);overflow:hidden}
+.scene .win:after{content:"✦ · ✧ · ✦ ·  ✧";position:absolute;left:10%;top:20%;color:#fff9;letter-spacing:22px;font-size:14px;animation:drift 14s linear infinite}
+@keyframes drift{to{transform:translateX(-60px)}}
+.scene .floor{position:absolute;left:0;right:0;bottom:0;height:34%;background:repeating-linear-gradient(90deg,#141d44 0 60px,#18245a 60px 62px)}
+.hot{position:absolute;transform:translate(-50%,-50%);text-align:center;font-size:clamp(34px,7vw,60px);line-height:1;filter:drop-shadow(0 4px 6px #000a);animation:bob 2.4s ease-in-out infinite}
+.hot small{display:block;font-size:12px;font-weight:700;background:#000a;border-radius:8px;padding:2px 7px;margin-top:4px;color:var(--tx)}
+.hot.pz small{background:var(--cy);color:#04221c}.hot.got{opacity:.25;animation:none}
+@keyframes bob{50%{transform:translate(-50%,-56%)}}
+.inv{display:flex;gap:8px;margin-top:8px;align-items:center;font-size:14px;color:var(--mu)}.inv span{background:var(--pan2);border:1px solid var(--line);border-radius:10px;padding:4px 10px;font-size:20px}
+#modal{position:fixed;inset:0;z-index:20;display:none;background:#020410d9;overflow:auto;padding:10px}
+#modal.on{display:block}
+.box{position:relative;max-width:760px;margin:10px auto;background:linear-gradient(170deg,#121c44,#0a1130);border:2px solid var(--cy);border-radius:18px;padding:16px 16px 20px;box-shadow:0 0 40px #3df5d033}
+.box.hb{border-color:var(--or);background:linear-gradient(170deg,#2a2114,#17110a)}.box.hb h2{color:var(--or)}
+#modal h2{padding-right:40px}
+.box.al{border-color:var(--re)}
+.x{position:absolute;right:10px;top:8px;font-size:22px;width:38px;height:38px;border-radius:50%;background:#fff1}
+#toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:40;background:#000e;border:1px solid var(--or);color:var(--tx);padding:10px 16px;border-radius:12px;max-width:92vw;display:none;font-weight:700}
+.roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.role{background:var(--pan2);border:1px dashed var(--line);border-radius:12px;padding:10px;font-size:14px}.role b{display:block;font-size:15px}.role.lead{border:2px solid var(--or);background:#3a2608}
+.role i{font-style:normal;font-size:26px}
+/* Raum 1 */
+.hold{display:flex;gap:6px;align-items:stretch;overflow-x:auto;padding:6px 0}
+.door{writing-mode:vertical-rl;background:var(--or);color:#2b1500;font-weight:800;border-radius:8px;padding:6px 3px;font-size:12px;text-align:center}
+.door.b{background:var(--pan2);color:var(--mu)}
+.slot{flex:1;min-width:74px;min-height:104px;border:2px dashed var(--line);border-radius:10px;background:#050a20;padding:4px;font-size:12px;color:var(--mu)}
+.slot.full{border-style:solid;border-color:var(--cy)}
+.crates{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.crate{background:#3b2a14;border:2px solid #8a6534;border-radius:10px;padding:6px 8px;min-width:92px;font-size:12px;color:#ffe9c7}
+.crate i,.slot i{display:block;font-style:normal;font-size:28px}.crate.sel{outline:3px solid var(--li);transform:scale(1.06)}
+/* Raum 2 */
+.wire svg{width:100%;height:auto;background:#070d26;border-radius:12px;border:1px solid var(--line)}
+/* Raum 3 */
+.plate{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;background:#5b6582;border:4px solid #8f9abb;border-radius:14px;padding:10px;flex:1;min-width:230px}
+.hole{background:#2b3350;border-radius:12px;padding:8px 4px;text-align:center;font-size:12px;color:#dfe6ff;min-height:84px;border:2px solid #1b2038}
+.hole i{font-style:normal;font-size:26px;display:block}.hole.full{background:#1f5c4f;border-color:var(--cy)}
+.o2{width:70px;text-align:center;font-weight:800}.o2 .bar{height:190px;width:44px;margin:6px auto;border:2px solid var(--line);border-radius:10px;background:#050a20;display:flex;align-items:flex-end;overflow:hidden}
+.o2 .bar div{width:100%;background:linear-gradient(#3df5d0,#1f8f7a);transition:height .3s}
+.screws{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.screw{background:var(--pan2);border:2px solid var(--line);border-radius:10px;padding:6px 10px;font-size:13px}.screw i{font-style:normal;font-size:22px;display:block}.screw.sel{outline:3px solid var(--li)}
+/* Raum 4 */
+.nosig{background:repeating-linear-gradient(0deg,#1c1c1c 0 4px,#2f2f2f 4px 8px);border-radius:12px;padding:18px;text-align:center;border:2px solid #555}
+.nosig b{display:inline-block;background:#000;padding:6px 16px;font-size:22px;letter-spacing:3px;font-family:monospace}
+.syms{font-size:34px;letter-spacing:12px;margin:10px 0}
+.radar{position:relative;width:min(300px,70vw);aspect-ratio:1;margin:10px auto;border-radius:50%;background:radial-gradient(circle,#0f3d4a 0,#07122b 70%);border:2px solid var(--cy);overflow:hidden}
+.radar .ring{position:absolute;left:50%;top:50%;border:1px dashed #3df5d077;border-radius:50%;transform:translate(-50%,-50%)}
+.radar .ring.on{border:2px solid var(--cy);box-shadow:0 0 14px #3df5d066}
+.radar .ship{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:26px}
+.radar .dl{position:absolute;font-size:22px;transform:translate(-50%,-50%)}
+.radar.scan:after{content:"";position:absolute;inset:0;background:conic-gradient(#3df5d066,transparent 25%);animation:spin 1.2s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.dealer{background:var(--pan2);border:1px solid var(--line);border-radius:12px;padding:10px;margin:6px 0;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+/* Raum 5 */
+.ciph{display:flex;flex-wrap:wrap;gap:4px 14px;margin:10px 0;font-family:ui-monospace,monospace}
+.word{display:flex;gap:3px}.cl{width:30px;border-radius:7px;background:#07122b;border:2px solid var(--line);text-align:center;padding:2px 0}
+.cl small{display:block;color:var(--mu);font-size:11px}.cl b{display:block;font-size:19px;min-height:26px;color:var(--li)}
+.cl.sel{border-color:var(--or);background:#3a2608}.cl.fix b{color:var(--cy)}
+.kb{display:grid;grid-template-columns:repeat(9,1fr);gap:4px;max-width:420px}.kb button{background:var(--pan2);border:1px solid var(--line);border-radius:7px;padding:8px 0;font-weight:800}
+.kb button.used{opacity:.35}
+.out{background:#04130f;border:1px solid var(--cy);border-radius:10px;padding:8px 12px;font-family:monospace;color:var(--cy);min-height:40px}
+table{border-collapse:collapse;width:100%;font-size:14px}th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}th{color:var(--mu);font-weight:700}
+.tw{overflow-x:auto}
+.big{font-size:clamp(40px,10vw,84px);font-weight:900;color:var(--or);line-height:1}
+.fact{display:flex;gap:14px;align-items:center;flex-wrap:wrap}.fact .em{font-size:64px}
+.meme{background:#fff;color:#111;border-radius:10px;padding:8px 12px;font-family:Impact,"Arial Black",sans-serif;text-transform:uppercase;letter-spacing:.5px;display:inline-block;transform:rotate(-1.5deg);margin-top:6px}
+.proj{position:fixed;inset:0;z-index:30;background:radial-gradient(circle at 80% 20%,#1b4a7a,#060a1c 60%);overflow:auto;padding:3vw}
+.proj h1{font-size:6vw;text-align:center;margin:0}.proj .qr{background:#fff;border-radius:14px;padding:10px;width:min(26vw,300px);margin:0 auto}.proj .qr svg{display:block;width:100%;height:auto}
+.proj table{font-size:clamp(16px,2.4vw,34px);background:#fffe;color:#111;border-radius:12px;overflow:hidden}.proj th{color:#333;background:#dfe6ff}.proj td{border-color:#ccd}
+.proj .code{font-family:monospace;font-weight:900;letter-spacing:4px}
+.q button{display:block;width:100%;text-align:left;background:var(--pan2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:6px 0}
+.q button.ok{background:#14553f;border-color:var(--cy)}.q button.no{background:#5a1c1c;border-color:var(--re)}
+.shake{animation:sh .35s}@keyframes sh{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+@media(max-width:560px){#app{padding:8px}.card{padding:12px}.cl{width:25px}.cl b{font-size:16px}.scene{aspect-ratio:4/5}.slot{min-width:64px;flex:1 1 22%}.hold{flex-wrap:wrap}.door{writing-mode:horizontal-tb;flex:1 1 100%;padding:3px}}
+</style></head><body>
+<div id="stars"></div><div id="app"></div><div id="modal"></div><div id="toast"></div>
+<script>var qrcode = function() {
+
+  //---------------------------------------------------------------------
+  // qrcode
+  //---------------------------------------------------------------------
+
+  /**
+   * qrcode
+   * @param typeNumber 1 to 40
+   * @param errorCorrectionLevel 'L','M','Q','H'
+   */
+  var qrcode = function(typeNumber, errorCorrectionLevel) {
+
+    var PAD0 = 0xEC;
+    var PAD1 = 0x11;
+
+    var _typeNumber = typeNumber;
+    var _errorCorrectionLevel = QRErrorCorrectionLevel[errorCorrectionLevel];
+    var _modules = null;
+    var _moduleCount = 0;
+    var _dataCache = null;
+    var _dataList = [];
+
+    var _this = {};
+
+    var makeImpl = function(test, maskPattern) {
+
+      _moduleCount = _typeNumber * 4 + 17;
+      _modules = function(moduleCount) {
+        var modules = new Array(moduleCount);
+        for (var row = 0; row < moduleCount; row += 1) {
+          modules[row] = new Array(moduleCount);
+          for (var col = 0; col < moduleCount; col += 1) {
+            modules[row][col] = null;
+          }
+        }
+        return modules;
+      }(_moduleCount);
+
+      setupPositionProbePattern(0, 0);
+      setupPositionProbePattern(_moduleCount - 7, 0);
+      setupPositionProbePattern(0, _moduleCount - 7);
+      setupPositionAdjustPattern();
+      setupTimingPattern();
+      setupTypeInfo(test, maskPattern);
+
+      if (_typeNumber >= 7) {
+        setupTypeNumber(test);
+      }
+
+      if (_dataCache == null) {
+        _dataCache = createData(_typeNumber, _errorCorrectionLevel, _dataList);
+      }
+
+      mapData(_dataCache, maskPattern);
+    };
+
+    var setupPositionProbePattern = function(row, col) {
+
+      for (var r = -1; r <= 7; r += 1) {
+
+        if (row + r <= -1 || _moduleCount <= row + r) continue;
+
+        for (var c = -1; c <= 7; c += 1) {
+
+          if (col + c <= -1 || _moduleCount <= col + c) continue;
+
+          if ( (0 <= r && r <= 6 && (c == 0 || c == 6) )
+              || (0 <= c && c <= 6 && (r == 0 || r == 6) )
+              || (2 <= r && r <= 4 && 2 <= c && c <= 4) ) {
+            _modules[row + r][col + c] = true;
+          } else {
+            _modules[row + r][col + c] = false;
+          }
+        }
+      }
+    };
+
+    var getBestMaskPattern = function() {
+
+      var minLostPoint = 0;
+      var pattern = 0;
+
+      for (var i = 0; i < 8; i += 1) {
+
+        makeImpl(true, i);
+
+        var lostPoint = QRUtil.getLostPoint(_this);
+
+        if (i == 0 || minLostPoint > lostPoint) {
+          minLostPoint = lostPoint;
+          pattern = i;
+        }
+      }
+
+      return pattern;
+    };
+
+    var setupTimingPattern = function() {
+
+      for (var r = 8; r < _moduleCount - 8; r += 1) {
+        if (_modules[r][6] != null) {
+          continue;
+        }
+        _modules[r][6] = (r % 2 == 0);
+      }
+
+      for (var c = 8; c < _moduleCount - 8; c += 1) {
+        if (_modules[6][c] != null) {
+          continue;
+        }
+        _modules[6][c] = (c % 2 == 0);
+      }
+    };
+
+    var setupPositionAdjustPattern = function() {
+
+      var pos = QRUtil.getPatternPosition(_typeNumber);
+
+      for (var i = 0; i < pos.length; i += 1) {
+
+        for (var j = 0; j < pos.length; j += 1) {
+
+          var row = pos[i];
+          var col = pos[j];
+
+          if (_modules[row][col] != null) {
+            continue;
+          }
+
+          for (var r = -2; r <= 2; r += 1) {
+
+            for (var c = -2; c <= 2; c += 1) {
+
+              if (r == -2 || r == 2 || c == -2 || c == 2
+                  || (r == 0 && c == 0) ) {
+                _modules[row + r][col + c] = true;
+              } else {
+                _modules[row + r][col + c] = false;
+              }
+            }
+          }
+        }
+      }
+    };
+
+    var setupTypeNumber = function(test) {
+
+      var bits = QRUtil.getBCHTypeNumber(_typeNumber);
+
+      for (var i = 0; i < 18; i += 1) {
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+        _modules[Math.floor(i / 3)][i % 3 + _moduleCount - 8 - 3] = mod;
+      }
+
+      for (var i = 0; i < 18; i += 1) {
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+        _modules[i % 3 + _moduleCount - 8 - 3][Math.floor(i / 3)] = mod;
+      }
+    };
+
+    var setupTypeInfo = function(test, maskPattern) {
+
+      var data = (_errorCorrectionLevel << 3) | maskPattern;
+      var bits = QRUtil.getBCHTypeInfo(data);
+
+      // vertical
+      for (var i = 0; i < 15; i += 1) {
+
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+
+        if (i < 6) {
+          _modules[i][8] = mod;
+        } else if (i < 8) {
+          _modules[i + 1][8] = mod;
+        } else {
+          _modules[_moduleCount - 15 + i][8] = mod;
+        }
+      }
+
+      // horizontal
+      for (var i = 0; i < 15; i += 1) {
+
+        var mod = (!test && ( (bits >> i) & 1) == 1);
+
+        if (i < 8) {
+          _modules[8][_moduleCount - i - 1] = mod;
+        } else if (i < 9) {
+          _modules[8][15 - i - 1 + 1] = mod;
+        } else {
+          _modules[8][15 - i - 1] = mod;
+        }
+      }
+
+      // fixed module
+      _modules[_moduleCount - 8][8] = (!test);
+    };
+
+    var mapData = function(data, maskPattern) {
+
+      var inc = -1;
+      var row = _moduleCount - 1;
+      var bitIndex = 7;
+      var byteIndex = 0;
+      var maskFunc = QRUtil.getMaskFunction(maskPattern);
+
+      for (var col = _moduleCount - 1; col > 0; col -= 2) {
+
+        if (col == 6) col -= 1;
+
+        while (true) {
+
+          for (var c = 0; c < 2; c += 1) {
+
+            if (_modules[row][col - c] == null) {
+
+              var dark = false;
+
+              if (byteIndex < data.length) {
+                dark = ( ( (data[byteIndex] >>> bitIndex) & 1) == 1);
+              }
+
+              var mask = maskFunc(row, col - c);
+
+              if (mask) {
+                dark = !dark;
+              }
+
+              _modules[row][col - c] = dark;
+              bitIndex -= 1;
+
+              if (bitIndex == -1) {
+                byteIndex += 1;
+                bitIndex = 7;
+              }
+            }
+          }
+
+          row += inc;
+
+          if (row < 0 || _moduleCount <= row) {
+            row -= inc;
+            inc = -inc;
+            break;
+          }
+        }
+      }
+    };
+
+    var createBytes = function(buffer, rsBlocks) {
+
+      var offset = 0;
+
+      var maxDcCount = 0;
+      var maxEcCount = 0;
+
+      var dcdata = new Array(rsBlocks.length);
+      var ecdata = new Array(rsBlocks.length);
+
+      for (var r = 0; r < rsBlocks.length; r += 1) {
+
+        var dcCount = rsBlocks[r].dataCount;
+        var ecCount = rsBlocks[r].totalCount - dcCount;
+
+        maxDcCount = Math.max(maxDcCount, dcCount);
+        maxEcCount = Math.max(maxEcCount, ecCount);
+
+        dcdata[r] = new Array(dcCount);
+
+        for (var i = 0; i < dcdata[r].length; i += 1) {
+          dcdata[r][i] = 0xff & buffer.getBuffer()[i + offset];
+        }
+        offset += dcCount;
+
+        var rsPoly = QRUtil.getErrorCorrectPolynomial(ecCount);
+        var rawPoly = qrPolynomial(dcdata[r], rsPoly.getLength() - 1);
+
+        var modPoly = rawPoly.mod(rsPoly);
+        ecdata[r] = new Array(rsPoly.getLength() - 1);
+        for (var i = 0; i < ecdata[r].length; i += 1) {
+          var modIndex = i + modPoly.getLength() - ecdata[r].length;
+          ecdata[r][i] = (modIndex >= 0)? modPoly.getAt(modIndex) : 0;
+        }
+      }
+
+      var totalCodeCount = 0;
+      for (var i = 0; i < rsBlocks.length; i += 1) {
+        totalCodeCount += rsBlocks[i].totalCount;
+      }
+
+      var data = new Array(totalCodeCount);
+      var index = 0;
+
+      for (var i = 0; i < maxDcCount; i += 1) {
+        for (var r = 0; r < rsBlocks.length; r += 1) {
+          if (i < dcdata[r].length) {
+            data[index] = dcdata[r][i];
+            index += 1;
+          }
+        }
+      }
+
+      for (var i = 0; i < maxEcCount; i += 1) {
+        for (var r = 0; r < rsBlocks.length; r += 1) {
+          if (i < ecdata[r].length) {
+            data[index] = ecdata[r][i];
+            index += 1;
+          }
+        }
+      }
+
+      return data;
+    };
+
+    var createData = function(typeNumber, errorCorrectionLevel, dataList) {
+
+      var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, errorCorrectionLevel);
+
+      var buffer = qrBitBuffer();
+
+      for (var i = 0; i < dataList.length; i += 1) {
+        var data = dataList[i];
+        buffer.put(data.getMode(), 4);
+        buffer.put(data.getLength(), QRUtil.getLengthInBits(data.getMode(), typeNumber) );
+        data.write(buffer);
+      }
+
+      // calc num max data.
+      var totalDataCount = 0;
+      for (var i = 0; i < rsBlocks.length; i += 1) {
+        totalDataCount += rsBlocks[i].dataCount;
+      }
+
+      if (buffer.getLengthInBits() > totalDataCount * 8) {
+        throw 'code length overflow. ('
+          + buffer.getLengthInBits()
+          + '>'
+          + totalDataCount * 8
+          + ')';
+      }
+
+      // end code
+      if (buffer.getLengthInBits() + 4 <= totalDataCount * 8) {
+        buffer.put(0, 4);
+      }
+
+      // padding
+      while (buffer.getLengthInBits() % 8 != 0) {
+        buffer.putBit(false);
+      }
+
+      // padding
+      while (true) {
+
+        if (buffer.getLengthInBits() >= totalDataCount * 8) {
+          break;
+        }
+        buffer.put(PAD0, 8);
+
+        if (buffer.getLengthInBits() >= totalDataCount * 8) {
+          break;
+        }
+        buffer.put(PAD1, 8);
+      }
+
+      return createBytes(buffer, rsBlocks);
+    };
+
+    _this.addData = function(data, mode) {
+
+      mode = mode || 'Byte';
+
+      var newData = null;
+
+      switch(mode) {
+      case 'Numeric' :
+        newData = qrNumber(data);
+        break;
+      case 'Alphanumeric' :
+        newData = qrAlphaNum(data);
+        break;
+      case 'Byte' :
+        newData = qr8BitByte(data);
+        break;
+      case 'Kanji' :
+        newData = qrKanji(data);
+        break;
+      default :
+        throw 'mode:' + mode;
+      }
+
+      _dataList.push(newData);
+      _dataCache = null;
+    };
+
+    _this.isDark = function(row, col) {
+      if (row < 0 || _moduleCount <= row || col < 0 || _moduleCount <= col) {
+        throw row + ',' + col;
+      }
+      return _modules[row][col];
+    };
+
+    _this.getModuleCount = function() {
+      return _moduleCount;
+    };
+
+    _this.make = function() {
+      if (_typeNumber < 1) {
+        var typeNumber = 1;
+
+        for (; typeNumber < 40; typeNumber++) {
+          var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, _errorCorrectionLevel);
+          var buffer = qrBitBuffer();
+
+          for (var i = 0; i < _dataList.length; i++) {
+            var data = _dataList[i];
+            buffer.put(data.getMode(), 4);
+            buffer.put(data.getLength(), QRUtil.getLengthInBits(data.getMode(), typeNumber) );
+            data.write(buffer);
+          }
+
+          var totalDataCount = 0;
+          for (var i = 0; i < rsBlocks.length; i++) {
+            totalDataCount += rsBlocks[i].dataCount;
+          }
+
+          if (buffer.getLengthInBits() <= totalDataCount * 8) {
+            break;
+          }
+        }
+
+        _typeNumber = typeNumber;
+      }
+
+      makeImpl(false, getBestMaskPattern() );
+    };
+
+    _this.createTableTag = function(cellSize, margin) {
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      var qrHtml = '';
+
+      qrHtml += '<table style="';
+      qrHtml += ' border-width: 0px; border-style: none;';
+      qrHtml += ' border-collapse: collapse;';
+      qrHtml += ' padding: 0px; margin: ' + margin + 'px;';
+      qrHtml += '">';
+      qrHtml += '<tbody>';
+
+      for (var r = 0; r < _this.getModuleCount(); r += 1) {
+
+        qrHtml += '<tr>';
+
+        for (var c = 0; c < _this.getModuleCount(); c += 1) {
+          qrHtml += '<td style="';
+          qrHtml += ' border-width: 0px; border-style: none;';
+          qrHtml += ' border-collapse: collapse;';
+          qrHtml += ' padding: 0px; margin: 0px;';
+          qrHtml += ' width: ' + cellSize + 'px;';
+          qrHtml += ' height: ' + cellSize + 'px;';
+          qrHtml += ' background-color: ';
+          qrHtml += _this.isDark(r, c)? '#000000' : '#ffffff';
+          qrHtml += ';';
+          qrHtml += '"/>';
+        }
+
+        qrHtml += '</tr>';
+      }
+
+      qrHtml += '</tbody>';
+      qrHtml += '</table>';
+
+      return qrHtml;
+    };
+
+    _this.createSvgTag = function(cellSize, margin, alt, title) {
+
+      var opts = {};
+      if (typeof arguments[0] == 'object') {
+        // Called by options.
+        opts = arguments[0];
+        // overwrite cellSize and margin.
+        cellSize = opts.cellSize;
+        margin = opts.margin;
+        alt = opts.alt;
+        title = opts.title;
+      }
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      // Compose alt property surrogate
+      alt = (typeof alt === 'string') ? {text: alt} : alt || {};
+      alt.text = alt.text || null;
+      alt.id = (alt.text) ? alt.id || 'qrcode-description' : null;
+
+      // Compose title property surrogate
+      title = (typeof title === 'string') ? {text: title} : title || {};
+      title.text = title.text || null;
+      title.id = (title.text) ? title.id || 'qrcode-title' : null;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var c, mc, r, mr, qrSvg='', rect;
+
+      rect = 'l' + cellSize + ',0 0,' + cellSize +
+        ' -' + cellSize + ',0 0,-' + cellSize + 'z ';
+
+      qrSvg += '<svg version="1.1" xmlns="http://www.w3.org/2000/svg"';
+      qrSvg += !opts.scalable ? ' width="' + size + 'px" height="' + size + 'px"' : '';
+      qrSvg += ' viewBox="0 0 ' + size + ' ' + size + '" ';
+      qrSvg += ' preserveAspectRatio="xMinYMin meet"';
+      qrSvg += (title.text || alt.text) ? ' role="img" aria-labelledby="' +
+          escapeXml([title.id, alt.id].join(' ').trim() ) + '"' : '';
+      qrSvg += '>';
+      qrSvg += (title.text) ? '<title id="' + escapeXml(title.id) + '">' +
+          escapeXml(title.text) + '</title>' : '';
+      qrSvg += (alt.text) ? '<description id="' + escapeXml(alt.id) + '">' +
+          escapeXml(alt.text) + '</description>' : '';
+      qrSvg += '<rect width="100%" height="100%" fill="white" cx="0" cy="0"/>';
+      qrSvg += '<path d="';
+
+      for (r = 0; r < _this.getModuleCount(); r += 1) {
+        mr = r * cellSize + margin;
+        for (c = 0; c < _this.getModuleCount(); c += 1) {
+          if (_this.isDark(r, c) ) {
+            mc = c*cellSize+margin;
+            qrSvg += 'M' + mc + ',' + mr + rect;
+          }
+        }
+      }
+
+      qrSvg += '" stroke="transparent" fill="black"/>';
+      qrSvg += '</svg>';
+
+      return qrSvg;
+    };
+
+    _this.createDataURL = function(cellSize, margin) {
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+
+      return createDataURL(size, size, function(x, y) {
+        if (min <= x && x < max && min <= y && y < max) {
+          var c = Math.floor( (x - min) / cellSize);
+          var r = Math.floor( (y - min) / cellSize);
+          return _this.isDark(r, c)? 0 : 1;
+        } else {
+          return 1;
+        }
+      } );
+    };
+
+    _this.createImgTag = function(cellSize, margin, alt) {
+
+      cellSize = cellSize || 2;
+      margin = (typeof margin == 'undefined')? cellSize * 4 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+
+      var img = '';
+      img += '<img';
+      img += '\u0020src="';
+      img += _this.createDataURL(cellSize, margin);
+      img += '"';
+      img += '\u0020width="';
+      img += size;
+      img += '"';
+      img += '\u0020height="';
+      img += size;
+      img += '"';
+      if (alt) {
+        img += '\u0020alt="';
+        img += escapeXml(alt);
+        img += '"';
+      }
+      img += '/>';
+
+      return img;
+    };
+
+    var escapeXml = function(s) {
+      var escaped = '';
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charAt(i);
+        switch(c) {
+        case '<': escaped += '&lt;'; break;
+        case '>': escaped += '&gt;'; break;
+        case '&': escaped += '&amp;'; break;
+        case '"': escaped += '&quot;'; break;
+        default : escaped += c; break;
+        }
+      }
+      return escaped;
+    };
+
+    var _createHalfASCII = function(margin) {
+      var cellSize = 1;
+      margin = (typeof margin == 'undefined')? cellSize * 2 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+
+      var y, x, r1, r2, p;
+
+      var blocks = {
+        '██': '█',
+        '█ ': '▀',
+        ' █': '▄',
+        '  ': ' '
+      };
+
+      var blocksLastLineNoMargin = {
+        '██': '▀',
+        '█ ': '▀',
+        ' █': ' ',
+        '  ': ' '
+      };
+
+      var ascii = '';
+      for (y = 0; y < size; y += 2) {
+        r1 = Math.floor((y - min) / cellSize);
+        r2 = Math.floor((y + 1 - min) / cellSize);
+        for (x = 0; x < size; x += 1) {
+          p = '█';
+
+          if (min <= x && x < max && min <= y && y < max && _this.isDark(r1, Math.floor((x - min) / cellSize))) {
+            p = ' ';
+          }
+
+          if (min <= x && x < max && min <= y+1 && y+1 < max && _this.isDark(r2, Math.floor((x - min) / cellSize))) {
+            p += ' ';
+          }
+          else {
+            p += '█';
+          }
+
+          // Output 2 characters per pixel, to create full square. 1 character per pixels gives only half width of square.
+          ascii += (margin < 1 && y+1 >= max) ? blocksLastLineNoMargin[p] : blocks[p];
+        }
+
+        ascii += '\n';
+      }
+
+      if (size % 2 && margin > 0) {
+        return ascii.substring(0, ascii.length - size - 1) + Array(size+1).join('▀');
+      }
+
+      return ascii.substring(0, ascii.length-1);
+    };
+
+    _this.createASCII = function(cellSize, margin) {
+      cellSize = cellSize || 1;
+
+      if (cellSize < 2) {
+        return _createHalfASCII(margin);
+      }
+
+      cellSize -= 1;
+      margin = (typeof margin == 'undefined')? cellSize * 2 : margin;
+
+      var size = _this.getModuleCount() * cellSize + margin * 2;
+      var min = margin;
+      var max = size - margin;
+
+      var y, x, r, p;
+
+      var white = Array(cellSize+1).join('██');
+      var black = Array(cellSize+1).join('  ');
+
+      var ascii = '';
+      var line = '';
+      for (y = 0; y < size; y += 1) {
+        r = Math.floor( (y - min) / cellSize);
+        line = '';
+        for (x = 0; x < size; x += 1) {
+          p = 1;
+
+          if (min <= x && x < max && min <= y && y < max && _this.isDark(r, Math.floor((x - min) / cellSize))) {
+            p = 0;
+          }
+
+          // Output 2 characters per pixel, to create full square. 1 character per pixels gives only half width of square.
+          line += p ? white : black;
+        }
+
+        for (r = 0; r < cellSize; r += 1) {
+          ascii += line + '\n';
+        }
+      }
+
+      return ascii.substring(0, ascii.length-1);
+    };
+
+    _this.renderTo2dContext = function(context, cellSize) {
+      cellSize = cellSize || 2;
+      var length = _this.getModuleCount();
+      for (var row = 0; row < length; row++) {
+        for (var col = 0; col < length; col++) {
+          context.fillStyle = _this.isDark(row, col) ? 'black' : 'white';
+          context.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
+        }
+      }
+    }
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrcode.stringToBytes
+  //---------------------------------------------------------------------
+
+  qrcode.stringToBytesFuncs = {
+    'default' : function(s) {
+      var bytes = [];
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charCodeAt(i);
+        bytes.push(c & 0xff);
+      }
+      return bytes;
+    }
+  };
+
+  qrcode.stringToBytes = qrcode.stringToBytesFuncs['default'];
+
+  //---------------------------------------------------------------------
+  // qrcode.createStringToBytes
+  //---------------------------------------------------------------------
+
+  /**
+   * @param unicodeData base64 string of byte array.
+   * [16bit Unicode],[16bit Bytes], ...
+   * @param numChars
+   */
+  qrcode.createStringToBytes = function(unicodeData, numChars) {
+
+    // create conversion map.
+
+    var unicodeMap = function() {
+
+      var bin = base64DecodeInputStream(unicodeData);
+      var read = function() {
+        var b = bin.read();
+        if (b == -1) throw 'eof';
+        return b;
+      };
+
+      var count = 0;
+      var unicodeMap = {};
+      while (true) {
+        var b0 = bin.read();
+        if (b0 == -1) break;
+        var b1 = read();
+        var b2 = read();
+        var b3 = read();
+        var k = String.fromCharCode( (b0 << 8) | b1);
+        var v = (b2 << 8) | b3;
+        unicodeMap[k] = v;
+        count += 1;
+      }
+      if (count != numChars) {
+        throw count + ' != ' + numChars;
+      }
+
+      return unicodeMap;
+    }();
+
+    var unknownChar = '?'.charCodeAt(0);
+
+    return function(s) {
+      var bytes = [];
+      for (var i = 0; i < s.length; i += 1) {
+        var c = s.charCodeAt(i);
+        if (c < 128) {
+          bytes.push(c);
+        } else {
+          var b = unicodeMap[s.charAt(i)];
+          if (typeof b == 'number') {
+            if ( (b & 0xff) == b) {
+              // 1byte
+              bytes.push(b);
+            } else {
+              // 2bytes
+              bytes.push(b >>> 8);
+              bytes.push(b & 0xff);
+            }
+          } else {
+            bytes.push(unknownChar);
+          }
+        }
+      }
+      return bytes;
+    };
+  };
+
+  //---------------------------------------------------------------------
+  // QRMode
+  //---------------------------------------------------------------------
+
+  var QRMode = {
+    MODE_NUMBER :    1 << 0,
+    MODE_ALPHA_NUM : 1 << 1,
+    MODE_8BIT_BYTE : 1 << 2,
+    MODE_KANJI :     1 << 3
+  };
+
+  //---------------------------------------------------------------------
+  // QRErrorCorrectionLevel
+  //---------------------------------------------------------------------
+
+  var QRErrorCorrectionLevel = {
+    L : 1,
+    M : 0,
+    Q : 3,
+    H : 2
+  };
+
+  //---------------------------------------------------------------------
+  // QRMaskPattern
+  //---------------------------------------------------------------------
+
+  var QRMaskPattern = {
+    PATTERN000 : 0,
+    PATTERN001 : 1,
+    PATTERN010 : 2,
+    PATTERN011 : 3,
+    PATTERN100 : 4,
+    PATTERN101 : 5,
+    PATTERN110 : 6,
+    PATTERN111 : 7
+  };
+
+  //---------------------------------------------------------------------
+  // QRUtil
+  //---------------------------------------------------------------------
+
+  var QRUtil = function() {
+
+    var PATTERN_POSITION_TABLE = [
+      [],
+      [6, 18],
+      [6, 22],
+      [6, 26],
+      [6, 30],
+      [6, 34],
+      [6, 22, 38],
+      [6, 24, 42],
+      [6, 26, 46],
+      [6, 28, 50],
+      [6, 30, 54],
+      [6, 32, 58],
+      [6, 34, 62],
+      [6, 26, 46, 66],
+      [6, 26, 48, 70],
+      [6, 26, 50, 74],
+      [6, 30, 54, 78],
+      [6, 30, 56, 82],
+      [6, 30, 58, 86],
+      [6, 34, 62, 90],
+      [6, 28, 50, 72, 94],
+      [6, 26, 50, 74, 98],
+      [6, 30, 54, 78, 102],
+      [6, 28, 54, 80, 106],
+      [6, 32, 58, 84, 110],
+      [6, 30, 58, 86, 114],
+      [6, 34, 62, 90, 118],
+      [6, 26, 50, 74, 98, 122],
+      [6, 30, 54, 78, 102, 126],
+      [6, 26, 52, 78, 104, 130],
+      [6, 30, 56, 82, 108, 134],
+      [6, 34, 60, 86, 112, 138],
+      [6, 30, 58, 86, 114, 142],
+      [6, 34, 62, 90, 118, 146],
+      [6, 30, 54, 78, 102, 126, 150],
+      [6, 24, 50, 76, 102, 128, 154],
+      [6, 28, 54, 80, 106, 132, 158],
+      [6, 32, 58, 84, 110, 136, 162],
+      [6, 26, 54, 82, 110, 138, 166],
+      [6, 30, 58, 86, 114, 142, 170]
+    ];
+    var G15 = (1 << 10) | (1 << 8) | (1 << 5) | (1 << 4) | (1 << 2) | (1 << 1) | (1 << 0);
+    var G18 = (1 << 12) | (1 << 11) | (1 << 10) | (1 << 9) | (1 << 8) | (1 << 5) | (1 << 2) | (1 << 0);
+    var G15_MASK = (1 << 14) | (1 << 12) | (1 << 10) | (1 << 4) | (1 << 1);
+
+    var _this = {};
+
+    var getBCHDigit = function(data) {
+      var digit = 0;
+      while (data != 0) {
+        digit += 1;
+        data >>>= 1;
+      }
+      return digit;
+    };
+
+    _this.getBCHTypeInfo = function(data) {
+      var d = data << 10;
+      while (getBCHDigit(d) - getBCHDigit(G15) >= 0) {
+        d ^= (G15 << (getBCHDigit(d) - getBCHDigit(G15) ) );
+      }
+      return ( (data << 10) | d) ^ G15_MASK;
+    };
+
+    _this.getBCHTypeNumber = function(data) {
+      var d = data << 12;
+      while (getBCHDigit(d) - getBCHDigit(G18) >= 0) {
+        d ^= (G18 << (getBCHDigit(d) - getBCHDigit(G18) ) );
+      }
+      return (data << 12) | d;
+    };
+
+    _this.getPatternPosition = function(typeNumber) {
+      return PATTERN_POSITION_TABLE[typeNumber - 1];
+    };
+
+    _this.getMaskFunction = function(maskPattern) {
+
+      switch (maskPattern) {
+
+      case QRMaskPattern.PATTERN000 :
+        return function(i, j) { return (i + j) % 2 == 0; };
+      case QRMaskPattern.PATTERN001 :
+        return function(i, j) { return i % 2 == 0; };
+      case QRMaskPattern.PATTERN010 :
+        return function(i, j) { return j % 3 == 0; };
+      case QRMaskPattern.PATTERN011 :
+        return function(i, j) { return (i + j) % 3 == 0; };
+      case QRMaskPattern.PATTERN100 :
+        return function(i, j) { return (Math.floor(i / 2) + Math.floor(j / 3) ) % 2 == 0; };
+      case QRMaskPattern.PATTERN101 :
+        return function(i, j) { return (i * j) % 2 + (i * j) % 3 == 0; };
+      case QRMaskPattern.PATTERN110 :
+        return function(i, j) { return ( (i * j) % 2 + (i * j) % 3) % 2 == 0; };
+      case QRMaskPattern.PATTERN111 :
+        return function(i, j) { return ( (i * j) % 3 + (i + j) % 2) % 2 == 0; };
+
+      default :
+        throw 'bad maskPattern:' + maskPattern;
+      }
+    };
+
+    _this.getErrorCorrectPolynomial = function(errorCorrectLength) {
+      var a = qrPolynomial([1], 0);
+      for (var i = 0; i < errorCorrectLength; i += 1) {
+        a = a.multiply(qrPolynomial([1, QRMath.gexp(i)], 0) );
+      }
+      return a;
+    };
+
+    _this.getLengthInBits = function(mode, type) {
+
+      if (1 <= type && type < 10) {
+
+        // 1 - 9
+
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 10;
+        case QRMode.MODE_ALPHA_NUM : return 9;
+        case QRMode.MODE_8BIT_BYTE : return 8;
+        case QRMode.MODE_KANJI     : return 8;
+        default :
+          throw 'mode:' + mode;
+        }
+
+      } else if (type < 27) {
+
+        // 10 - 26
+
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 12;
+        case QRMode.MODE_ALPHA_NUM : return 11;
+        case QRMode.MODE_8BIT_BYTE : return 16;
+        case QRMode.MODE_KANJI     : return 10;
+        default :
+          throw 'mode:' + mode;
+        }
+
+      } else if (type < 41) {
+
+        // 27 - 40
+
+        switch(mode) {
+        case QRMode.MODE_NUMBER    : return 14;
+        case QRMode.MODE_ALPHA_NUM : return 13;
+        case QRMode.MODE_8BIT_BYTE : return 16;
+        case QRMode.MODE_KANJI     : return 12;
+        default :
+          throw 'mode:' + mode;
+        }
+
+      } else {
+        throw 'type:' + type;
+      }
+    };
+
+    _this.getLostPoint = function(qrcode) {
+
+      var moduleCount = qrcode.getModuleCount();
+
+      var lostPoint = 0;
+
+      // LEVEL1
+
+      for (var row = 0; row < moduleCount; row += 1) {
+        for (var col = 0; col < moduleCount; col += 1) {
+
+          var sameCount = 0;
+          var dark = qrcode.isDark(row, col);
+
+          for (var r = -1; r <= 1; r += 1) {
+
+            if (row + r < 0 || moduleCount <= row + r) {
+              continue;
+            }
+
+            for (var c = -1; c <= 1; c += 1) {
+
+              if (col + c < 0 || moduleCount <= col + c) {
+                continue;
+              }
+
+              if (r == 0 && c == 0) {
+                continue;
+              }
+
+              if (dark == qrcode.isDark(row + r, col + c) ) {
+                sameCount += 1;
+              }
+            }
+          }
+
+          if (sameCount > 5) {
+            lostPoint += (3 + sameCount - 5);
+          }
+        }
+      };
+
+      // LEVEL2
+
+      for (var row = 0; row < moduleCount - 1; row += 1) {
+        for (var col = 0; col < moduleCount - 1; col += 1) {
+          var count = 0;
+          if (qrcode.isDark(row, col) ) count += 1;
+          if (qrcode.isDark(row + 1, col) ) count += 1;
+          if (qrcode.isDark(row, col + 1) ) count += 1;
+          if (qrcode.isDark(row + 1, col + 1) ) count += 1;
+          if (count == 0 || count == 4) {
+            lostPoint += 3;
+          }
+        }
+      }
+
+      // LEVEL3
+
+      for (var row = 0; row < moduleCount; row += 1) {
+        for (var col = 0; col < moduleCount - 6; col += 1) {
+          if (qrcode.isDark(row, col)
+              && !qrcode.isDark(row, col + 1)
+              &&  qrcode.isDark(row, col + 2)
+              &&  qrcode.isDark(row, col + 3)
+              &&  qrcode.isDark(row, col + 4)
+              && !qrcode.isDark(row, col + 5)
+              &&  qrcode.isDark(row, col + 6) ) {
+            lostPoint += 40;
+          }
+        }
+      }
+
+      for (var col = 0; col < moduleCount; col += 1) {
+        for (var row = 0; row < moduleCount - 6; row += 1) {
+          if (qrcode.isDark(row, col)
+              && !qrcode.isDark(row + 1, col)
+              &&  qrcode.isDark(row + 2, col)
+              &&  qrcode.isDark(row + 3, col)
+              &&  qrcode.isDark(row + 4, col)
+              && !qrcode.isDark(row + 5, col)
+              &&  qrcode.isDark(row + 6, col) ) {
+            lostPoint += 40;
+          }
+        }
+      }
+
+      // LEVEL4
+
+      var darkCount = 0;
+
+      for (var col = 0; col < moduleCount; col += 1) {
+        for (var row = 0; row < moduleCount; row += 1) {
+          if (qrcode.isDark(row, col) ) {
+            darkCount += 1;
+          }
+        }
+      }
+
+      var ratio = Math.abs(100 * darkCount / moduleCount / moduleCount - 50) / 5;
+      lostPoint += ratio * 10;
+
+      return lostPoint;
+    };
+
+    return _this;
+  }();
+
+  //---------------------------------------------------------------------
+  // QRMath
+  //---------------------------------------------------------------------
+
+  var QRMath = function() {
+
+    var EXP_TABLE = new Array(256);
+    var LOG_TABLE = new Array(256);
+
+    // initialize tables
+    for (var i = 0; i < 8; i += 1) {
+      EXP_TABLE[i] = 1 << i;
+    }
+    for (var i = 8; i < 256; i += 1) {
+      EXP_TABLE[i] = EXP_TABLE[i - 4]
+        ^ EXP_TABLE[i - 5]
+        ^ EXP_TABLE[i - 6]
+        ^ EXP_TABLE[i - 8];
+    }
+    for (var i = 0; i < 255; i += 1) {
+      LOG_TABLE[EXP_TABLE[i] ] = i;
+    }
+
+    var _this = {};
+
+    _this.glog = function(n) {
+
+      if (n < 1) {
+        throw 'glog(' + n + ')';
+      }
+
+      return LOG_TABLE[n];
+    };
+
+    _this.gexp = function(n) {
+
+      while (n < 0) {
+        n += 255;
+      }
+
+      while (n >= 256) {
+        n -= 255;
+      }
+
+      return EXP_TABLE[n];
+    };
+
+    return _this;
+  }();
+
+  //---------------------------------------------------------------------
+  // qrPolynomial
+  //---------------------------------------------------------------------
+
+  function qrPolynomial(num, shift) {
+
+    if (typeof num.length == 'undefined') {
+      throw num.length + '/' + shift;
+    }
+
+    var _num = function() {
+      var offset = 0;
+      while (offset < num.length && num[offset] == 0) {
+        offset += 1;
+      }
+      var _num = new Array(num.length - offset + shift);
+      for (var i = 0; i < num.length - offset; i += 1) {
+        _num[i] = num[i + offset];
+      }
+      return _num;
+    }();
+
+    var _this = {};
+
+    _this.getAt = function(index) {
+      return _num[index];
+    };
+
+    _this.getLength = function() {
+      return _num.length;
+    };
+
+    _this.multiply = function(e) {
+
+      var num = new Array(_this.getLength() + e.getLength() - 1);
+
+      for (var i = 0; i < _this.getLength(); i += 1) {
+        for (var j = 0; j < e.getLength(); j += 1) {
+          num[i + j] ^= QRMath.gexp(QRMath.glog(_this.getAt(i) ) + QRMath.glog(e.getAt(j) ) );
+        }
+      }
+
+      return qrPolynomial(num, 0);
+    };
+
+    _this.mod = function(e) {
+
+      if (_this.getLength() - e.getLength() < 0) {
+        return _this;
+      }
+
+      var ratio = QRMath.glog(_this.getAt(0) ) - QRMath.glog(e.getAt(0) );
+
+      var num = new Array(_this.getLength() );
+      for (var i = 0; i < _this.getLength(); i += 1) {
+        num[i] = _this.getAt(i);
+      }
+
+      for (var i = 0; i < e.getLength(); i += 1) {
+        num[i] ^= QRMath.gexp(QRMath.glog(e.getAt(i) ) + ratio);
+      }
+
+      // recursive call
+      return qrPolynomial(num, 0).mod(e);
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // QRRSBlock
+  //---------------------------------------------------------------------
+
+  var QRRSBlock = function() {
+
+    var RS_BLOCK_TABLE = [
+
+      // L
+      // M
+      // Q
+      // H
+
+      // 1
+      [1, 26, 19],
+      [1, 26, 16],
+      [1, 26, 13],
+      [1, 26, 9],
+
+      // 2
+      [1, 44, 34],
+      [1, 44, 28],
+      [1, 44, 22],
+      [1, 44, 16],
+
+      // 3
+      [1, 70, 55],
+      [1, 70, 44],
+      [2, 35, 17],
+      [2, 35, 13],
+
+      // 4
+      [1, 100, 80],
+      [2, 50, 32],
+      [2, 50, 24],
+      [4, 25, 9],
+
+      // 5
+      [1, 134, 108],
+      [2, 67, 43],
+      [2, 33, 15, 2, 34, 16],
+      [2, 33, 11, 2, 34, 12],
+
+      // 6
+      [2, 86, 68],
+      [4, 43, 27],
+      [4, 43, 19],
+      [4, 43, 15],
+
+      // 7
+      [2, 98, 78],
+      [4, 49, 31],
+      [2, 32, 14, 4, 33, 15],
+      [4, 39, 13, 1, 40, 14],
+
+      // 8
+      [2, 121, 97],
+      [2, 60, 38, 2, 61, 39],
+      [4, 40, 18, 2, 41, 19],
+      [4, 40, 14, 2, 41, 15],
+
+      // 9
+      [2, 146, 116],
+      [3, 58, 36, 2, 59, 37],
+      [4, 36, 16, 4, 37, 17],
+      [4, 36, 12, 4, 37, 13],
+
+      // 10
+      [2, 86, 68, 2, 87, 69],
+      [4, 69, 43, 1, 70, 44],
+      [6, 43, 19, 2, 44, 20],
+      [6, 43, 15, 2, 44, 16],
+
+      // 11
+      [4, 101, 81],
+      [1, 80, 50, 4, 81, 51],
+      [4, 50, 22, 4, 51, 23],
+      [3, 36, 12, 8, 37, 13],
+
+      // 12
+      [2, 116, 92, 2, 117, 93],
+      [6, 58, 36, 2, 59, 37],
+      [4, 46, 20, 6, 47, 21],
+      [7, 42, 14, 4, 43, 15],
+
+      // 13
+      [4, 133, 107],
+      [8, 59, 37, 1, 60, 38],
+      [8, 44, 20, 4, 45, 21],
+      [12, 33, 11, 4, 34, 12],
+
+      // 14
+      [3, 145, 115, 1, 146, 116],
+      [4, 64, 40, 5, 65, 41],
+      [11, 36, 16, 5, 37, 17],
+      [11, 36, 12, 5, 37, 13],
+
+      // 15
+      [5, 109, 87, 1, 110, 88],
+      [5, 65, 41, 5, 66, 42],
+      [5, 54, 24, 7, 55, 25],
+      [11, 36, 12, 7, 37, 13],
+
+      // 16
+      [5, 122, 98, 1, 123, 99],
+      [7, 73, 45, 3, 74, 46],
+      [15, 43, 19, 2, 44, 20],
+      [3, 45, 15, 13, 46, 16],
+
+      // 17
+      [1, 135, 107, 5, 136, 108],
+      [10, 74, 46, 1, 75, 47],
+      [1, 50, 22, 15, 51, 23],
+      [2, 42, 14, 17, 43, 15],
+
+      // 18
+      [5, 150, 120, 1, 151, 121],
+      [9, 69, 43, 4, 70, 44],
+      [17, 50, 22, 1, 51, 23],
+      [2, 42, 14, 19, 43, 15],
+
+      // 19
+      [3, 141, 113, 4, 142, 114],
+      [3, 70, 44, 11, 71, 45],
+      [17, 47, 21, 4, 48, 22],
+      [9, 39, 13, 16, 40, 14],
+
+      // 20
+      [3, 135, 107, 5, 136, 108],
+      [3, 67, 41, 13, 68, 42],
+      [15, 54, 24, 5, 55, 25],
+      [15, 43, 15, 10, 44, 16],
+
+      // 21
+      [4, 144, 116, 4, 145, 117],
+      [17, 68, 42],
+      [17, 50, 22, 6, 51, 23],
+      [19, 46, 16, 6, 47, 17],
+
+      // 22
+      [2, 139, 111, 7, 140, 112],
+      [17, 74, 46],
+      [7, 54, 24, 16, 55, 25],
+      [34, 37, 13],
+
+      // 23
+      [4, 151, 121, 5, 152, 122],
+      [4, 75, 47, 14, 76, 48],
+      [11, 54, 24, 14, 55, 25],
+      [16, 45, 15, 14, 46, 16],
+
+      // 24
+      [6, 147, 117, 4, 148, 118],
+      [6, 73, 45, 14, 74, 46],
+      [11, 54, 24, 16, 55, 25],
+      [30, 46, 16, 2, 47, 17],
+
+      // 25
+      [8, 132, 106, 4, 133, 107],
+      [8, 75, 47, 13, 76, 48],
+      [7, 54, 24, 22, 55, 25],
+      [22, 45, 15, 13, 46, 16],
+
+      // 26
+      [10, 142, 114, 2, 143, 115],
+      [19, 74, 46, 4, 75, 47],
+      [28, 50, 22, 6, 51, 23],
+      [33, 46, 16, 4, 47, 17],
+
+      // 27
+      [8, 152, 122, 4, 153, 123],
+      [22, 73, 45, 3, 74, 46],
+      [8, 53, 23, 26, 54, 24],
+      [12, 45, 15, 28, 46, 16],
+
+      // 28
+      [3, 147, 117, 10, 148, 118],
+      [3, 73, 45, 23, 74, 46],
+      [4, 54, 24, 31, 55, 25],
+      [11, 45, 15, 31, 46, 16],
+
+      // 29
+      [7, 146, 116, 7, 147, 117],
+      [21, 73, 45, 7, 74, 46],
+      [1, 53, 23, 37, 54, 24],
+      [19, 45, 15, 26, 46, 16],
+
+      // 30
+      [5, 145, 115, 10, 146, 116],
+      [19, 75, 47, 10, 76, 48],
+      [15, 54, 24, 25, 55, 25],
+      [23, 45, 15, 25, 46, 16],
+
+      // 31
+      [13, 145, 115, 3, 146, 116],
+      [2, 74, 46, 29, 75, 47],
+      [42, 54, 24, 1, 55, 25],
+      [23, 45, 15, 28, 46, 16],
+
+      // 32
+      [17, 145, 115],
+      [10, 74, 46, 23, 75, 47],
+      [10, 54, 24, 35, 55, 25],
+      [19, 45, 15, 35, 46, 16],
+
+      // 33
+      [17, 145, 115, 1, 146, 116],
+      [14, 74, 46, 21, 75, 47],
+      [29, 54, 24, 19, 55, 25],
+      [11, 45, 15, 46, 46, 16],
+
+      // 34
+      [13, 145, 115, 6, 146, 116],
+      [14, 74, 46, 23, 75, 47],
+      [44, 54, 24, 7, 55, 25],
+      [59, 46, 16, 1, 47, 17],
+
+      // 35
+      [12, 151, 121, 7, 152, 122],
+      [12, 75, 47, 26, 76, 48],
+      [39, 54, 24, 14, 55, 25],
+      [22, 45, 15, 41, 46, 16],
+
+      // 36
+      [6, 151, 121, 14, 152, 122],
+      [6, 75, 47, 34, 76, 48],
+      [46, 54, 24, 10, 55, 25],
+      [2, 45, 15, 64, 46, 16],
+
+      // 37
+      [17, 152, 122, 4, 153, 123],
+      [29, 74, 46, 14, 75, 47],
+      [49, 54, 24, 10, 55, 25],
+      [24, 45, 15, 46, 46, 16],
+
+      // 38
+      [4, 152, 122, 18, 153, 123],
+      [13, 74, 46, 32, 75, 47],
+      [48, 54, 24, 14, 55, 25],
+      [42, 45, 15, 32, 46, 16],
+
+      // 39
+      [20, 147, 117, 4, 148, 118],
+      [40, 75, 47, 7, 76, 48],
+      [43, 54, 24, 22, 55, 25],
+      [10, 45, 15, 67, 46, 16],
+
+      // 40
+      [19, 148, 118, 6, 149, 119],
+      [18, 75, 47, 31, 76, 48],
+      [34, 54, 24, 34, 55, 25],
+      [20, 45, 15, 61, 46, 16]
+    ];
+
+    var qrRSBlock = function(totalCount, dataCount) {
+      var _this = {};
+      _this.totalCount = totalCount;
+      _this.dataCount = dataCount;
+      return _this;
+    };
+
+    var _this = {};
+
+    var getRsBlockTable = function(typeNumber, errorCorrectionLevel) {
+
+      switch(errorCorrectionLevel) {
+      case QRErrorCorrectionLevel.L :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 0];
+      case QRErrorCorrectionLevel.M :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 1];
+      case QRErrorCorrectionLevel.Q :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 2];
+      case QRErrorCorrectionLevel.H :
+        return RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 3];
+      default :
+        return undefined;
+      }
+    };
+
+    _this.getRSBlocks = function(typeNumber, errorCorrectionLevel) {
+
+      var rsBlock = getRsBlockTable(typeNumber, errorCorrectionLevel);
+
+      if (typeof rsBlock == 'undefined') {
+        throw 'bad rs block @ typeNumber:' + typeNumber +
+            '/errorCorrectionLevel:' + errorCorrectionLevel;
+      }
+
+      var length = rsBlock.length / 3;
+
+      var list = [];
+
+      for (var i = 0; i < length; i += 1) {
+
+        var count = rsBlock[i * 3 + 0];
+        var totalCount = rsBlock[i * 3 + 1];
+        var dataCount = rsBlock[i * 3 + 2];
+
+        for (var j = 0; j < count; j += 1) {
+          list.push(qrRSBlock(totalCount, dataCount) );
+        }
+      }
+
+      return list;
+    };
+
+    return _this;
+  }();
+
+  //---------------------------------------------------------------------
+  // qrBitBuffer
+  //---------------------------------------------------------------------
+
+  var qrBitBuffer = function() {
+
+    var _buffer = [];
+    var _length = 0;
+
+    var _this = {};
+
+    _this.getBuffer = function() {
+      return _buffer;
+    };
+
+    _this.getAt = function(index) {
+      var bufIndex = Math.floor(index / 8);
+      return ( (_buffer[bufIndex] >>> (7 - index % 8) ) & 1) == 1;
+    };
+
+    _this.put = function(num, length) {
+      for (var i = 0; i < length; i += 1) {
+        _this.putBit( ( (num >>> (length - i - 1) ) & 1) == 1);
+      }
+    };
+
+    _this.getLengthInBits = function() {
+      return _length;
+    };
+
+    _this.putBit = function(bit) {
+
+      var bufIndex = Math.floor(_length / 8);
+      if (_buffer.length <= bufIndex) {
+        _buffer.push(0);
+      }
+
+      if (bit) {
+        _buffer[bufIndex] |= (0x80 >>> (_length % 8) );
+      }
+
+      _length += 1;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrNumber
+  //---------------------------------------------------------------------
+
+  var qrNumber = function(data) {
+
+    var _mode = QRMode.MODE_NUMBER;
+    var _data = data;
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return _data.length;
+    };
+
+    _this.write = function(buffer) {
+
+      var data = _data;
+
+      var i = 0;
+
+      while (i + 2 < data.length) {
+        buffer.put(strToNum(data.substring(i, i + 3) ), 10);
+        i += 3;
+      }
+
+      if (i < data.length) {
+        if (data.length - i == 1) {
+          buffer.put(strToNum(data.substring(i, i + 1) ), 4);
+        } else if (data.length - i == 2) {
+          buffer.put(strToNum(data.substring(i, i + 2) ), 7);
+        }
+      }
+    };
+
+    var strToNum = function(s) {
+      var num = 0;
+      for (var i = 0; i < s.length; i += 1) {
+        num = num * 10 + chatToNum(s.charAt(i) );
+      }
+      return num;
+    };
+
+    var chatToNum = function(c) {
+      if ('0' <= c && c <= '9') {
+        return c.charCodeAt(0) - '0'.charCodeAt(0);
+      }
+      throw 'illegal char :' + c;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrAlphaNum
+  //---------------------------------------------------------------------
+
+  var qrAlphaNum = function(data) {
+
+    var _mode = QRMode.MODE_ALPHA_NUM;
+    var _data = data;
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return _data.length;
+    };
+
+    _this.write = function(buffer) {
+
+      var s = _data;
+
+      var i = 0;
+
+      while (i + 1 < s.length) {
+        buffer.put(
+          getCode(s.charAt(i) ) * 45 +
+          getCode(s.charAt(i + 1) ), 11);
+        i += 2;
+      }
+
+      if (i < s.length) {
+        buffer.put(getCode(s.charAt(i) ), 6);
+      }
+    };
+
+    var getCode = function(c) {
+
+      if ('0' <= c && c <= '9') {
+        return c.charCodeAt(0) - '0'.charCodeAt(0);
+      } else if ('A' <= c && c <= 'Z') {
+        return c.charCodeAt(0) - 'A'.charCodeAt(0) + 10;
+      } else {
+        switch (c) {
+        case ' ' : return 36;
+        case '$' : return 37;
+        case '%' : return 38;
+        case '*' : return 39;
+        case '+' : return 40;
+        case '-' : return 41;
+        case '.' : return 42;
+        case '/' : return 43;
+        case ':' : return 44;
+        default :
+          throw 'illegal char :' + c;
+        }
+      }
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qr8BitByte
+  //---------------------------------------------------------------------
+
+  var qr8BitByte = function(data) {
+
+    var _mode = QRMode.MODE_8BIT_BYTE;
+    var _data = data;
+    var _bytes = qrcode.stringToBytes(data);
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return _bytes.length;
+    };
+
+    _this.write = function(buffer) {
+      for (var i = 0; i < _bytes.length; i += 1) {
+        buffer.put(_bytes[i], 8);
+      }
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // qrKanji
+  //---------------------------------------------------------------------
+
+  var qrKanji = function(data) {
+
+    var _mode = QRMode.MODE_KANJI;
+    var _data = data;
+
+    var stringToBytes = qrcode.stringToBytesFuncs['SJIS'];
+    if (!stringToBytes) {
+      throw 'sjis not supported.';
+    }
+    !function(c, code) {
+      // self test for sjis support.
+      var test = stringToBytes(c);
+      if (test.length != 2 || ( (test[0] << 8) | test[1]) != code) {
+        throw 'sjis not supported.';
+      }
+    }('\u53cb', 0x9746);
+
+    var _bytes = stringToBytes(data);
+
+    var _this = {};
+
+    _this.getMode = function() {
+      return _mode;
+    };
+
+    _this.getLength = function(buffer) {
+      return ~~(_bytes.length / 2);
+    };
+
+    _this.write = function(buffer) {
+
+      var data = _bytes;
+
+      var i = 0;
+
+      while (i + 1 < data.length) {
+
+        var c = ( (0xff & data[i]) << 8) | (0xff & data[i + 1]);
+
+        if (0x8140 <= c && c <= 0x9FFC) {
+          c -= 0x8140;
+        } else if (0xE040 <= c && c <= 0xEBBF) {
+          c -= 0xC140;
+        } else {
+          throw 'illegal char at ' + (i + 1) + '/' + c;
+        }
+
+        c = ( (c >>> 8) & 0xff) * 0xC0 + (c & 0xff);
+
+        buffer.put(c, 13);
+
+        i += 2;
+      }
+
+      if (i < data.length) {
+        throw 'illegal char at ' + (i + 1);
+      }
+    };
+
+    return _this;
+  };
+
+  //=====================================================================
+  // GIF Support etc.
+  //
+
+  //---------------------------------------------------------------------
+  // byteArrayOutputStream
+  //---------------------------------------------------------------------
+
+  var byteArrayOutputStream = function() {
+
+    var _bytes = [];
+
+    var _this = {};
+
+    _this.writeByte = function(b) {
+      _bytes.push(b & 0xff);
+    };
+
+    _this.writeShort = function(i) {
+      _this.writeByte(i);
+      _this.writeByte(i >>> 8);
+    };
+
+    _this.writeBytes = function(b, off, len) {
+      off = off || 0;
+      len = len || b.length;
+      for (var i = 0; i < len; i += 1) {
+        _this.writeByte(b[i + off]);
+      }
+    };
+
+    _this.writeString = function(s) {
+      for (var i = 0; i < s.length; i += 1) {
+        _this.writeByte(s.charCodeAt(i) );
+      }
+    };
+
+    _this.toByteArray = function() {
+      return _bytes;
+    };
+
+    _this.toString = function() {
+      var s = '';
+      s += '[';
+      for (var i = 0; i < _bytes.length; i += 1) {
+        if (i > 0) {
+          s += ',';
+        }
+        s += _bytes[i];
+      }
+      s += ']';
+      return s;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // base64EncodeOutputStream
+  //---------------------------------------------------------------------
+
+  var base64EncodeOutputStream = function() {
+
+    var _buffer = 0;
+    var _buflen = 0;
+    var _length = 0;
+    var _base64 = '';
+
+    var _this = {};
+
+    var writeEncoded = function(b) {
+      _base64 += String.fromCharCode(encode(b & 0x3f) );
+    };
+
+    var encode = function(n) {
+      if (n < 0) {
+        // error.
+      } else if (n < 26) {
+        return 0x41 + n;
+      } else if (n < 52) {
+        return 0x61 + (n - 26);
+      } else if (n < 62) {
+        return 0x30 + (n - 52);
+      } else if (n == 62) {
+        return 0x2b;
+      } else if (n == 63) {
+        return 0x2f;
+      }
+      throw 'n:' + n;
+    };
+
+    _this.writeByte = function(n) {
+
+      _buffer = (_buffer << 8) | (n & 0xff);
+      _buflen += 8;
+      _length += 1;
+
+      while (_buflen >= 6) {
+        writeEncoded(_buffer >>> (_buflen - 6) );
+        _buflen -= 6;
+      }
+    };
+
+    _this.flush = function() {
+
+      if (_buflen > 0) {
+        writeEncoded(_buffer << (6 - _buflen) );
+        _buffer = 0;
+        _buflen = 0;
+      }
+
+      if (_length % 3 != 0) {
+        // padding
+        var padlen = 3 - _length % 3;
+        for (var i = 0; i < padlen; i += 1) {
+          _base64 += '=';
+        }
+      }
+    };
+
+    _this.toString = function() {
+      return _base64;
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // base64DecodeInputStream
+  //---------------------------------------------------------------------
+
+  var base64DecodeInputStream = function(str) {
+
+    var _str = str;
+    var _pos = 0;
+    var _buffer = 0;
+    var _buflen = 0;
+
+    var _this = {};
+
+    _this.read = function() {
+
+      while (_buflen < 8) {
+
+        if (_pos >= _str.length) {
+          if (_buflen == 0) {
+            return -1;
+          }
+          throw 'unexpected end of file./' + _buflen;
+        }
+
+        var c = _str.charAt(_pos);
+        _pos += 1;
+
+        if (c == '=') {
+          _buflen = 0;
+          return -1;
+        } else if (c.match(/^\s$/) ) {
+          // ignore if whitespace.
+          continue;
+        }
+
+        _buffer = (_buffer << 6) | decode(c.charCodeAt(0) );
+        _buflen += 6;
+      }
+
+      var n = (_buffer >>> (_buflen - 8) ) & 0xff;
+      _buflen -= 8;
+      return n;
+    };
+
+    var decode = function(c) {
+      if (0x41 <= c && c <= 0x5a) {
+        return c - 0x41;
+      } else if (0x61 <= c && c <= 0x7a) {
+        return c - 0x61 + 26;
+      } else if (0x30 <= c && c <= 0x39) {
+        return c - 0x30 + 52;
+      } else if (c == 0x2b) {
+        return 62;
+      } else if (c == 0x2f) {
+        return 63;
+      } else {
+        throw 'c:' + c;
+      }
+    };
+
+    return _this;
+  };
+
+  //---------------------------------------------------------------------
+  // gifImage (B/W)
+  //---------------------------------------------------------------------
+
+  var gifImage = function(width, height) {
+
+    var _width = width;
+    var _height = height;
+    var _data = new Array(width * height);
+
+    var _this = {};
+
+    _this.setPixel = function(x, y, pixel) {
+      _data[y * _width + x] = pixel;
+    };
+
+    _this.write = function(out) {
+
+      //---------------------------------
+      // GIF Signature
+
+      out.writeString('GIF87a');
+
+      //---------------------------------
+      // Screen Descriptor
+
+      out.writeShort(_width);
+      out.writeShort(_height);
+
+      out.writeByte(0x80); // 2bit
+      out.writeByte(0);
+      out.writeByte(0);
+
+      //---------------------------------
+      // Global Color Map
+
+      // black
+      out.writeByte(0x00);
+      out.writeByte(0x00);
+      out.writeByte(0x00);
+
+      // white
+      out.writeByte(0xff);
+      out.writeByte(0xff);
+      out.writeByte(0xff);
+
+      //---------------------------------
+      // Image Descriptor
+
+      out.writeString(',');
+      out.writeShort(0);
+      out.writeShort(0);
+      out.writeShort(_width);
+      out.writeShort(_height);
+      out.writeByte(0);
+
+      //---------------------------------
+      // Local Color Map
+
+      //---------------------------------
+      // Raster Data
+
+      var lzwMinCodeSize = 2;
+      var raster = getLZWRaster(lzwMinCodeSize);
+
+      out.writeByte(lzwMinCodeSize);
+
+      var offset = 0;
+
+      while (raster.length - offset > 255) {
+        out.writeByte(255);
+        out.writeBytes(raster, offset, 255);
+        offset += 255;
+      }
+
+      out.writeByte(raster.length - offset);
+      out.writeBytes(raster, offset, raster.length - offset);
+      out.writeByte(0x00);
+
+      //---------------------------------
+      // GIF Terminator
+      out.writeString(';');
+    };
+
+    var bitOutputStream = function(out) {
+
+      var _out = out;
+      var _bitLength = 0;
+      var _bitBuffer = 0;
+
+      var _this = {};
+
+      _this.write = function(data, length) {
+
+        if ( (data >>> length) != 0) {
+          throw 'length over';
+        }
+
+        while (_bitLength + length >= 8) {
+          _out.writeByte(0xff & ( (data << _bitLength) | _bitBuffer) );
+          length -= (8 - _bitLength);
+          data >>>= (8 - _bitLength);
+          _bitBuffer = 0;
+          _bitLength = 0;
+        }
+
+        _bitBuffer = (data << _bitLength) | _bitBuffer;
+        _bitLength = _bitLength + length;
+      };
+
+      _this.flush = function() {
+        if (_bitLength > 0) {
+          _out.writeByte(_bitBuffer);
+        }
+      };
+
+      return _this;
+    };
+
+    var getLZWRaster = function(lzwMinCodeSize) {
+
+      var clearCode = 1 << lzwMinCodeSize;
+      var endCode = (1 << lzwMinCodeSize) + 1;
+      var bitLength = lzwMinCodeSize + 1;
+
+      // Setup LZWTable
+      var table = lzwTable();
+
+      for (var i = 0; i < clearCode; i += 1) {
+        table.add(String.fromCharCode(i) );
+      }
+      table.add(String.fromCharCode(clearCode) );
+      table.add(String.fromCharCode(endCode) );
+
+      var byteOut = byteArrayOutputStream();
+      var bitOut = bitOutputStream(byteOut);
+
+      // clear code
+      bitOut.write(clearCode, bitLength);
+
+      var dataIndex = 0;
+
+      var s = String.fromCharCode(_data[dataIndex]);
+      dataIndex += 1;
+
+      while (dataIndex < _data.length) {
+
+        var c = String.fromCharCode(_data[dataIndex]);
+        dataIndex += 1;
+
+        if (table.contains(s + c) ) {
+
+          s = s + c;
+
+        } else {
+
+          bitOut.write(table.indexOf(s), bitLength);
+
+          if (table.size() < 0xfff) {
+
+            if (table.size() == (1 << bitLength) ) {
+              bitLength += 1;
+            }
+
+            table.add(s + c);
+          }
+
+          s = c;
+        }
+      }
+
+      bitOut.write(table.indexOf(s), bitLength);
+
+      // end code
+      bitOut.write(endCode, bitLength);
+
+      bitOut.flush();
+
+      return byteOut.toByteArray();
+    };
+
+    var lzwTable = function() {
+
+      var _map = {};
+      var _size = 0;
+
+      var _this = {};
+
+      _this.add = function(key) {
+        if (_this.contains(key) ) {
+          throw 'dup key:' + key;
+        }
+        _map[key] = _size;
+        _size += 1;
+      };
+
+      _this.size = function() {
+        return _size;
+      };
+
+      _this.indexOf = function(key) {
+        return _map[key];
+      };
+
+      _this.contains = function(key) {
+        return typeof _map[key] != 'undefined';
+      };
+
+      return _this;
+    };
+
+    return _this;
+  };
+
+  var createDataURL = function(width, height, getPixel) {
+    var gif = gifImage(width, height);
+    for (var y = 0; y < height; y += 1) {
+      for (var x = 0; x < width; x += 1) {
+        gif.setPixel(x, y, getPixel(x, y) );
+      }
+    }
+
+    var b = byteArrayOutputStream();
+    gif.write(b);
+
+    var base64 = base64EncodeOutputStream();
+    var bytes = b.toByteArray();
+    for (var i = 0; i < bytes.length; i += 1) {
+      base64.writeByte(bytes[i]);
+    }
+    base64.flush();
+
+    return 'data:image/gif;base64,' + base64;
+  };
+
+  //---------------------------------------------------------------------
+  // returns qrcode function.
+
+  return qrcode;
+}();
+
+// multibyte support
+!function() {
+
+  qrcode.stringToBytesFuncs['UTF-8'] = function(s) {
+    // http://stackoverflow.com/questions/18729405/how-to-convert-utf8-string-to-byte-array
+    function toUTF8Array(str) {
+      var utf8 = [];
+      for (var i=0; i < str.length; i++) {
+        var charcode = str.charCodeAt(i);
+        if (charcode < 0x80) utf8.push(charcode);
+        else if (charcode < 0x800) {
+          utf8.push(0xc0 | (charcode >> 6),
+              0x80 | (charcode & 0x3f));
+        }
+        else if (charcode < 0xd800 || charcode >= 0xe000) {
+          utf8.push(0xe0 | (charcode >> 12),
+              0x80 | ((charcode>>6) & 0x3f),
+              0x80 | (charcode & 0x3f));
+        }
+        // surrogate pair
+        else {
+          i++;
+          // UTF-16 encodes 0x10000-0x10FFFF by
+          // subtracting 0x10000 and splitting the
+          // 20 bits of 0x0-0xFFFFF into two halves
+          charcode = 0x10000 + (((charcode & 0x3ff)<<10)
+            | (str.charCodeAt(i) & 0x3ff));
+          utf8.push(0xf0 | (charcode >>18),
+              0x80 | ((charcode>>12) & 0x3f),
+              0x80 | ((charcode>>6) & 0x3f),
+              0x80 | (charcode & 0x3f));
+        }
+      }
+      return utf8;
+    }
+    return toUTF8Array(s);
+  };
+
+}();
+
+(function (factory) {
+  if (typeof define === 'function' && define.amd) {
+      define([], factory);
+  } else if (typeof exports === 'object') {
+      module.exports = factory();
+  }
+}(function () {
+    return qrcode;
+}));
+</script>
+<script>
+'use strict';
+/* ===================== Grunddaten ===================== */
+const PROD='https://lernspiele-eight.vercel.app';
+const FILE=location.protocol==='file:';
+const API=(FILE?PROD:'')+'/api/esc';
+const JOINURL=FILE?PROD+'/escape/':location.origin+location.pathname;
+const START=62, LIMIT=540, TICK=180, HCOST=[1,2,4];
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const mmss=s=>{s=Math.max(0,Math.round(s));return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')};
+const DEV=(()=>{try{let d=localStorage.getItem('sf_dev');if(!d){d=Math.random().toString(36).slice(2,12);localStorage.setItem('sf_dev',d)}return d}catch(e){return Math.random().toString(36).slice(2,12)}})();
+const ROLES=[
+ {e:'👑',n:'Spielleitung',d:'Trifft die Entscheidungen, loggt Lösungen ein und darf Hilfen kaufen – aber erst, wenn die Crew einverstanden ist.'},
+ {e:'📖',n:'Handbuch-Offizier:in',d:'Liest im Handbuch nach und erklärt der Crew, was dort steht.'},
+ {e:'⏱️',n:'Zeitwache',d:'Behält Uhr und Supercells im Blick und schlägt Alarm, wenn es eng wird.'},
+ {e:'📝',n:'Logbuch',d:'Notiert Zwischenergebnisse und Ideen auf Papier.'},
+ {e:'🔭',n:'Ausguck',d:'Sucht den Raum nach Gegenständen ab und prüft jede Lösung noch einmal.'}];
+
+/* ---- Raum 1: Bedürfnisse ---- */
+const CR=[{id:'git',e:'🎸',n:'Gitarre',kg:8},{id:'h2o',e:'💧',n:'Trinkwasser',kg:50},{id:'gold',e:'💍',n:'Goldschmuck',kg:20},{id:'o2',e:'🫧',n:'Sauerstoff-Flaschen',kg:30},{id:'book',e:'📚',n:'Bücherkiste',kg:40},{id:'parf',e:'🧴',n:'Parfüm-Set',kg:5},{id:'food',e:'🥫',n:'Nahrungsrationen',kg:35}];
+const CR_SOL=['o2','h2o','food','git','book','parf','gold'];
+/* ---- Raum 2: Kabel ---- */
+const WC=[{id:'ge',n:'Gelb',c:'#ffd23d'},{id:'bl',n:'Blau',c:'#4d9bff'},{id:'vi',n:'Violett',c:'#b57bff'},{id:'ro',n:'Rot',c:'#ff5d5d'},{id:'gr',n:'Grün',c:'#52e07a'}];
+const W_SOL={bl:0,ro:1,gr:2,vi:3,ge:4};
+/* ---- Raum 3: Schrauben ---- */
+const HEAD={K:{s:'✚',n:'Kreuz'},H:{s:'⬢',n:'Sechskant'},S:{s:'▬',n:'Schlitz'}};
+const HOLES=[{h:'K',l:0,v:9},{h:'H',l:1,v:10},{h:'S',l:0,v:5},{h:'S',l:1,v:9},{h:'K',l:1,v:6},{h:'H',l:0,v:4},{h:'H',l:1,v:7},{h:'S',l:0,v:3},{h:'K',l:0,v:8}];
+const SCREWS=[{h:'K',l:1},{h:'K',l:0},{h:'H',l:1},{h:'H',l:0},{h:'S',l:1}];
+const O2BASE=60;
+const fits=(sc,ho)=>sc.h===ho.h&&sc.l>=ho.l;
+const O2OPT=(()=>{let best=0,bs={};(function rec(i,used,sum,map){if(i===SCREWS.length){if(sum>best){best=sum;bs=Object.assign({},map)}return}rec(i+1,used,sum,map);HOLES.forEach((ho,j)=>{if(!used[j]&&fits(SCREWS[i],ho)){used[j]=1;map[j]=i;rec(i+1,used,sum+ho.v,map);delete map[j];used[j]=0}})})(0,{},0,{});return {v:best,map:bs}})();
+/* ---- Raum 4: Funk ---- */
+const SYM={a:'▲',b:'⬢',c:'■',d:'◆'}, RCODE='93753', RSEQ=['d','b','a','c','b'];
+const DEALERS=[{n:'Schrott-Sepp',e:'🛰️',km:'2 Lichtminuten',p:9,x:62,y:40},{n:'Orbit-Olga',e:'🛸',km:'9 Lichtminuten',p:6,x:24,y:66},{n:'Nebel-Nuri',e:'🪐',km:'21 Lichtminuten',p:4,x:82,y:84}];
+/* ---- Raum 5: Updates ---- */
+const KEY='QWERTZUIOPASDFGHJKLYXCVBNM', ABC='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const enc=t=>t.replace(/[A-Z]/g,c=>KEY[ABC.indexOf(c)]);
+const UPD={fw:{n:'Firewall-Update',t:'ZEIT IST GELD',fix:''},av:{n:'Antivirus-Update',t:'JEDE ENTSCHEIDUNG KOSTET ETWAS DENN MAN VERZICHTET AUF DIE ZWEITBESTE WAHL',fix:'ENTSCHIDA'}};
+
+const ROOMS=[
+ {t:'Clever packen',o:'Frachtraum',bg:'linear-gradient(#141d44,#0b1230)',
+  story:'Startfreigabe in wenigen Minuten! Vorher muss der Frachtraum beladen werden. Bordcomputer NOVA meldet: »Ladeplan fehlt. Was die Crew unterwegs am dringendsten braucht, gehört direkt an die Tür.«',
+  item:{e:'📋',n:'Ladeschein',x:18,y:74},pz:{e:'📦',n:'Ladeterminal',x:52,y:66},fun:{e:'🐈',n:'Bordkatze',x:84,y:78,t:'Bordkatze Kometa schnurrt. Sie hat ein Existenzbedürfnis: Futter. Und ein Luxusbedürfnis: euren Pilotensitz.'},
+  fact:{e:'💧',t:'Auf der Raumstation ISS wird Wasser fast vollständig wiederverwertet – sogar aus Schweiß und Urin. 2023 meldete die NASA eine Rückgewinnung von rund 98 %.',m:'Der Kaffee von heute ist der Kaffee von gestern'}},
+ {t:'Mit Lichtgeschwindigkeit zur Tankstation',o:'Maschinenraum',bg:'linear-gradient(#2a1740,#0b1230)',
+  story:'Der Treibstoff geht zur Neige – und ihr seid nicht allein: Mehrere Schiffe steuern die letzte Tankstation im Sektor an. Ihre Reserven reichen nicht für alle. Mit dem Lichtantrieb wärt ihr zuerst dort, aber jemand hat die Verkabelung durcheinandergebracht.',
+  item:{e:'🧤',n:'Isolierhandschuhe',x:80,y:72},pz:{e:'🔌',n:'Kabelschacht',x:40,y:62},fun:{e:'⛽',n:'Tankanzeige',x:16,y:76,t:'Tankanzeige: 4 %. Ein Gut ist knapp, wenn es weniger davon gibt, als alle zusammen haben wollen.'},
+  fact:{e:'☀️',t:'Licht ist das Schnellste, was es gibt – und braucht trotzdem etwa 8 Minuten und 20 Sekunden von der Sonne bis zur Erde.',m:'Wenn du die Sonne siehst, ist sie schon 8 Minuten weiter'}},
+ {t:'Jede Schraube zählt',o:'Außenschleuse',bg:'linear-gradient(#40171c,#0b1230)',
+  story:'ALARM! Ein Mikrometeorit hat die Außenhülle durchschlagen, der Sauerstoff entweicht. Eine Rumpfplatte liegt bereit – aber im Werkzeugkasten sind nur noch fünf Schrauben. NOVA: »Mehr gibt es nicht. Macht das Beste daraus.«',
+  item:{e:'🪛',n:'Schraubendreher',x:20,y:78},pz:{e:'🛠️',n:'Rumpfplatte',x:55,y:62},fun:{e:'🧯',n:'Feuerlöscher',x:86,y:74,t:'Der Feuerlöscher ist voll. Immerhin etwas, das heute nicht knapp ist.'},
+  fact:{e:'🛰️',t:'Die ISS ist ungefähr so groß wie ein Fußballfeld und umrundet die Erde in rund 90 Minuten – die Crew erlebt etwa 16 Sonnenaufgänge am Tag.',m:'16 mal Montagmorgen pro Tag'}},
+ {t:'Funkstille',o:'Funkzentrale',bg:'linear-gradient(#0f3a40,#0b1230)',
+  story:'Das Schiff wird langsamer: Der Antrieb braucht ein Ersatzteil. Händler erreicht ihr nur über Funk, und bezahlt wird in Supercells. Doch auf dem Funkmonitor steht nur: KEIN SIGNAL. Das System ist verschlüsselt.',
+  item:{e:'🎧',n:'Funk-Headset',x:82,y:76},pz:{e:'📡',n:'Funkpult',x:46,y:62},fun:{e:'🤖',n:'Putzroboter',x:16,y:78,t:'Der Putzroboter piept: »Gleiches Ersatzteil, drei Preise. Ich würde vergleichen. Aber ich bin nur ein Staubsauger.«'},
+  fact:{e:'📻',t:'Die Raumsonde Voyager 1 ist so weit weg, dass ihre Funksignale fast einen ganzen Tag bis zur Erde unterwegs sind – obwohl sie mit Lichtgeschwindigkeit reisen.',m:'Nachricht gesendet. Gelesen: morgen'}},
+ {t:'Wer die Wahl hat, hat die Qual',o:'Kommandobrücke',bg:'linear-gradient(#10402a,#0b1230)',
+  story:'Die Erde ist schon zu sehen – da flackern alle Bildschirme. Weltraumpiraten hacken den Bordcomputer! Zwei Updates könnten den Angriff stoppen. Aber die Rechenleistung reicht nur für eines.',
+  item:{e:'💾',n:'Datenstick',x:18,y:76},pz:{e:'🖥️',n:'Bordcomputer',x:50,y:60},fun:{e:'🏴‍☠️',n:'Piratenfunk',x:85,y:74,t:'Piratenfunk: »Arrr! Jede Minute, die ihr rätselt, kostet euch Energie. Jede Abkürzung auch. Sucht es euch aus!«'},
+  fact:null}];
+
+const QUIZ=[
+ {q:'Im Frachtraum kamen Sauerstoff, Wasser und Nahrung an die Tür. Zu welcher Bedürfnisart gehören diese Güter?',a:['Existenzbedürfnisse','Kulturbedürfnisse','Luxusbedürfnisse'],r:0,e:'Existenzbedürfnisse müssen befriedigt werden, um zu überleben. Kultur- und Luxusbedürfnisse kommen danach.'},
+ {q:'Der Treibstoff an der Tankstation reichte nicht für alle Schiffe. Wie nennt man das?',a:['Überfluss','Knappheit','Inflation'],r:1,e:'Knappheit: Die Bedürfnisse sind größer als die vorhandenen Güter. Deshalb muss gewirtschaftet werden.'},
+ {q:'Fünf Schrauben waren vorgegeben, damit sollte möglichst viel Sauerstoff gehalten werden. Welches Prinzip ist das?',a:['Minimalprinzip','Maximalprinzip','Zufallsprinzip'],r:1,e:'Maximalprinzip: Mit gegebenen Mitteln soll ein möglichst großer Ertrag erreicht werden.'},
+ {q:'Das Ersatzteil war vorgegeben, es sollte möglichst wenige Supercells kosten. Welches Prinzip ist das?',a:['Minimalprinzip','Maximalprinzip','Verursacherprinzip'],r:0,e:'Minimalprinzip: Ein festes Ziel soll mit möglichst geringem Mitteleinsatz erreicht werden.'},
+ {q:'Ihr konntet nur ein Update installieren. Was sind die Opportunitätskosten eurer Wahl?',a:['Der Preis des gewählten Updates','Der entgangene Nutzen des Updates, das ihr nicht gewählt habt','Die Stromkosten des Bordcomputers'],r:1,e:'Opportunitätskosten sind der entgangene Nutzen der besten nicht gewählten Alternative.'}];
+
+/* ===================== Zustand ===================== */
+let S=null, V='start', SEL=null, CSEL=null, MODAL=null, G={code:'',name:'',lead:true,peek:null}, T={games:[],cur:null,data:null,proj:null}, muted=false, pollTimer=null;
+function newState(mode){return {mode,room:0,phase:'names',cells:START,total:0,rt:[0,0,0,0,0],hs:[0,0,0,0,0],to:[],crew:[],r:{},log:[],dec:{},quiz:null,ts:Date.now()}}
+function saveLocal(){try{if(S)localStorage.setItem('sf_save',JSON.stringify({S,G:{code:G.code,name:G.name}}));}catch(e){}}
+function loadLocal(){try{return JSON.parse(localStorage.getItem('sf_save')||'null')}catch(e){return null}}
+function clearLocal(){try{localStorage.removeItem('sf_save')}catch(e){}}
+async function api(a,body){try{const x=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(Object.assign({a},body))});return await x.json()}catch(e){return {ok:false,err:'Keine Verbindung zum Server',net:true}}}
+function toast(t,ms){const el=$('#toast');el.textContent=t;el.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>el.style.display='none',ms||3200)}
+let AC=null;function beep(f,d,type){if(muted)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.type=type||'square';o.frequency.value=f;g.gain.value=.05;o.connect(g);g.connect(AC.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+(d||.15));o.stop(AC.currentTime+(d||.15))}catch(e){}}
+const ok=()=>{beep(660,.1);setTimeout(()=>beep(990,.18),110)}, bad=()=>beep(140,.3,'sawtooth');
+function pay(n,w){n=Math.min(n,S.cells);if(n<=0)return;S.cells-=n;S.log.push({r:S.room,n,w});if(n)beep(220,.12,'triangle')}
+const leadIdx=()=>S.crew.length?S.room%S.crew.length:0;
+const leadName=()=>S.crew[leadIdx()]||'Crew';
+const hintSpent=r=>[0,1,3,7][S.hs[r]];
+
+/* ===================== Synchronisation (Klassenmodus) ===================== */
+async function sync(){if(!S||S.mode!=='class'||!G.lead)return;S.ts=Date.now();const j=await api('report',{g:G.code,dev:DEV,save:S});if(j.ok&&j.lead===false){G.lead=false;closeModal();V='crew';render();toast('Ein anderes Gerät hat die Spielleitung übernommen.')}}
+function startPoll(){clearInterval(pollTimer);pollTimer=setInterval(async()=>{
+  if(V==='teacher'&&T.cur&&!T.busy)return loadTeacher();
+  if(V==='crew'){const j=await api('peek',{g:G.code,dev:DEV,ping:1});if(j.ok){G.peek=j;if(j.lead&&j.save){S=j.save;G.lead=true;V='game';}render()}else if(j.gone){toast('Die Gruppe wurde entfernt.');V='start';render()}return}
+  if(V==='game'&&S&&S.mode==='class'&&G.lead&&S.phase!=='scene'){const j=await api('peek',{g:G.code,dev:DEV});if(j.ok&&!j.lead){G.lead=false;V='crew';G.peek=j;closeModal();render()}}
+ },4000)}
+
+/* ===================== Uhr ===================== */
+setInterval(()=>{if(V!=='game'||!S||S.phase!=='scene'||!G.lead)return;
+  S.rt[S.room]++;S.total++;
+  if(S.total%TICK===0){pay(1,'Antrieb: 3 Minuten Flugzeit');toast('⚡ Der Antrieb hat 1 Supercell verbraucht.')}
+  if(S.rt[S.room]===180&&S.hs[S.room]===0)toast('💡 NOVA: Ihr rätselt schon 3 Minuten. Über das ❓ kann die Spielleitung Hilfen kaufen.',6000);
+  if(S.rt[S.room]===LIMIT-60){toast('⏰ Noch 1 Minute in diesem Raum!',5000);bad()}
+  if(S.rt[S.room]>=LIMIT)return timeout();
+  if(S.total%10===0){saveLocal();sync()}
+  const t=$('#hudT'),c=$('#hudC');if(t){const left=LIMIT-S.rt[S.room];t.textContent=mmss(left);t.classList.toggle('low',left<=60)}if(c)c.textContent=S.cells;
+  if(S.room===3&&S.r.scan&&Date.now()>=S.r.scan){S.r.scan=0;S.r.range++;ok();if(MODAL==='pz')openModal('pz',true)}
+ },1000);
+function timeout(){const r=S.room;S.to[r]=1;pay(7-hintSpent(r),'Zeit abgelaufen: nicht genutzte Hilfen verfallen');S.hs[r]=3;
+  if(r===2)pay(1,'Leck nicht optimal abgedichtet');
+  if(r===3)pay(9,'Ersatzteil in letzter Sekunde beim teuersten Händler gekauft');
+  if(r===4)pay(2,'Notfall-Firewall automatisch installiert');
+  bad();closeModal();finishRoom(true)}
+function finishRoom(late){S.phase='between';S.late=!!late;SEL=CSEL=null;saveLocal();sync();render();window.scrollTo(0,0)}
+function nextRoom(){S.room++;S.r={};S.late=false;S.phase=S.room>=ROOMS.length?'end':'intro';if(S.phase==='end')S.room=ROOMS.length-1,S.done=1;saveLocal();sync();render();window.scrollTo(0,0)}
+function enterRoom(){S.phase='scene';saveLocal();sync();render()}
+
+/* ===================== Ansichten ===================== */
+function render(){const a=$('#app');
+  if(V==='start')a.innerHTML=vStart();else if(V==='join')a.innerHTML=vJoin();else if(V==='crew')a.innerHTML=vCrew();else if(V==='teacher')a.innerHTML=vTeacher();
+  else if(V==='game')a.innerHTML=({names:vNames,intro:vIntro,scene:vScene,between:vBetween,end:vEnd,quiz:vQuiz}[S.phase])();
+  if(MODAL)openModal(MODAL,true)}
+const SHIP='<svg viewBox="0 0 420 200" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="hl" x1="0" x2="1"><stop offset="0" stop-color="#dfe9ff"/><stop offset="1" stop-color="#8fa5e6"/></linearGradient></defs><circle cx="340" cy="52" r="34" fill="#2c7be0"/><path d="M312 44c14-10 30 2 44-6M318 66c16 4 28-8 46 0" stroke="#6fe08a" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="60" cy="150" r="20" fill="#d98b4a"/><ellipse cx="60" cy="150" rx="34" ry="7" fill="none" stroke="#ffd9a8" stroke-width="3"/><path d="M70 118h170c50 0 80-14 100-22-8 26-40 52-100 52H96z" fill="url(#hl)"/><path d="M70 118l-34-34h40l40 34z" fill="#5b6fc0"/><path d="M110 148l-30 26h44l30-26z" fill="#5b6fc0"/><rect x="150" y="124" width="70" height="16" rx="8" fill="#0f1838"/><circle cx="166" cy="132" r="5" fill="#ffa13d"/><circle cx="185" cy="132" r="5" fill="#ffa13d"/><circle cx="204" cy="132" r="5" fill="#ffa13d"/><path d="M270 110c20 0 36-4 52-10-6 8-22 18-46 20z" fill="#3df5d0"/><path d="M36 122l-30 10 30 10z" fill="#ffa13d"><animate attributeName="opacity" values="1;.4;1" dur=".5s" repeatCount="indefinite"/></path></svg>';
+function vStart(){const sv=loadLocal();const can=sv&&sv.S&&sv.S.phase!=='names'&&!sv.S.done;
+ return `<div class="hero">${SHIP}<h1>Sternenfracht</h1><div class="tag">Mission Supercell · Escape Game</div>
+ <p class="sub" style="max-width:560px;margin:10px auto">Ein Escape Game zu den ökonomischen Grundannahmen: Bedürfnisse, Knappheit, ökonomisches Prinzip und Opportunitätskosten. Für Gruppen von 2 bis 5 Personen, etwa 45 Minuten.</p></div>
+ <div class="card"><h2>🚀 Als Crew spielen</h2>
+ <p>Habt ihr von eurer Lehrkraft einen <b>Spielcode</b> bekommen?</p>
+ <div class="row"><button class="btn" onclick="V='join';render()">Spielcode eingeben</button>
+ <button class="btn g" onclick="soloStart()">Ohne Code spielen</button>${can?`<button class="btn o" onclick="resume()">Mission fortsetzen</button>`:''}</div></div>
+ <div class="card"><h2>🧑‍🏫 Lehrkraft</h2><p class="sub">Spiele anlegen, Gruppen und Spielcodes verwalten, Codes und Ergebnisse am Beamer zeigen, Lösungen ansehen.</p>
+ <button class="btn g" onclick="openTeacher()">Lehrkraft-Bereich öffnen</button></div>
+ <p class="sub" style="text-align:center">Eigene Umsetzung für den Unterricht, angelehnt an die Spielanleitung »Escape Game« von Teach Economy (Joachim Herz Stiftung).</p>`}
+function soloStart(){S=newState('solo');G={code:'',name:'',lead:true};V='game';render()}
+function resume(){const sv=loadLocal();S=sv.S;G.code=sv.G.code;G.name=sv.G.name;G.lead=true;V='game';if(S.mode==='class')joinCode(G.code,true);else render()}
+function vJoin(){return `<div class="card"><h2>Spielcode eingeben</h2><p>Der Code steht am Beamer neben eurem Gruppennamen. Wer sich zuerst einloggt, übernimmt die erste Spielleitung. Alle weiteren Geräte der Gruppe werden Crew-Geräte mit Handbuch.</p>
+ <div class="row"><input id="jc" maxlength="5" placeholder="z. B. 7TBFY" style="text-transform:uppercase;font-size:24px;letter-spacing:6px;max-width:220px" value="${esc(G.code||'')}" onkeydown="if(event.key==='Enter')joinCode($('#jc').value)">
+ <button class="btn" onclick="joinCode($('#jc').value)">Beitreten</button><button class="btn g" onclick="V='start';render()">Zurück</button></div><p id="je" style="color:var(--re);font-weight:700"></p></div>`}
+async function joinCode(code,keep){code=String(code||'').toUpperCase().replace(/[^A-Z0-9]/g,'');if(code.length<5){const e=$('#je');if(e)e.textContent='Der Code hat 5 Zeichen.';return}
+  const j=await api('join',{g:code,dev:DEV});
+  if(!j.ok){if(keep&&j.net){render();return toast('Keine Verbindung – ihr spielt offline weiter.')}V='join';G.code=code;render();const e=$('#je');if(e)e.textContent=j.err||'Fehler';return}
+  G={code,name:j.n,lead:j.lead,peek:j};startPoll();
+  if(j.lead){if(j.save&&j.save.phase!=='names'){S=j.save}else if(!(keep&&S)){S=newState('class')}S.mode='class';V='game'}else V='crew';
+  saveLocal();render()}
+function vNames(){return `<div class="card"><h2>${G.name?'Crew »'+esc(G.name)+'«':'Eure Crew'}</h2>
+ <p>Tragt die Vornamen aller Crewmitglieder ein (2 bis 5). In jedem Raum wechselt die <b>Spielleitung</b> – so ist jede und jeder einmal dran.</p>
+ ${[0,1,2,3,4].map(i=>`<p><input class="nm" maxlength="16" placeholder="Crewmitglied ${i+1}${i>1?' (optional)':''}"></p>`).join('')}
+ <button class="btn" onclick="setNames()">Crew bestätigen</button> <button class="btn g" onclick="V='start';render()">Zurück</button></div>
+ <div class="card"><h3>Hinweise für die Raumschiffcrew</h3><ul><li><b>Teamwork</b> entscheidet. Nur gemeinsam löst ihr die Rätsel.</li><li>Nur die <b>Spielleitung</b> trifft Entscheidungen, loggt Lösungen ein und kauft Hilfen.</li><li>Im <b>Handbuch</b> 📖 stehen nützliche Informationen. Handbuch und Rätsel sind nie gleichzeitig zu sehen – teilt euch die Arbeit auf.</li><li>Die Zeit ist knapp: 9 Minuten pro Raum. <b>Hilfen</b> ❓ kosten Supercells, können sich aber lohnen.</li></ul></div>`}
+function setNames(){const n=[...document.querySelectorAll('.nm')].map(i=>i.value.trim()).filter(Boolean);if(n.length<1)return toast('Bitte mindestens einen Namen eintragen.');S.crew=n;S.phase='intro';S.prolog=1;saveLocal();sync();render()}
+function rolesHTML(){const n=S.crew.length;if(!n)return '';return `<div class="roles">${S.crew.map((nm,j)=>{const k=((j-S.room)%n+n)%n;const ro=ROLES[k]||ROLES[4];return `<div class="role ${k===0?'lead':''}"><i>${ro.e}</i><b>${esc(nm)}</b>${ro.n}<br><span class="sub">${ro.d}</span></div>`}).join('')}</div>`}
+function vIntro(){const R=ROOMS[S.room];
+ if(S.prolog)return `<div class="hero">${SHIP}</div><div class="card"><h2>Die Mission</h2>
+ <p>Auf dem Forschungsplaneten Kepler-9 ist ein Durchbruch gelungen: die <b>Supercell</b>, eine Energiezelle, so stark, dass sie der Erde im Kampf gegen die Klimakrise helfen kann.</p>
+ <p>Eure Crew vom Lieferdienst »Sternenfracht« soll <b>${START} Supercells</b> sicher zur Erde bringen. Der Haken: Euer Schiff braucht selbst Energie. <b>Alle 3 Minuten</b> verbraucht der Antrieb eine Supercell aus der Fracht. Und ihr seid nicht die Einzigen, die sich für die Ladung interessieren …</p>
+ <p><b>Euer Ziel:</b> Bringt so viele Supercells wie möglich zur Erde.</p>
+ <button class="btn" onclick="S.prolog=0;saveLocal();render();window.scrollTo(0,0)">Zum Raumschiff</button></div>`;
+ return `<div class="card"><div class="tag">Raum ${S.room+1} von 5 · ${R.o}</div><h1 style="font-size:clamp(24px,5vw,38px)">${R.t}</h1><p style="font-size:18px">${R.story}</p></div>
+ <div class="card"><h3>👑 Spielleitung in diesem Raum: ${esc(leadName())}</h3><p class="sub">Gebt das Gerät an die Spielleitung weiter. Die Uhr startet, sobald ihr den Raum betretet: 9 Minuten.</p>${rolesHTML()}
+ <p style="margin-top:14px"><button class="btn o" onclick="enterRoom()">Raum betreten – Uhr starten</button></p></div>`}
+function hud(){const left=LIMIT-S.rt[S.room];return `<div class="hud"><span>👑 <b>${esc(leadName())}</b></span>${G.code?`<span>Code <b>${G.code}</b></span>`:''}<span class="grow"></span>
+ <span>⏱ <span id="hudT" class="t ${left<=60?'low':''}">${mmss(left)}</span></span><span>🔋 <span id="hudC" class="c">${S.cells}</span></span>
+ <button class="btn s g" data-t="hb" onclick="openModal('hb')">📖 Handbuch</button><button class="btn s g" data-t="hint" onclick="openModal('hint')">❓ Hilfe</button><button class="btn s g" onclick="muted=!muted;this.textContent=muted?'🔇':'🔊'">${muted?'🔇':'🔊'}</button></div>`}
+function vScene(){const R=ROOMS[S.room];return hud()+`<div class="scene" style="background:${R.bg}"><div class="win"></div><div class="floor"></div>
+ <button class="hot ${S.r.item?'got':''}" data-t="item" style="left:${R.item.x}%;top:${R.item.y}%" onclick="takeItem()">${R.item.e}<small>${S.r.item?'eingesammelt':'?'}</small></button>
+ <button class="hot pz" data-t="pz" style="left:${R.pz.x}%;top:${R.pz.y}%" onclick="tryPuzzle()">${R.pz.e}<small>${R.pz.n}</small></button>
+ <button class="hot" data-t="fun" style="left:${R.fun.x}%;top:${R.fun.y}%;animation-delay:.8s" onclick="toast(ROOMS[S.room].fun.t,6000)">${R.fun.e}<small>${R.fun.n}</small></button></div>
+ <div class="inv">Inventar: ${S.r.item?`<span title="${R.item.n}">${R.item.e}</span> ${R.item.n}`:'leer – seht euch im Raum um'}</div>
+ <p class="sub">Raum ${S.room+1} von 5 · ${R.o} · ${R.t}</p>`}
+function takeItem(){if(S.r.item)return;S.r.item=1;ok();toast(ROOMS[S.room].item.e+' '+ROOMS[S.room].item.n+' eingesammelt.');render()}
+function tryPuzzle(){if(!S.r.item){bad();return toast('NOVA: Dafür fehlt euch noch etwas. Seht euch im Raum um!')}openModal('pz')}
+function vBetween(){const r=S.room,R=ROOMS[r],lost=S.log.filter(l=>l.r===r),sum=lost.reduce((a,l)=>a+l.n,0),last=r===ROOMS.length-1;
+ const nx=S.crew.length?S.crew[(r+1)%S.crew.length]:'';
+ return `<div class="card"><div class="tag">Raum ${r+1} ${S.late?'– Zeit abgelaufen':'geschafft'}</div><h2>${S.late?'NOVA schleust euch weiter …':'Stark, Crew!'}</h2>
+ <div class="row"><div><div class="sub">Zeit im Raum</div><div class="big" style="font-size:40px">${mmss(S.rt[r])}</div></div><div><div class="sub">Supercells an Bord</div><div class="big" style="font-size:40px">🔋 ${S.cells}</div></div></div>
+ ${sum?`<h3>In diesem Raum abgegeben: ${sum}</h3><ul>${lost.map(l=>`<li>−${l.n} · ${esc(l.w)}</li>`).join('')}</ul>`:'<p>In diesem Raum habt ihr keine Supercell abgegeben.</p>'}
+ ${r===1&&S.dec.fuel?`<p class="sub">Eure Entscheidung an der Tankstation: ${S.dec.fuel==='all'?'Ihr habt alle Reserven getankt. Der Frachter »Halley« blieb ohne Treibstoff zurück.':'Ihr habt geteilt. Der Frachter »Halley« konnte ebenfalls weiterfliegen.'}</p>`:''}</div>
+ ${R.fact?`<div class="card"><h3>Wusstest du schon?</h3><div class="fact"><div class="em">${R.fact.e}</div><div class="grow" style="min-width:220px"><p>${R.fact.t}</p><div class="meme">${R.fact.m}</div></div></div></div>`:''}
+ <div class="card">${last?`<h3>🌍 Landeanflug auf die Erde</h3><button class="btn o" onclick="nextRoom()">Landen</button>`:`<h3>👑 Die Spielleitung wechselt${nx?': jetzt ist '+esc(nx)+' dran':''}</h3>
+ <p class="sub">${S.mode==='class'?'Gebt das Gerät weiter – oder ein Crew-Gerät übernimmt jetzt über »Spielleitung übernehmen«.':'Gebt das Gerät an die neue Spielleitung weiter.'}</p><button class="btn" onclick="nextRoom()">Weiter zu Raum ${r+2}</button>`}</div>`}
+function verdict(c){return c>=45?['🏆 Elite-Crew','Fast die ganze Fracht ist angekommen. Ihr habt mit knappen Mitteln klug gewirtschaftet.']:c>=30?['🥈 Starke Lieferung','Ein großer Teil der Supercells ist da. An ein paar Stellen wäre noch mehr drin gewesen.']:c>=15?['🥉 Knapp geliefert','Die Erde bekommt Supercells – aber unterwegs ist viel Energie verloren gegangen.']:['🛟 Notlandung','Ihr seid angekommen, doch von der Fracht ist kaum etwas übrig. Zeit und Hilfen haben fast alles aufgezehrt.']}
+function vEnd(){const v=verdict(S.cells),by={};S.log.forEach(l=>{const k=/Antrieb/.test(l.w)?'Flugzeit (Antrieb)':/Hilfe/.test(l.w)?'Hilfen':/Händler|Ersatzteil/.test(l.w)?'Ersatzteil':/Firewall/.test(l.w)?'Firewall-Update':/Leck|Sauerstoff/.test(l.w)?'Leck':'Sonstiges';by[k]=(by[k]||0)+l.n});
+ const d=S.dec,dl=DEALERS[d.dealer];
+ return `<div class="hero"><div style="font-size:80px">🌍</div><h1>Gelandet!</h1><div class="big">🔋 ${S.cells} <span style="font-size:.4em;color:var(--mu)">von ${START}</span></div><h2>${v[0]}</h2><p>${v[1]}</p><p class="sub">Gesamtspielzeit ${mmss(S.total)}</p></div>
+ <div class="card"><h3>Wo sind die Supercells geblieben?</h3><div class="tw"><table>${Object.keys(by).map(k=>`<tr><td>${k}</td><td>−${by[k]}</td></tr>`).join('')||'<tr><td>Keine Verluste</td><td></td></tr>'}</table></div></div>
+ <div class="card"><h2>Missionsauswertung</h2><p class="sub">Was ihr erlebt habt, hat in der Wirtschaftslehre einen Namen.</p>
+ <h3>Raum 1 · Bedürfnisse</h3><p>Nicht alles ist gleich dringend. <b>Existenzbedürfnisse</b> (Sauerstoff, Wasser, Nahrung) kommen vor <b>Kulturbedürfnissen</b> (Musik, Bücher) und <b>Luxusbedürfnissen</b> (Parfüm, Schmuck).</p>
+ <h3>Raum 2 · Knappheit</h3><p>Der Treibstoff reichte nicht für alle: <b>Knappheit</b>. Was das eine Schiff tankt, fehlt dem anderen (Rivalität). ${d.fuel==='all'?'Ihr habt alles für euch beansprucht.':d.fuel==='share'?'Ihr habt mit dem Frachter »Halley« geteilt.':''}</p>
+ <h3>Raum 3 · Maximalprinzip</h3><p>Fünf Schrauben waren gegeben, der Sauerstoff sollte möglichst hoch sein: <b>mit gegebenen Mitteln den größten Ertrag</b>. ${d.o2==null?'':'Ihr habt '+d.o2+' % erreicht'+(d.o2>=O2BASE+O2OPT.v?' – das Optimum.':', möglich waren '+(O2BASE+O2OPT.v)+' %.')}</p>
+ <h3>Raum 4 · Minimalprinzip</h3><p>Das Ersatzteil stand fest, der Preis nicht: <b>ein gegebenes Ziel mit möglichst geringen Mitteln</b>. ${dl?'Ihr habt bei '+dl.n+' für '+dl.p+' Supercells gekauft'+(dl.p===4?' – das günstigste Angebot.':', das günstigste Angebot lag bei 4.'):''}</p>
+ <h3>Raum 5 · Opportunitätskosten</h3><p>Nur ein Update war möglich. Wer das eine wählt, verzichtet auf den Nutzen des anderen: <b>Opportunitätskosten</b>. ${d.upd==='fw'?'Ihr habt die Firewall gewählt: kurzer Code, dafür 2 Supercells.':d.upd==='av'?'Ihr habt das Antivirus-Update gewählt: keine Supercells, dafür mehr Zeit.':''}</p></div>
+ <div class="card"><h3>Für das Gespräch in der Klasse</h3><ol><li>An welcher Stelle habt ihr Supercells gegen Zeit getauscht? War es das wert?</li><li>Wie habt ihr an der Tankstation entschieden – und warum?</li><li>Wo begegnen euch Maximal- und Minimalprinzip im Ausbildungsbetrieb oder im Alltag?</li><li>Nennt eine Entscheidung von heute Morgen. Was waren ihre Opportunitätskosten?</li></ol>
+ <button class="btn" onclick="S.phase='quiz';S.quiz=S.quiz||{i:0,p:0,a:null};saveLocal();render();window.scrollTo(0,0)">Logbuch-Check (5 Fragen)</button> <button class="btn g" onclick="if(confirm('Mission wirklich verlassen?')){clearLocal();S=null;V='start';render()}">Zur Startseite</button></div>`}
+function vQuiz(){const z=S.quiz;if(z.i>=QUIZ.length)return `<div class="card"><h2>Logbuch-Check</h2><div class="big">${z.p} / ${QUIZ.length}</div><p>${z.p>=4?'Fachbegriffe sitzen. Starke Crew!':'Schaut euch die Missionsauswertung noch einmal an.'}</p><button class="btn" onclick="S.phase='end';render()">Zur Auswertung</button></div>`;
+ const q=QUIZ[z.i];return `<div class="card q"><div class="tag">Frage ${z.i+1} von ${QUIZ.length}</div><h2>${q.q}</h2>${q.a.map((t,k)=>`<button data-t="qa" class="${z.a==null?'':k===q.r?'ok':k===z.a?'no':''}" onclick="quizA(${k})">${t}</button>`).join('')}
+ ${z.a!=null?`<p><b>${z.a===q.r?'Richtig.':'Nicht ganz.'}</b> ${q.e}</p><button class="btn" onclick="S.quiz.i++;S.quiz.a=null;saveLocal();render()">Weiter</button>`:''}</div>`}
+function quizA(k){const z=S.quiz;if(z.a!=null)return;z.a=k;if(k===QUIZ[z.i].r){z.p++;ok()}else bad();saveLocal();render()}
+
+/* ===================== Crew-Gerät ===================== */
+function vCrew(){const p=G.peek||{},s=p.save;let body;
+ if(!s||s.phase==='names')body=`<p>Die Spielleitung bereitet die Mission vor …</p>`;
+ else{const R=ROOMS[s.room],age=s.phase==='scene'?Math.max(0,((p.now||Date.now())-(s.upd||Date.now()))/1000):0,left=LIMIT-s.rt[s.room]-age;const old=S;S=s;const rh=rolesHTML(),ln=leadName();S=old;
+  body=s.done?`<h2>🌍 Gelandet mit 🔋 ${s.cells} Supercells</h2>`:`<div class="row"><div><div class="sub">Raum ${s.room+1} von 5</div><b>${R.t}</b></div><span class="grow"></span><div>⏱ <b style="font-size:22px;color:var(--li)">${s.phase==='scene'?mmss(left):'Pause'}</b></div><div>🔋 <b style="font-size:22px;color:var(--or)">${s.cells}</b></div></div>
+  <p class="sub">Spielleitung: 👑 ${esc(ln)}</p>${rh}`}
+ const can=!s||s.phase!=='scene';
+ return `<div class="card"><div class="tag">Crew-Gerät · ${esc(G.name||'')} · Code ${G.code}</div><h2>Ihr seid die Handbuch-Crew</h2>${body}
+ <p style="margin-top:12px"><button class="btn o" ${can?'':'disabled'} onclick="takeLead()">Spielleitung übernehmen</button> <button class="btn g s" onclick="V='start';clearInterval(pollTimer);render()">Verlassen</button></p>
+ <p class="sub">${can?'Zwischen den Räumen kann dieses Gerät die Spielleitung übernehmen.':'Die Spielleitung kann nur zwischen den Räumen wechseln.'}</p></div>
+ ${s&&s.phase!=='names'&&!s.done?`<div class="card" style="border-color:var(--or)">${handbook(s.room,s)}</div>`:''}`}
+async function takeLead(){const j=await api('take',{g:G.code,dev:DEV});if(!j.ok)return toast(j.err||'Fehler');G.lead=true;S=j.save&&j.save.phase!=='names'?j.save:newState('class');S.mode='class';V='game';saveLocal();render();sync()}
+
+/* ===================== Modal: Rätsel, Handbuch, Hilfen ===================== */
+function openModal(kind,keep){MODAL=kind;const m=$('#modal');m.className='on';
+  const inner=kind==='pz'?[p1,p2,p3,p4,p5][S.room]():kind==='hb'?handbook(S.room,S):kind==='hint'?hints():'';
+  const sc=keep?m.scrollTop:0;m.innerHTML=`<div class="box ${kind==='hb'?'hb':''}"><button class="x" data-t="close" onclick="closeModal()">✕</button>${inner}</div>`;m.scrollTop=sc}
+function closeModal(){MODAL=null;const m=$('#modal');m.className='';m.innerHTML=''}
+function solved(msg){ok();closeModal();toast(msg||'Gelöst!');finishRoom(false)}
+function shake(){bad();const b=$('#modal .box');if(b){b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake')}}
+
+function handbook(r,s){const gen=`<h3>Crew-Regeln</h3><ul><li>An Bord: ${START} Supercells. Alle 3 Minuten verbraucht der Antrieb eine davon.</li><li>Pro Raum habt ihr 9 Minuten. Danach schleust NOVA euch weiter – nicht genutzte Hilfen und 9 Minuten Flugzeit sind dann trotzdem bezahlt.</li><li>Drei Hilfen pro Raum: 1, 2 und 4 Supercells.</li><li>Nur die Spielleitung loggt Lösungen ein.</li></ul>`;
+ const ch=[
+ `<h3>Kapitel 1 · Ladevorschrift</h3><p>Platz 1 liegt direkt an der Tür, Platz 7 ganz hinten im Heck. Was die Crew am dringendsten braucht, steht am nächsten an der Tür.</p>
+ <p><b>Bedürfnisarten</b><br>1. <b>Existenzbedürfnisse</b>: Ohne ihre Befriedigung kann der Mensch nicht überleben.<br>2. <b>Kulturbedürfnisse</b>: Sie machen das Leben reicher, zum Beispiel Bildung, Musik und Unterhaltung.<br>3. <b>Luxusbedürfnisse</b>: Sie gehen über den normalen Lebensstandard hinaus, zum Beispiel teurer Schmuck oder edle Düfte.</p>
+ <p><b>Notiz der Bordärztin:</b> »Ohne Sauerstoff hält ein Mensch nur wenige Minuten durch, ohne Wasser etwa drei Tage, ohne Nahrung etwa drei Wochen.«</p>
+ <p><b>Notiz des Lademeisters:</b> »Bei Kultur- und Luxusgütern gilt: Innerhalb derselben Bedürfnisart steht die leichtere Kiste näher an der Tür.«</p>`,
+ `<h3>Kapitel 2 · Schaltplan Lichtantrieb</h3><p>Die Buchsen sind von links nach rechts mit 1 bis 5 nummeriert. Jedes Kabel gehört in genau eine Buchse:</p>
+ <ol><li>Gelb steckt ganz außen.</li><li>Rot steckt direkt links neben Grün.</li><li>Blau steckt weder neben Grün noch neben Gelb.</li><li>Violett steckt irgendwo rechts von Grün.</li><li>Blau steckt irgendwo links von Rot.</li></ol>
+ <p><b>Sektor-Info:</b> Die Tankstation »Letzter Tropfen« hat nur noch 10 Einheiten Treibstoff. Gemeldete Schiffe im Anflug: mehrere.</p>`,
+ `<h3>Kapitel 3 · Rumpfplatten verschrauben</h3><p>Jedes Loch hat eine <b>Kopfform</b> (✚ Kreuz, ⬢ Sechskant, ▬ Schlitz) und eine <b>Tiefe</b> (kurz oder lang). Die Zahl am Loch zeigt, wie viele Prozentpunkte Sauerstoff eine Schraube dort hält.</p>
+ <ul><li>Die Kopfform muss passen.</li><li>Eine <b>lange</b> Schraube hält auch in einem kurzen Loch. Eine <b>kurze</b> Schraube hält in einem langen Loch nicht.</li><li>Ohne Platte bleiben ${O2BASE} % Sauerstoff im Raum.</li></ul><p>Ihr könnt jede Verschraubung einloggen. NOVA prüft danach, ob mit euren Schrauben mehr möglich gewesen wäre.</p>`,
+ `<h3>Kapitel 4 · Funksystem neu starten</h3><p>Das Funksystem ist verschlüsselt. Jedes Symbol steht für eine Ziffer. Die Wartungsrechnungen verraten, für welche:</p>
+ <p style="font-size:22px;font-family:monospace;line-height:1.9">⬢ × ⬢ = 9<br>▲ + ▲ + ⬢ = 17<br>■ × ▲ − ⬢ = 32<br>◆ + ■ + ▲ = 21</p>
+ <p><b>Händler-Info:</b> Ersatzteile werden in Supercells bezahlt. Mit jeder Stufe der Funkreichweite erreicht ihr weiter entfernte Händler. Eine Erhöhung dauert einige Sekunden.</p>`,
+ `<h3>Kapitel 5 · Cyberabwehr</h3><p>Die Piraten haben das Alphabet des Bordcomputers vertauscht: Jeder Buchstabe wurde durch einen anderen ersetzt, immer durch denselben. Tippt ein Feld an und wählt den richtigen Buchstaben.</p>
+ <p><b>Firewall-Update:</b> kurzer Code, keine Buchstaben vorgegeben. Die Installation verbraucht 2 Supercells.<br><b>Antivirus-Update:</b> langer Code, viele Buchstaben sind schon bekannt. Die Installation verbraucht keine Supercells.</p>
+ <p><b>Sprichwort-Datenbank der Firewall</b> (eines davon ist der Code):<br>REDEN IST SILBER · EILE MIT WEILE · ZEIT IST GELD · ENDE GUT ALLES GUT · OHNE FLEISS KEIN PREIS · AUS FEHLERN WIRD MAN KLUG</p>
+ <p><b>Tipp des Bordtechnikers:</b> Im Deutschen ist E der häufigste Buchstabe, danach N.</p>`];
+ return `<h2>📖 Bordhandbuch</h2>${ch[r]}<hr style="border-color:#5a4520">${gen}`}
+
+function hintText(r,k){const u=S.r.upd;return [
+ ['Ordnet zuerst nach Bedürfnisart: Existenz, dann Kultur, dann Luxus.','An die Tür gehören: Sauerstoff, dann Wasser, dann Nahrung.','Lösung von der Tür zum Heck: Sauerstoff, Wasser, Nahrung, Gitarre, Bücher, Parfüm, Goldschmuck.'],
+ ['Beginnt mit Gelb: Es steckt ganz außen. Prüft beide Seiten.','Blau steckt in Buchse 1, Gelb in Buchse 5.','Lösung: 1 Blau, 2 Rot, 3 Grün, 4 Violett, 5 Gelb.'],
+ ['Eine lange Schraube darf auch in ein kurzes Loch. Vergleicht die Zahlen!','Der Bestwert liegt bei '+(O2BASE+O2OPT.v)+' %. Nicht jedes lange Loch muss belegt werden.','Lösung: ✚ lang → ✚ 9, ✚ kurz → ✚ 8, ⬢ lang → ⬢ 10, ⬢ kurz → ⬢ 4, ▬ lang → ▬ 9.'],
+ S.r.radio?['Erhöht die Funkreichweite: Weiter draußen gibt es weitere Händler.','Es gibt insgesamt drei Händler. Vergleicht die Preise.','Der entfernteste Händler verlangt nur 4 Supercells.']:['Jedes Symbol ist eine Ziffer. Startet mit der Rechnung, in der nur ein Symbol vorkommt.','⬢ = 3 und ▲ = 7.','Der Code lautet 93753.'],
+ u==='av'?['Das zweite Wort heißt ENTSCHEIDUNG.','Der Satz beginnt mit: JEDE ENTSCHEIDUNG KOSTET ETWAS …','Lösung: JEDE ENTSCHEIDUNG KOSTET ETWAS DENN MAN VERZICHTET AUF DIE ZWEITBESTE WAHL']:u==='fw'?['Im Handbuch steht eine Sprichwort-Datenbank. Achtet auf die Wortlängen: 4 – 3 – 4.','Das mittlere Wort heißt IST.','Lösung: ZEIT IST GELD']:['Lest im Handbuch nach, worin sich die Updates unterscheiden.','Firewall: 2 Supercells, dafür kurz. Antivirus: keine Supercells, dafür lang.','Was ist euch mehr wert: Zeit oder Supercells? Entscheidet gemeinsam.']
+ ][r][k]}
+function hints(){const r=S.room,n=S.hs[r],ht=S.r.ht||[];
+ return `<h2>❓ Hilfen</h2><p class="sub">Nur die Spielleitung darf Hilfen kaufen – in Absprache mit der Crew. An Bord: 🔋 ${S.cells}</p>
+ ${ht.map((t,i)=>`<div class="card" style="margin:8px 0"><b>Hilfe ${i+1}:</b> ${esc(t)}</div>`).join('')}
+ ${n<3?`<button class="btn o" data-t="buyhint" onclick="buyHint()">Hilfe ${n+1} kaufen (−${HCOST[n]} 🔋)</button>`:'<p>Alle Hilfen für diesen Raum sind verbraucht.</p>'}`}
+function buyHint(){const r=S.room,n=S.hs[r];if(n>=3)return;pay(HCOST[n],'Hilfe '+(n+1)+' gekauft');(S.r.ht=S.r.ht||[]).push(hintText(r,n));S.hs[r]++;saveLocal();sync();render()}
+
+/* ---- Raum 1 ---- */
+const crate=id=>{const c=CR.find(x=>x.id===id);return `<i>${c.e}</i>${c.n}<br>${c.kg} kg`};
+function p1(){const p=S.r.p||(S.r.p=Array(7).fill(null));const free=CR.filter(c=>!p.includes(c.id));
+ return `<h2>📦 Frachtraum beladen</h2><p class="sub">Kiste antippen, dann Platz antippen. Ein belegter Platz wird durch Antippen wieder frei.</p>
+ <div class="hold"><div class="door">🚪 TÜR</div>${p.map((id,i)=>`<button class="slot ${id?'full':''}" data-t="slot" onclick="p1slot(${i})">Platz ${i+1}${id?crate(id):''}</button>`).join('')}<div class="door b">HECK</div></div>
+ <div class="crates">${free.map(c=>`<button class="crate ${SEL===c.id?'sel':''}" data-t="crate" onclick="SEL='${c.id}';render()">${crate(c.id)}</button>`).join('')||'<span class="sub">Alle Kisten sind verladen.</span>'}</div>
+ <button class="btn" data-t="go" onclick="p1check()">Ladeplan einloggen</button>`}
+function p1slot(i){const p=S.r.p;if(SEL){p[i]=SEL;SEL=null;beep(500,.05)}else if(p[i]){p[i]=null}render()}
+function p1check(){const p=S.r.p;if(p.includes(null)){shake();return toast('Es sind noch nicht alle Kisten verladen.')}
+ if(p.every((id,i)=>id===CR_SOL[i]))return solved('Ladeplan akzeptiert. Startfreigabe!');shake();toast('NOVA: Ladeplan abgelehnt. Die Reihenfolge stimmt noch nicht.')}
+/* ---- Raum 2 ---- */
+function p2(){const w=S.r.w||(S.r.w={});
+ if(S.r.wired)return `<h2>⛽ Tankstation »Letzter Tropfen«</h2><p>Der Lichtantrieb läuft – ihr seid als Erste da. Die Station hat noch <b>10 Einheiten</b> Treibstoff. Bis zur Erde braucht ihr <b>6</b>. Mit vollen Tanks wärt ihr auf der sicheren Seite.</p>
+ <p>Da meldet sich der Frachter »Halley«: »Unser Tank ist fast leer. Lasst uns bitte 4 Einheiten übrig, sonst sitzen wir hier fest!«</p>
+ <p class="sub">Die Spielleitung entscheidet – nach Absprache mit der Crew.</p>
+ <button class="btn o" data-t="fuelall" onclick="fuel('all')">Alle 10 Einheiten tanken</button><button class="btn" data-t="fuelshare" onclick="fuel('share')">6 tanken, 4 übrig lassen</button>`;
+ const X=i=>60+95*i;let lines='';WC.forEach((c,i)=>{if(w[c.id]!=null)lines+=`<path d="M${X(i)} 48 C${X(i)} 130 ${X(w[c.id])} 110 ${X(w[c.id])} 192" stroke="${c.c}" stroke-width="7" fill="none" stroke-linecap="round"/>`});
+ return `<h2>🔌 Verkabelung des Lichtantriebs</h2><p class="sub">Stecker oben antippen, dann eine Buchse unten. Den Schaltplan findet ihr im Handbuch.</p>
+ <div class="wire"><svg viewBox="0 0 500 240">${lines}
+ ${WC.map((c,i)=>`<g data-t="plug" onclick="SEL='${c.id}';render()" style="cursor:pointer"><circle cx="${X(i)}" cy="30" r="22" fill="${c.c}" stroke="${SEL===c.id?'#fff':'#0008'}" stroke-width="${SEL===c.id?5:2}"/><text x="${X(i)}" y="35" text-anchor="middle" font-size="12" font-weight="800" fill="#111">${c.n}</text></g>`).join('')}
+ ${[0,1,2,3,4].map(i=>`<g data-t="sock" onclick="p2sock(${i})" style="cursor:pointer"><rect x="${X(i)-26}" y="188" width="52" height="42" rx="8" fill="#1b2756" stroke="#5a6fc4" stroke-width="2"/><text x="${X(i)}" y="216" text-anchor="middle" font-size="18" font-weight="800" fill="#e9efff">${i+1}</text></g>`).join('')}</svg></div>
+ <p><button class="btn o" data-t="go" onclick="p2check()">⚡ Antrieb EIN</button> <button class="btn g s" onclick="S.r.w={};render()">Alle Kabel ziehen</button></p>`}
+function p2sock(i){if(!SEL)return toast('Erst oben einen Stecker antippen.');const w=S.r.w;Object.keys(w).forEach(k=>{if(w[k]===i)delete w[k]});w[SEL]=i;SEL=null;beep(500,.05);render()}
+function p2check(){const w=S.r.w;if(Object.keys(w).length<5){shake();return toast('Es sind noch nicht alle Kabel gesteckt.')}
+ if(WC.every(c=>w[c.id]===W_SOL[c.id])){S.r.wired=1;ok();saveLocal();return render()}shake();toast('Kurzschluss! Die Verkabelung stimmt noch nicht.')}
+function fuel(x){S.dec.fuel=x;solved(x==='all'?'Tanks randvoll. »Halley« funkt: »Danke für nichts.«':'Getankt. »Halley« funkt: »Danke, Sternenfracht!«')}
+/* ---- Raum 3 ---- */
+const o2now=()=>O2BASE+Object.keys(S.r.s||{}).reduce((a,j)=>a+HOLES[j].v,0);
+function p3(){const s=S.r.s||(S.r.s={});const used=Object.values(s);const o=o2now();
+ return `<h2>🛠️ Rumpfplatte verschrauben</h2><p class="sub">Schraube antippen, dann ein Loch. Eine gesetzte Schraube lässt sich durch Antippen wieder lösen.</p>
+ <div class="row" style="align-items:stretch"><div class="o2">O₂<div class="bar"><div style="height:${o}%"></div></div><span id="o2v">${o} %</span></div>
+ <div class="plate">${HOLES.map((h,j)=>`<button class="hole ${s[j]!=null?'full':''}" data-t="hole" onclick="p3hole(${j})"><i>${s[j]!=null?'🔩':HEAD[h.h].s}</i>${HEAD[h.h].n}<br>${h.l?'lang':'kurz'} · <b>+${h.v}</b></button>`).join('')}</div></div>
+ <div class="screws">${SCREWS.map((sc,i)=>used.includes(i)?'':`<button class="screw ${SEL===i?'sel':''}" data-t="screw" onclick="SEL=${i};render()"><i>${HEAD[sc.h].s}</i>${HEAD[sc.h].n}<br><b>${sc.l?'lang':'kurz'}</b></button>`).join('')||'<span class="sub">Alle Schrauben sind gesetzt.</span>'}</div>
+ <button class="btn" data-t="go" onclick="p3check()">Verschraubung einloggen</button>`}
+function p3hole(j){const s=S.r.s;if(s[j]!=null){delete s[j];return render()}if(SEL==null)return toast('Erst eine Schraube antippen.');
+ if(!fits(SCREWS[SEL],HOLES[j])){bad();return toast(SCREWS[SEL].h!==HOLES[j].h?'Die Kopfform passt nicht.':'Die kurze Schraube hält in diesem langen Loch nicht.')}
+ s[j]=SEL;SEL=null;beep(500,.05);render()}
+function p3check(){const n=Object.keys(S.r.s).length;if(!n){shake();return toast('Ohne Schrauben hält die Platte nicht.')}
+ if(n<SCREWS.length&&!confirm('Ihr habt noch Schrauben übrig. Trotzdem einloggen?'))return;
+ const o=o2now();S.dec.o2=o;if(o<O2BASE+O2OPT.v){pay(1,'Leck nicht optimal abgedichtet: Sauerstoff nachproduziert');solved('Platte hält – aber nur '+o+' % Sauerstoff. Die Aufbereitung kostet 1 Supercell.')}else solved('Perfekt abgedichtet: '+o+' % Sauerstoff!')}
+/* ---- Raum 4 ---- */
+function p4(){if(!S.r.radio)return `<h2>📡 Funksystem</h2><div class="nosig"><b>KEIN SIGNAL</b><div class="syms">${RSEQ.map(k=>SYM[k]).join('')}</div>
+ <div class="row" style="justify-content:center"><input id="rc" inputmode="numeric" maxlength="5" placeholder="Code" style="max-width:160px;font-size:22px;letter-spacing:5px;text-align:center" onkeydown="if(event.key==='Enter')p4code()"><button class="btn" data-t="go" onclick="p4code()">Senden</button></div></div>
+ <p class="sub">Jedes Symbol steht für eine Ziffer. Das Handbuch hilft beim Entschlüsseln.</p>`;
+ const rg=S.r.range||0,scan=S.r.scan;
+ return `<h2>📡 Händler anfunken</h2><p class="sub">Ihr braucht <b>ein Hyperantrieb-Ersatzteil</b>. Bezahlt wird in Supercells. An Bord: 🔋 ${S.cells}</p>
+ <div class="radar ${scan?'scan':''}">${[34,66,98].map((d,i)=>`<div class="ring ${i<=rg?'on':''}" style="width:${d}%;height:${d}%"></div>`).join('')}<div class="ship">🚀</div>
+ ${DEALERS.map((d,i)=>i<=rg?`<div class="dl" style="left:${d.x}%;top:${d.y}%">${d.e}</div>`:'').join('')}</div>
+ ${DEALERS.map((d,i)=>i<=rg?`<div class="dealer"><span style="font-size:28px">${d.e}</span><div class="grow"><b>${d.n}</b><br><span class="sub">Entfernung: ${d.km}</span></div><b style="color:var(--or)">${d.p} 🔋</b><button class="btn s" data-t="buy" onclick="p4buy(${i})">Kaufen</button></div>`:'').join('')}
+ ${rg<2?`<button class="btn g" data-t="range" ${scan?'disabled':''} onclick="p4range()">${scan?'Suche läuft …':'Funkreichweite erhöhen'}</button>`:'<p class="sub">Maximale Funkreichweite erreicht.</p>'}`}
+function p4code(){const v=$('#rc').value.replace(/\D/g,'');if(v===RCODE){S.r.radio=1;S.r.range=0;ok();toast('Funksystem online!');saveLocal();return render()}shake();toast('Falscher Code.')}
+function p4range(){if(S.r.scan||S.r.range>=2)return;S.r.scan=Date.now()+7000;beep(880,.08);render()}
+function p4buy(i){const d=DEALERS[i];S.dec.dealer=i;pay(d.p,'Ersatzteil bei Händler '+d.n+' gekauft');solved('Ersatzteil eingebaut. '+d.n+' bedankt sich für '+d.p+' Supercells.')}
+/* ---- Raum 5 ---- */
+function p5(){const u=S.r.upd;if(!u)return `<h2>🖥️ Cyberangriff!</h2><p>NOVA: »Ich kann nur <b>ein</b> Update installieren. Welches soll es sein?«</p>
+ <div class="dealer"><div class="grow"><b>🧱 Firewall-Update</b><br><span class="sub">Kurzer Code, aber ohne bekannte Buchstaben. Verbraucht 2 Supercells.</span></div><button class="btn o" data-t="fw" onclick="p5pick('fw')">Firewall wählen</button></div>
+ <div class="dealer"><div class="grow"><b>🦠 Antivirus-Update</b><br><span class="sub">Langer Code, viele Buchstaben sind bekannt. Verbraucht keine Supercells, dauert aber.</span></div><button class="btn" data-t="av" onclick="p5pick('av')">Antivirus wählen</button></div>
+ <p class="sub">Die Entscheidung lässt sich nicht rückgängig machen.</p>`;
+ const U=UPD[u],m=S.r.m,ct=enc(U.t),usedP=Object.values(m);
+ const out=ct.replace(/[A-Z]/g,c=>m[c]||'_');
+ return `<h2>${u==='fw'?'🧱':'🦠'} ${U.n}</h2><p class="sub">Feld antippen, dann unten den richtigen Buchstaben wählen. Gleiche Zeichen stehen immer für denselben Buchstaben.</p>
+ <div class="ciph">${ct.split(' ').map(wd=>`<div class="word">${wd.split('').map(c=>{const fx=U.fix.includes(ABC[KEY.indexOf(c)]);return `<button class="cl ${CSEL===c?'sel':''} ${fx?'fix':''}" data-t="cl" onclick="${fx?'':`CSEL='${c}';render()`}"><small>${c}</small><b>${m[c]||''}</b></button>`}).join('')}</div>`).join('')}</div>
+ <div class="out" id="out">&gt; ${out}</div>
+ <div class="kb" style="margin-top:10px">${ABC.split('').map(l=>`<button data-t="kb" class="${usedP.includes(l)?'used':''}" onclick="p5key('${l}')">${l}</button>`).join('')}<button data-t="kbdel" onclick="p5key('')">⌫</button></div>
+ <p style="margin-top:12px"><button class="btn" data-t="go" onclick="p5check()">Update installieren</button></p>`}
+function p5pick(u){S.r.upd=u;S.dec.upd=u;S.r.m={};UPD[u].fix.split('').forEach(l=>{S.r.m[KEY[ABC.indexOf(l)]]=l});if(u==='fw')pay(2,'Firewall-Update installiert');CSEL=null;saveLocal();sync();render()}
+function p5key(l){if(!CSEL)return toast('Erst ein Feld im Code antippen.');const m=S.r.m,U=UPD[S.r.upd];
+ if(!l){delete m[CSEL];return render()}
+ const other=Object.keys(m).find(c=>m[c]===l);if(other){if(U.fix.includes(l))return toast('Dieser Buchstabe ist schon fest vergeben.');delete m[other]}
+ m[CSEL]=l;beep(500,.04);render()}
+function p5check(){const U=UPD[S.r.upd],m=S.r.m,ct=enc(U.t);if(ct.replace(/[A-Z]/g,c=>m[c]||'_')===U.t)return solved('Update installiert. Die Piraten sind ausgesperrt!');shake();toast(ct.split('').some(c=>c!==' '&&!m[c])?'Der Code ist noch nicht vollständig.':'Die Ausgabe ergibt noch keinen Sinn.')}
+
+/* ===================== Lehrkraft ===================== */
+function tGames(){try{return JSON.parse(localStorage.getItem('sf_games')||'[]')}catch(e){return []}}
+function tSave(){try{localStorage.setItem('sf_games',JSON.stringify(T.games))}catch(e){}}
+function openTeacher(){T.games=tGames();T.cur=T.games.length?T.games[0].c:null;T.data=null;V='teacher';render();startPoll();if(T.cur)loadTeacher()}
+async function loadTeacher(){const g=T.games.find(x=>x.c===T.cur);if(!g)return;const j=await api('state',{c:g.c,hk:g.hk});
+  if(j.gone){T.games=T.games.filter(x=>x.c!==g.c);tSave();T.cur=T.games.length?T.games[0].c:null;T.data=null;return render()}
+  T.err=j.ok?'':j.err;if(j.ok)T.data=j;const f=document.activeElement;if(V==='teacher'&&!(f&&/INPUT|TEXTAREA/.test(f.tagName)))render()}
+async function tNew(){const n=$('#tn').value.trim();if(!n)return toast('Bitte einen Namen eingeben, z. B. die Klasse.');const j=await api('create',{name:n});if(!j.ok)return toast(j.err);T.games.unshift({c:j.c,hk:j.hk,name:j.name});tSave();T.cur=j.c;T.data=null;render();loadTeacher()}
+async function tAdd(){const g=T.games.find(x=>x.c===T.cur),n=$('#gn').value.trim(),d=$('#gd').value.trim();if(!n)return toast('Bitte einen Gruppennamen eingeben.');T.busy=1;const j=await api('addg',{c:g.c,hk:g.hk,n,d});T.busy=0;if(!j.ok)return toast(j.err);document.activeElement.blur();await loadTeacher();render();const i=$('#gn');if(i)i.focus()}
+async function tDel(code){if(!confirm('Gruppe '+code+' wirklich löschen?'))return;const g=T.games.find(x=>x.c===T.cur);await api('delg',{c:g.c,hk:g.hk,g:code});loadTeacher()}
+async function tReset(code){if(!confirm('Spielstand der Gruppe '+code+' zurücksetzen?'))return;const g=T.games.find(x=>x.c===T.cur);await api('reset',{c:g.c,hk:g.hk,g:code});loadTeacher()}
+async function tClose(){if(!confirm('Dieses Spiel mit allen Gruppen und Ergebnissen dauerhaft löschen?'))return;const g=T.games.find(x=>x.c===T.cur);await api('close',{c:g.c,hk:g.hk});T.games=T.games.filter(x=>x.c!==g.c);tSave();T.cur=T.games.length?T.games[0].c:null;T.data=null;render();if(T.cur)loadTeacher()}
+function qrSvg(t){try{const q=qrcode(0,'M');q.addData(t);q.make();return q.createSvgTag({cellSize:6,margin:2,scalable:true})}catch(e){return ''}}
+const prog=s=>!s?'–':s.done?'Ziel ✓':s.phase==='names'?'Start':'Raum '+(s.room+1)+'/5';
+function tCsv(){const d=T.data;if(!d)return;const rows=[['Gruppe','Spielcode','Fortschritt','Supercells','Spielzeit','Raum 1','Raum 2','Raum 3','Raum 4','Raum 5','Beschreibung','Crew']].concat(d.groups.map(x=>{const s=x.s;return [x.n,x.g,prog(s),s?s.cells:'',s?mmss(s.total):''].concat([0,1,2,3,4].map(i=>s?mmss(s.rt[i]):'')).concat([x.d||'',s&&s.crew?s.crew.join(' '):''])}));
+  const csv='﻿'+rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(';')).join('\r\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='Sternenfracht_'+(d.name||'Spiel')+'.csv';document.body.appendChild(a);a.click();a.remove()}
+function vTeacher(){const g=T.games.find(x=>x.c===T.cur),d=T.data;
+ let h=`<div class="row"><h1 style="font-size:28px" class="grow">🧑‍🏫 Lehrkraft-Bereich</h1><button class="btn g s" onclick="V='start';T.proj=null;clearInterval(pollTimer);render()">Zur Startseite</button></div>
+ <div class="card"><h2>Meine Spiele</h2><div class="row">${T.games.map(x=>`<button class="btn s ${x.c===T.cur?'o':'g'}" data-t="game" onclick="T.cur='${x.c}';T.data=null;render();loadTeacher()">${esc(x.name)}</button>`).join('')||'<span class="sub">Noch kein Spiel angelegt.</span>'}</div>
+ <div class="row" style="margin-top:10px"><input id="tn" maxlength="40" placeholder="Name, z. B. Klasse BK1" onkeydown="if(event.key==='Enter')tNew()"><button class="btn" data-t="newgame" onclick="tNew()">Neues Spiel erstellen</button></div></div>`;
+ if(g){h+=`<div class="card"><div class="row"><h2 class="grow">${esc(g.name)}</h2><button class="btn s" data-t="pcodes" onclick="T.proj='codes';render()">Spielcodes projizieren</button><button class="btn s o" data-t="pres" onclick="T.proj='res';render()">Ergebnisse projizieren</button><button class="btn s g" data-t="csv" onclick="tCsv()">CSV</button><button class="btn s r" data-t="closegame" onclick="tClose()">Spiel löschen</button></div>
+ ${T.err?`<p style="color:var(--re)"><b>${esc(T.err)}</b></p>`:''}
+ <div class="row" style="margin:10px 0"><input id="gn" maxlength="24" placeholder="Gruppenname, z. B. Mars" style="max-width:220px" onkeydown="if(event.key==='Enter')tAdd()"><input id="gd" maxlength="80" placeholder="Beschreibung (optional), z. B. Namen" onkeydown="if(event.key==='Enter')tAdd()"><button class="btn" data-t="addgroup" onclick="tAdd()">Neue Spielgruppe erstellen</button></div>
+ <div class="tw"><table><tr><th>Name</th><th>Spielcode</th><th>Geräte</th><th>Fortschritt</th><th>Supercells</th><th>Spielzeit</th><th>R1</th><th>R2</th><th>R3</th><th>R4</th><th>R5</th><th>Beschreibung</th><th></th></tr>
+ ${d?d.groups.map(x=>{const s=x.s;return `<tr><td><b>${esc(x.n)}</b></td><td style="font-family:monospace;font-weight:800;letter-spacing:2px">${x.g}</td><td>${x.dev}</td><td>${prog(s)}</td><td>${s?s.cells+'/'+START:'–'}</td><td>${s?mmss(s.total):'–'}</td>${[0,1,2,3,4].map(i=>`<td>${s&&s.rt[i]?mmss(s.rt[i]):'–'}</td>`).join('')}<td>${esc(x.d||(s&&s.crew?s.crew.join(', '):''))}</td><td><button class="btn s g" title="Spielstand zurücksetzen" onclick="tReset('${x.g}')">↺</button><button class="btn s r" title="Gruppe löschen" onclick="tDel('${x.g}')">✕</button></td></tr>`}).join('')||'<tr><td colspan="13" class="sub">Noch keine Gruppen. Legt für jede Kleingruppe eine Spielgruppe an.</td></tr>':'<tr><td colspan="13" class="sub">Lade …</td></tr>'}</table></div>
+ <p class="sub">Adresse für die Klasse: <b>${JOINURL}</b> · Wer sich zuerst mit einem Gruppencode einloggt, übernimmt die erste Spielleitung. Weitere Geräte derselben Gruppe werden Crew-Geräte mit Handbuch. Mit dem Code kann eine Gruppe jederzeit wieder beitreten.</p></div>`}
+ h+=`<div class="card"><details><summary><b>Ablauf, Spiel-Score und Hinweise</b></summary>
+ <p><b>Einsatz:</b> Kleingruppen mit 2 bis 5 Personen, etwa 45 Minuten Spielzeit, danach Nachbesprechung. Eine Gruppe kann sich ein Gerät teilen oder mit mehreren Geräten spielen (ein Gerät hat die Spielleitung, die anderen zeigen Handbuch und Rollen).</p>
+ <p><b>Score:</b> ${START} Supercells an Bord. Alle 3 Minuten Spielzeit −1 (höchstens 15). Hilfen je Raum 1 + 2 + 4 = 7 (höchstens 35). Zeit abgelaufen (9 Minuten): nicht genutzte Hilfen werden trotzdem abgezogen. Raum 3: −1, wenn die Sauerstoffversorgung nicht optimal ist. Raum 4: −4 bis −9 je nach Händler. Raum 5: −2 bei Wahl des Firewall-Updates.</p>
+ <p><b>Vor dem Start sagen:</b> Teamwork betonen. Rolle der Spielleitung erklären (sie wechselt in jedem Raum). Auf das Handbuch hinweisen. Hilfen früh nutzen, wenn es hakt. Nach 9 Minuten geht es automatisch weiter.</p></details>
+ <details><summary><b>Lösungen der Rätsel (nur für die Lehrkraft)</b></summary>
+ <p><b>Raum 1 · Bedürfnisse:</b> von der Tür zum Heck: Sauerstoff, Trinkwasser, Nahrung, Gitarre, Bücherkiste, Parfüm-Set, Goldschmuck.</p>
+ <p><b>Raum 2 · Knappheit:</b> Buchse 1 Blau, 2 Rot, 3 Grün, 4 Violett, 5 Gelb. Danach freie Entscheidung an der Tankstation (ohne Folgen für den Score, Gesprächsanlass).</p>
+ <p><b>Raum 3 · Maximalprinzip:</b> Optimum ${O2BASE+O2OPT.v} %: Kreuz lang → Kreuz +9, Kreuz kurz → Kreuz +8, Sechskant lang → +10, Sechskant kurz → +4, Schlitz lang → +9. Falle: Das lange Kreuz-Loch (+6) bleibt leer.</p>
+ <p><b>Raum 4 · Minimalprinzip:</b> ⬢ = 3, ▲ = 7, ■ = 5, ◆ = 9, Code 93753. Günstigster Händler ist der entfernteste (4 Supercells), dafür zweimal Funkreichweite erhöhen.</p>
+ <p><b>Raum 5 · Opportunitätskosten:</b> Firewall: ZEIT IST GELD. Antivirus: JEDE ENTSCHEIDUNG KOSTET ETWAS DENN MAN VERZICHTET AUF DIE ZWEITBESTE WAHL.</p></details></div>`;
+ if(T.proj&&g)h+=vProj(g,d);return h}
+function vProj(g,d){const res=T.proj==='res';const gs=d?d.groups.slice():[];if(res)gs.sort((a,b)=>((b.s?b.s.cells:-1)-(a.s?a.s.cells:-1))||((a.s?a.s.total:1e9)-(b.s?b.s.total:1e9)));
+ return `<div class="proj"><button class="btn g s" style="position:fixed;right:12px;top:12px" data-t="projclose" onclick="T.proj=null;render()">✕ Schließen</button>
+ <div class="row" style="justify-content:center;gap:4vw"><div><h1>Sternenfracht</h1><p style="text-align:center;font-size:2.2vw;margin:.2em 0">Mission Supercell · ${esc(g.name)}</p><p style="text-align:center;font-size:clamp(16px,2.6vw,36px);font-weight:800;color:var(--cy)">${JOINURL.replace(/^https?:\/\//,'')}</p></div><div class="qr">${qrSvg(JOINURL)}</div></div>
+ <div class="tw" style="margin-top:3vh"><table>${res?`<tr><th>Platz</th><th>Name</th><th>Gesamtzeit</th><th>Verbl. Supercells</th><th>Beschreibung</th></tr>${gs.map((x,i)=>`<tr><td>${x.s&&x.s.done?(i+1)+'.':'–'}</td><td><b>${esc(x.n)}</b></td><td>${x.s?mmss(x.s.total):'–'}</td><td><b>${x.s?x.s.cells:'–'}</b>${x.s&&!x.s.done?' (unterwegs)':''}</td><td>${esc(x.d||'')}</td></tr>`).join('')}`
+ :`<tr><th>Name</th><th>Spielcode</th><th>Verbunden</th><th>Beschreibung</th></tr>${gs.map(x=>`<tr><td><b>${esc(x.n)}</b></td><td class="code">${x.g}</td><td>${x.dev}</td><td>${esc(x.d||'')}</td></tr>`).join('')}`}</table></div></div>`}
+
+/* ===================== Start ===================== */
+(function(){const st=$('#stars');let h='';for(let i=0;i<70;i++)h+=`<i style="left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*3}s;opacity:${.3+Math.random()*.7}"></i>`;st.innerHTML=h;
+ const q=new URLSearchParams(location.search);const c=q.get('code')||q.get('raum');
+ if(q.has('lehrer'))openTeacher();else if(c){G.code=c.toUpperCase();V='join';render()}else render()})();
+window.addEventListener('beforeunload',()=>{if(S&&V==='game')saveLocal()});
+</script></body></html>

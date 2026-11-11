@@ -15,6 +15,14 @@
     {
       "source": "/anlagen-check/",
       "destination": "/anlagen-check/Anlagen_Check.html"
+    },
+    {
+      "source": "/escape",
+      "destination": "/escape/Sternenfracht.html"
+    },
+    {
+      "source": "/escape/",
+      "destination": "/escape/Sternenfracht.html"
     }
   ]
 }
