@@ -1,1 +1,277 @@
-{"date":"","items":[],"news":[]}
+{
+ "date": "2026-11-13",
+ "items": [
+  {
+   "q": "Um wie viel Prozent fiel die Nvidia-Aktie am 5. November 2026?",
+   "a": "rund 9 Prozent",
+   "w": [
+    "rund 2 Prozent",
+    "rund 25 Prozent",
+    "rund 50 Prozent"
+   ],
+   "e": "Nach den US-Zwischenwahlen gab es einen Ausverkauf bei Chip-Aktien. Nvidia schloss 9,26 % tiefer bei 181,60 Dollar.",
+   "src": {
+    "l": "getquin",
+    "url": "https://app.getquin.com/pt/post/CylECpJwmr"
+   },
+   "d": "05.11.2026"
+  },
+  {
+   "q": "Welchen Quartalsumsatz hat Nvidia für das Oktober-Quartal 2026 angekündigt?",
+   "a": "etwa 108 Milliarden Dollar",
+   "w": [
+    "etwa 10,8 Milliarden Dollar",
+    "etwa 1,08 Billionen Dollar",
+    "etwa 50 Milliarden Dollar"
+   ],
+   "e": "Nvidia plant rund 108 Mrd. Dollar, plus oder minus 2 %. Die Zahlen kommen am 17. November 2026.",
+   "src": {
+    "l": "TIKR",
+    "url": "https://www.tikr.com/de/blog/nvidia-sinks-9-as-midterm-data-center-fears-deepen-ai-chip-rout-absolute-slaughter"
+   },
+   "d": "05.11.2026"
+  },
+  {
+   "q": "An welchem Tag legt Nvidia seine nächsten Quartalszahlen vor?",
+   "a": "17. November 2026",
+   "w": [
+    "1. Dezember 2026",
+    "24. Dezember 2026",
+    "2. Januar 2027"
+   ],
+   "e": "Der Bericht erscheint am 17. November 2026 nach US-Börsenschluss.",
+   "src": {
+    "l": "getquin",
+    "url": "https://app.getquin.com/pt/post/CylECpJwmr"
+   },
+   "d": "05.11.2026"
+  },
+  {
+   "q": "Welchen Preis bekamen Nvidia-Chef Jensen Huang und Chefwissenschaftler Bill Dally?",
+   "a": "Queen Elizabeth Prize for Engineering",
+   "w": [
+    "Friedensnobelpreis",
+    "Deutscher Zukunftspreis",
+    "Karlspreis"
+   ],
+   "e": "Sie wurden mit weiteren KI-Forschern mit dem britischen Ingenieurpreis 2026 ausgezeichnet.",
+   "src": {
+    "l": "finanztrends",
+    "url": "https://www.finanztrends.de/news/nvidia-aktie-kracher-am-laufenden-band/"
+   },
+   "d": "12.11.2026"
+  },
+  {
+   "q": "Um wie viel hob Lindt & Sprüngli die Preise im 1. Halbjahr 2026 im Schnitt an?",
+   "a": "11,8 Prozent",
+   "w": [
+    "1,8 Prozent",
+    "4,5 Prozent",
+    "25 Prozent"
+   ],
+   "e": "Nach den Preiserhöhungen sank die verkaufte Menge deutlich. Lindt senkte die Prognose, die Aktie fiel.",
+   "src": {
+    "l": "web.de (dpa)",
+    "url": "https://web.de/magazine/wirtschaft/lindt-spruengli-wirft-konzernchef-raus-42850318"
+   },
+   "d": ""
+  },
+  {
+   "q": "Was passierte laut dpa nach Lindts kräftigen Preiserhöhungen?",
+   "a": "Der Konzernchef musste gehen",
+   "w": [
+    "Lindt kaufte einen Konkurrenten",
+    "Die Aktie stieg auf Rekord",
+    "Lindt senkte alle Preise"
+   ],
+   "e": "Weniger Absatz, gesenkte Prognose, Kurssturz: Der Konzernchef wurde abgelöst. Ein Beispiel für Preiselastizität der Nachfrage.",
+   "src": {
+    "l": "web.de (dpa)",
+    "url": "https://web.de/magazine/wirtschaft/lindt-spruengli-wirft-konzernchef-raus-42850318"
+   },
+   "d": ""
+  },
+  {
+   "q": "Was meldete der Tagesspiegel Ende Oktober 2026 zur Ausbildung?",
+   "a": "So wenige Azubi-Anfänger seit 30 Jahren nicht",
+   "w": [
+    "Rekord bei neuen Lehrstellen",
+    "Ausbildung wird ab 2027 Pflicht",
+    "Alle Lehrstellen sind besetzt"
+   ],
+   "e": "Die Arbeitslosigkeit sinkt und die Wirtschaft wächst, trotzdem beginnen so wenige junge Leute eine Ausbildung wie seit über 30 Jahren nicht.",
+   "src": {
+    "l": "Tagesspiegel",
+    "url": "https://www.tagesspiegel.de/wirtschaft/archiv/2026/10/30"
+   },
+   "d": "30.10.2026"
+  },
+  {
+   "q": "Wie viel Geld sammelte die KI-Firma „Dream“, an der Sebastian Kurz beteiligt ist, ein?",
+   "a": "260 Millionen",
+   "w": [
+    "26 Millionen",
+    "2,6 Milliarden",
+    "600 Millionen"
+   ],
+   "e": "Der Unternehmenswert liegt laut Bericht nun bei rund 3 Milliarden Dollar.",
+   "src": {
+    "l": "news.at",
+    "url": "https://www.news.at/wirtschaft?page=28"
+   },
+   "d": ""
+  },
+  {
+   "q": "Wie viel Umsatz machte Coca-Cola laut Bericht in einem Quartal?",
+   "a": "gut 13 Milliarden Dollar",
+   "w": [
+    "gut 1,3 Milliarden Dollar",
+    "gut 130 Milliarden Dollar",
+    "gut 31 Milliarden Dollar"
+   ],
+   "e": "Mehr Absatz und höhere Preise trieben den Umsatz des Getränkekonzerns.",
+   "src": {
+    "l": "Tagesspiegel",
+    "url": "https://www.tagesspiegel.de/wirtschaft/archiv/2026/10/27"
+   },
+   "d": "27.10.2026"
+  },
+  {
+   "q": "Wie viel wollte Google in Finnland investieren, bevor Bauarbeiten gestoppt wurden?",
+   "a": "13 Milliarden Euro",
+   "w": [
+    "1,3 Milliarden Euro",
+    "130 Millionen Euro",
+    "50 Milliarden Euro"
+   ],
+   "e": "An zwei Standorten ruhen die Arbeiten, bis eine Umweltverträglichkeitsprüfung vorliegt.",
+   "src": {
+    "l": "Tagesspiegel",
+    "url": "https://www.tagesspiegel.de/wirtschaft/archiv/2026/10/07"
+   },
+   "d": "07.10.2026"
+  }
+ ],
+ "news": [
+  {
+   "k": "Börse",
+   "t": "Nvidia-Aktie stürzt nach den US-Zwischenwahlen um gut 9 % ab",
+   "x": "Am 5. November 2026 schloss Nvidia bei 181,60 Dollar, rund ein Viertel unter dem Rekordhoch. Auch andere Chip-Werte fielen stark.",
+   "s": {
+    "l": "getquin",
+    "url": "https://app.getquin.com/pt/post/CylECpJwmr"
+   },
+   "d": "05.11.2026"
+  },
+  {
+   "k": "Börse",
+   "t": "Nvidia vor den Zahlen: 108 Milliarden Dollar Umsatz angekündigt",
+   "x": "Am 17. November legt Nvidia die Quartalszahlen vor. Sie gelten als erster Test, wie stark die Nachfrage aus den USA noch ist.",
+   "s": {
+    "l": "TIKR",
+    "url": "https://www.tikr.com/de/blog/nvidia-sinks-9-as-midterm-data-center-fears-deepen-ai-chip-rout-absolute-slaughter"
+   },
+   "d": "05.11.2026"
+  },
+  {
+   "k": "Promis",
+   "t": "Nvidia-Chef Jensen Huang erhält britischen Ingenieurpreis",
+   "x": "Huang und Chefwissenschaftler Bill Dally bekamen den Queen Elizabeth Prize for Engineering 2026. Die Aktie erholte sich zuletzt etwas.",
+   "s": {
+    "l": "finanztrends",
+    "url": "https://www.finanztrends.de/news/nvidia-aktie-kracher-am-laufenden-band/"
+   },
+   "d": "12.11.2026"
+  },
+  {
+   "k": "Unternehmen",
+   "t": "Lindt wirft Konzernchef raus: Zu hohe Preise, zu wenig Absatz",
+   "x": "Lindt erhöhte die Preise im ersten Halbjahr 2026 im Schnitt um 11,8 %. Die Mengen sanken, die Prognose fiel auf 0 bis 2 % Wachstum. Auch der Deutschland-Chef geht.",
+   "s": {
+    "l": "web.de (dpa)",
+    "url": "https://web.de/magazine/wirtschaft/lindt-spruengli-wirft-konzernchef-raus-42850318"
+   },
+   "d": ""
+  },
+  {
+   "k": "Unternehmen",
+   "t": "Gerresheimer: Interimschef geht vorzeitig, Aktie fällt",
+   "x": "Uwe Röhrhoff legt sein Amt auf eigenen Wunsch früher nieder. Finanzchef und ein Vorstandsmitglied übernehmen kommissarisch.",
+   "s": {
+    "l": "sharedeals.de",
+    "url": "https://www.sharedeals.de/kompakt/gerresheimer-aktie-kurssturz-nach-ueberraschendem-interimchef-abgang/"
+   },
+   "d": ""
+  },
+  {
+   "k": "Promis",
+   "t": "Ex-Kanzler Kurz: KI-Firma „Dream“ sammelt 260 Millionen ein",
+   "x": "Die Firma, an der Sebastian Kurz beteiligt ist, wird laut Bericht mit rund 3 Milliarden Dollar bewertet.",
+   "s": {
+    "l": "news.at",
+    "url": "https://www.news.at/wirtschaft?page=28"
+   },
+   "d": ""
+  },
+  {
+   "k": "Kurioses",
+   "t": "Polizei ermittelt auf Googles Rechenzentrums-Baustelle in Finnland",
+   "x": "Google hatte Milliarden für Finnland angekündigt. Nun geht es um mögliche Umweltschäden, an zwei Standorten ruhen die Arbeiten.",
+   "s": {
+    "l": "Tagesspiegel",
+    "url": "https://www.tagesspiegel.de/wirtschaft/archiv/2026/10/30"
+   },
+   "d": "30.10.2026"
+  },
+  {
+   "k": "Arbeit",
+   "t": "So wenige neue Azubis wie seit über 30 Jahren nicht",
+   "x": "Die Wirtschaft wächst wieder und die Arbeitslosigkeit sinkt. Bei der Ausbildung sieht es dagegen schlecht aus.",
+   "s": {
+    "l": "Tagesspiegel",
+    "url": "https://www.tagesspiegel.de/wirtschaft/archiv/2026/10/30"
+   },
+   "d": "30.10.2026"
+  },
+  {
+   "k": "Konjunktur",
+   "t": "Deutsche Wirtschaft wächst im dritten Quartal leicht",
+   "x": "Niedrigwasser am Rhein und der Iran-Krieg belasteten. Ein Rückgang blieb trotzdem aus.",
+   "s": {
+    "l": "Tagesspiegel",
+    "url": "https://www.tagesspiegel.de/wirtschaft/archiv/2026/10/30"
+   },
+   "d": "30.10.2026"
+  },
+  {
+   "k": "Unternehmen",
+   "t": "Coca-Cola macht gut 13 Milliarden Dollar Umsatz im Quartal",
+   "x": "Mehr Absatz und höhere Preise halfen dem Getränkekonzern.",
+   "s": {
+    "l": "Tagesspiegel",
+    "url": "https://www.tagesspiegel.de/wirtschaft/archiv/2026/10/27"
+   },
+   "d": "27.10.2026"
+  },
+  {
+   "k": "Unternehmen",
+   "t": "Ford setzt auf große Autos statt E-Autos",
+   "x": "Ford fuhr das verlustreiche Elektro-Geschäft zurück und verdiente an großen Wagen in den USA. Die Folgen des Iran-Kriegs bremsen.",
+   "s": {
+    "l": "Tagesspiegel",
+    "url": "https://www.tagesspiegel.de/wirtschaft/archiv/2026/10/28"
+   },
+   "d": "28.10.2026"
+  },
+  {
+   "k": "Unternehmen",
+   "t": "Halbleiterhersteller Vishay investiert in Itzehoe",
+   "x": "In Schleswig-Holstein sollen künftig deutlich größere Wafer produziert werden. Es geht um eine Millioneninvestition.",
+   "s": {
+    "l": "Tagesspiegel",
+    "url": "https://www.tagesspiegel.de/wirtschaft/archiv/2026/10/30"
+   },
+   "d": "30.10.2026"
+  }
+ ]
+}

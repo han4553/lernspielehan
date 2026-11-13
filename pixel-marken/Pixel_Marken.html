@@ -91,6 +91,7 @@ input:focus,select:focus{outline:none;border-color:var(--cy)}
 .bk .br .fact,.bk .br .card{margin-top:8px}
 .bcols{display:flex;flex-direction:column}.tqmode .br{order:-1}
 @media(min-width:900px){.wrap.bk{max-width:1100px}.bcols{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}.bk .rdock{top:4px}.bk .br canvas{max-width:100%}}
+body.ingame #mfab,body.ingame #mpan{display:none}
 #mfab{position:fixed;right:10px;bottom:10px;z-index:50;width:44px;height:44px;border-radius:50%;border:2px solid #ffffff44;background:#33216bee;color:#fff;font-size:20px;cursor:pointer}
 #mpan{display:none;position:fixed;right:10px;bottom:64px;z-index:51;width:min(320px,calc(100vw - 20px));max-height:70vh;overflow:auto;background:#241552f5;border:2px solid var(--ye);border-radius:14px;padding:10px 12px}
 #mpan .mx{float:right;background:none;border:0;color:#fff;font-size:18px}.mrow{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.mlab{font-size:13px;color:var(--mut)}
@@ -120,6 +121,7 @@ table{width:100%;border-collapse:collapse}td,th{padding:6px 8px;border-bottom:1p
 .rn{position:absolute;top:5px;display:flex;align-items:center;gap:6px;white-space:nowrap;transition:left 1s ease-out}
 .lb2{font-size:12px;line-height:1.15}.lb2 b{display:block;max-width:96px;overflow:hidden;text-overflow:ellipsis}.lb2 i{font-style:normal;color:var(--ye);font-weight:800}
 .lane.me .lb2 b{color:var(--ye)}
+.race{padding-top:18px}
 .bub{display:none;position:absolute;top:-18px;left:14px;background:#fff;color:#1b1035;border-radius:10px;padding:3px 8px;font:800 12px "Trebuchet MS",sans-serif;box-shadow:0 2px 0 #000a;z-index:3}
 .bub.on{display:block;animation:pop .28s ease-out}.bub.rt{left:auto;right:0}
 .finish{position:absolute;right:4px;top:6px;bottom:6px;width:14px;background:repeating-conic-gradient(#fff 0 25%,#222 0 50%) 0 0/7px 7px;border-radius:3px}
@@ -135,7 +137,7 @@ table{width:100%;border-collapse:collapse}td,th{padding:6px 8px;border-bottom:1p
 .jbox{background:#ffffff14;border:2px solid #ffffff2a;border-radius:12px;padding:8px 10px;margin:8px 0;font-size:14px}.jbtn{margin:4px 4px 0 0}
 .cer{background:linear-gradient(#2a1458,#150c2b);border:3px solid var(--ye);border-radius:16px;padding:12px;text-align:center;margin-bottom:12px}
 .stage.tq{background:linear-gradient(#2a1458,#150c2b);border:3px solid #ffffff2a;border-radius:14px;min-height:250px;padding:12px 14px;display:block;aspect-ratio:auto}
-.nw{margin:8px 0;padding:10px 12px}.nw summary{cursor:pointer;font-weight:800;line-height:1.35}.nw p{margin:8px 0 0;font-size:14px;opacity:.92}.nk{display:inline-block;font-size:11px;font-weight:800;padding:2px 8px;border-radius:99px;background:#ffffff22;margin-right:4px}.nsr a{color:var(--cy)}
+.nw{margin:8px 0;padding:10px 12px}.nw summary{cursor:pointer;font-weight:800;line-height:1.35;list-style:none}.nw summary::-webkit-details-marker{display:none}.nt{display:block;margin-top:4px}.nw[open]{border-color:var(--cy)}.nchips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}.nch{border:2px solid #ffffff33;background:transparent;color:#fff;border-radius:99px;padding:5px 11px;font:700 13px inherit;cursor:pointer}.nch.on{background:var(--ye);color:#1b1035;border-color:var(--ye)}.nw p{margin:8px 0 0;font-size:14px;opacity:.92}.nk{display:inline-block;font-size:11px;font-weight:800;padding:2px 8px;border-radius:99px;background:#ffffff22;margin-right:4px}.nsr a{color:var(--cy)}
 .tqh{font:900 15px "Trebuchet MS",sans-serif;color:var(--cy);letter-spacing:.5px;margin-bottom:8px}.tqc{margin:0;padding-left:22px;font-size:16px}.tqc li{margin:4px 0;opacity:.8}.tqc li.new{opacity:1;color:var(--ye);font-weight:800;animation:pop .35s ease-out}
 .tqf{font-size:54px;text-align:center;margin-top:6px}.tqk{font:900 26px "Trebuchet MS",sans-serif;color:var(--ye);text-align:center;margin:8px 0}
 .tqt{display:flex;border-top:3px solid #fff;margin:6px 30px}.tqt span{flex:1;text-align:center;padding-top:4px;color:var(--mut);font-weight:800}.tqt span:first-child{border-right:3px solid #fff}
@@ -152,7 +154,7 @@ table{width:100%;border-collapse:collapse}td,th{padding:6px 8px;border-bottom:1p
 .pod{display:flex;justify-content:center;align-items:flex-end;gap:8px;margin-top:10px}.pcol{display:flex;flex-direction:column;align-items:center;max-width:32%;font-size:13px}.pcol b{overflow-wrap:anywhere}.pbar{width:80px;max-width:100%;background:linear-gradient(#ffd23f,#e09f00);color:#1b1035;border-radius:8px 8px 0 0;display:flex;align-items:flex-start;justify-content:center;font-size:30px;padding-top:4px}
 .conf{font-size:26px;letter-spacing:6px;animation:pop .6s ease-out}
 .race.mini .rider{margin-left:-10px}
-.race.mini{padding:10px 8px 4px;margin-top:12px}.race.mini .lane{height:36px}.race.mini .rn{top:3px}.race.mini .lb2{font-size:11px}.race.mini .bub{top:-14px}.race.mini .rider{margin-left:-10px}
+.race.mini{padding:16px 8px 4px;margin-top:12px}.race.mini .lane{height:36px}.race.mini .rn{top:3px}.race.mini .lb2{font-size:11px}.race.mini .bub{top:-14px}.race.mini .rider{margin-left:-10px}
 
 .race[data-sc=wueste]{background-color:#6b3d12;background-image:repeating-linear-gradient(90deg,#ffffff10 0 2px,transparent 2px 26px),linear-gradient(#e0a23a55,#7a431422 60%,#3a1c0833)}
 .race[data-sc=schnee]{background-color:#1d3b5e;background-image:repeating-linear-gradient(90deg,#ffffff18 0 2px,transparent 2px 26px),radial-gradient(#fff 1.5px,transparent 2px),radial-gradient(#ffffffaa 1px,transparent 2px);background-size:auto,38px 31px,23px 27px}
@@ -2683,7 +2685,7 @@ const roundMs=()=>playMs()+brkMs();
 const nRounds=()=>M==='solo'?G.qs.length:R.cfg.rounds;
 const lastR=()=>G.r>=nRounds()-1; // letzte Runde: Auswertung erst bei der Siegerehrung
 const srvNow=()=>Date.now()+R.off;
-const app=h=>{$('#app').innerHTML=h;window.scrollTo(0,0)};
+const app=h=>{$('#app').innerHTML=h;window.scrollTo(0,0);document.body.classList.toggle('ingame',!!document.querySelector('#app .hud'))};
 async function syncTime(){let best=null;for(let i=0;i<3;i++){const t0=Date.now();const x=await api('time');const t1=Date.now();if(x&&x.ok){const rtt=t1-t0,off=x.t+rtt/2-t1;if(!best||rtt<best.rtt)best={rtt,off}}}if(best)R.off=best.off;return !!best}
 
 /* ===================== Wirtschafts-Spielarten (ohne Bilder) ===================== */
@@ -2732,13 +2734,30 @@ function buildQs(seed,count,pool){
   return ids.map(id=>{const others=shuffle(all.filter(x=>x!==id),r).slice(0,3);return {id,opts:shuffle([id].concat(others),r)}});
 }
 
-function newsView(){
-  V='news';
+function newsView(cat){
+  V='news';clearInterval(heroT);cat=typeof cat==='string'?cat:'Alle';
+  if(!NEWSL.length)NEWSP.then(()=>{if(V==='news'&&NEWSL.length)newsView(cat)});
   const fd=d=>{const m=/^(\d{4})-(\d\d)-(\d\d)$/.exec(d||'');return m?m[3]+'.'+m[2]+'.'+m[1]:(d||'')};
-  const L=NEWSL.map(n=>'<details class="card nw"><summary><span class="nk">'+esc(n.k||'News')+'</span> '+esc(n.t)+'</summary><p>'+esc(n.x||'')+'</p>'+(n.s&&n.s.url&&/^https?:\/\//.test(n.s.url)?'<p class="nsr">📰 <a href="'+esc(n.s.url)+'" target="_blank" rel="noopener">'+esc(n.s.l||'Quelle')+'</a>'+(n.d?' · '+esc(n.d):'')+'</p>':'')+'</details>').join('');
-  app('<div class="big" style="padding-bottom:6px"><h2>📰 Wirtschafts-News</h2><div class="sub">'+(NEWSD?'Stand: '+esc(fd(NEWSD))+' · wird täglich vom Lehrer-Radar aktualisiert':'')+'</div></div>'+(L||'')+(NEWSL.length?'':'<div class="card">Noch keine Meldungen geladen. Sie erscheinen nach dem nächsten Tagesupdate.</div>')+'<button class="btn" id="nq">📰 Quiz zu den News spielen</button><button class="btn gh" id="nb2">⬅ Zurück</button>');
-  $('#nb2').onclick=homeView;$('#nq').onclick=()=>{soloSetup();const g=$('#gm');if(g)g.value='news'};
+  const KI={Konjunktur:'📈',Arbeit:'👷',Handel:'🛒',Logistik:'🚚',Börse:'💹',Unternehmen:'🏢',Promis:'⭐',Kurioses:'🤯'};
+  const cats=['Alle'].concat([...new Set(NEWSL.map(n=>n.k||'News'))]);
+  const L=NEWSL.filter(n=>cat==='Alle'||(n.k||'News')===cat).map(n=>'<details class="card nw"><summary><span class="nk">'+(KI[n.k]||'📰')+' '+esc(n.k||'News')+'</span><span class="nt">'+esc(n.t)+'</span></summary><p>'+esc(n.x||'')+'</p>'+(n.s&&n.s.url&&/^https:\/\//.test(n.s.url)?'<p class="nsr">Quelle: <a href="'+esc(n.s.url)+'" target="_blank" rel="noopener">'+esc(n.s.l||'Link')+'</a>'+(n.d?' · '+esc(n.d):'')+'</p>':'')+'</details>').join('');
+  const nq=TQ_NEWS.length;
+  app('<div class="wrap"><div class="h1" style="font-size:26px">📰 Wirtschafts-News</div><div class="sub">'+(NEWSL.length?'Stand '+esc(fd(NEWSD))+' · Börse, Firmen, Promis, Kurioses und Konjunktur. Tippe eine Meldung an.':'Die Meldungen kommen jeden Morgen um 6:20 Uhr neu.')+'</div>'+
+   (cats.length>2?'<div class="nchips">'+cats.map(c=>'<button class="nch'+(c===cat?' on':'')+'" data-c="'+esc(c)+'">'+(KI[c]||'')+' '+esc(c)+'</button>').join('')+'</div>':'')+
+   (L||'<div class="card">Heute sind noch keine Meldungen da. Das Quiz nimmt dann die Wirtschafts-Blitz-Fragen.</div>')+
+   '<button class="btn" id="nq">🎮 Quiz dazu spielen'+(nq?' ('+nq+' Fragen)':'')+'</button><button class="btn gh" id="nb2">← Zurück</button></div>');
+  document.querySelectorAll('.nch').forEach(b=>b.onclick=()=>newsView(b.dataset.c));
+  $('#nb2').onclick=homeView;$('#nq').onclick=()=>{soloSetup();const g=$('#gm');if(g){g.value='news';g.dispatchEvent(new Event('change'))}};
 }
+function setupSync(gmId,nrId,smId,subId){
+  const g=$('#'+gmId),n=$('#'+nrId),s=$('#'+smId);if(!g||!n)return;
+  [...n.options].forEach(o=>o.dataset.t=o.dataset.t||o.textContent);
+  const f=()=>{const tq=TQM.includes(g.value);[...n.options].forEach(o=>o.textContent=tq?o.dataset.t.replace(/Marken/g,'Fragen').replace('Alle Fragen','Alle Fragen'):o.dataset.t);
+    if(subId&&$('#'+subId)){const k=s?s.value:'standard',x={standard:'Falsche Antwort = −25 Punkte.',risiko:'Doppelte Punkte, aber falsch = −50.',fair:'Kein Abzug für Fehler, dafür kein Serienbonus.',turbo:'Serienbonus bis +100 Punkte.',wechsel:'Die Wertung wechselt jede Runde.'}[k]||'';
+      $('#'+subId).textContent=(GMH[g.value]||'')+' '+x+' Wer schnell und sicher antwortet, gewinnt das Rennen.'}};
+  g.addEventListener('change',f);if(s)s.addEventListener('change',f);f();
+}
+const GMH={klassisch:'Das Logo wird Stufe für Stufe schärfer.',mut:'Je unschärfer du tippst, desto mehr Punkte.',blick:'Das Logo blitzt kurz auf, dann aus dem Gedächtnis.',zoom:'Die Lupe zeigt erst ein Detail, dann mehr.',wer:'Hinweis für Hinweis: Welcher Fachbegriff ist gemeint?',konto:'Ordne das Konto der richtigen Kontoart zu.',blitz:'Schnelle Wirtschaftsfragen, nach und nach fallen falsche Antworten weg.',news:'Fragen zu den Wirtschafts-News von heute.'};
 /* ===================== Startseite ===================== */
 let heroT=null,heroI=0,heroS=0;
 function homeView(){
@@ -2929,11 +2948,10 @@ function soloRank(){
 /* ===================== Einzelspiel ===================== */
 function soloSetup(){
   V='solo-setup';clearInterval(heroT);
-  app('<div class="wrap"><div class="h1" style="font-size:26px">Einzelspiel</div><div class="sub">Falsche Antwort = Punktabzug (−25). Wer schnell und sicher erkennt, gewinnt das Rennen.</div>'+
-   '<label>Dein Männchen</label>'+avBuilder()+'<label>KI-Gegner (Rennen)</label><select id="nb"><option value="0">Keine</option><option value="3">3 Gegner</option><option value="5">5 Gegner</option><option value="10">10 Gegner</option><option value="20">20 Gegner</option><option value="30" selected>30 Gegner (ganze Klasse)</option></select><label>Stärke der Gegner</label><select id="lv"><option value="0.45">Leicht</option><option value="0.65" selected>Mittel</option><option value="0.85">Schwer</option></select><label>Wie viele Runden?</label><select id="nr"><option value="7">Kurz (7 Marken)</option><option value="14">Mittel (14 Marken)</option><option value="20">Lang (20 Marken)</option><option value="30">Alle Marken</option></select>'+
-   '<label>Spielmodus</label><select id="gm"><option value="klassisch">🧩 Klassisch – Pixel werden schärfer</option><option value="mut">🎲 Mut-Modus – je unschärfer, desto mehr Punkte</option><option value="blick">👁 Kurzer Blick – 1 Sekunde scharf, dann aus dem Gedächtnis</option><option value="zoom">🔍 Lupe – Ausschnitt wird größer</option><optgroup label="Wirtschaft (ohne Logos)"><option value="wer">🕵️ Wer bin ich? – Wirtschaftsbegriffe (7 Hinweise)</option><option value="konto">📒 Kontenjagd – Aktiv, Passiv, Aufwand oder Ertrag?</option><option value="news">📰 News-Quiz – aktuelle Wirtschaftsmeldungen, täglich neu</option><option value="blitz">💡 Wirtschafts-Blitz – Fakten und Zahlen</option></optgroup></select><label>Rennbahn-Szenerie</label><select id="sc"><option value="strecke">🏁 Rennstrecke</option><option value="wueste">🏜 Wüste</option><option value="schnee">❄️ Schneelandschaft</option><option value="weltall">🚀 Weltall</option><option value="strand">🏖 Strand</option><option value="dschungel">🌴 Dschungel</option><option value="wechsel">🔀 Wechselt jede Runde</option></select><label>Punkte-Wertung</label><select id="sm"><option value="standard">⚖️ Standard – falsch −25</option><option value="risiko">🎰 Risiko – doppelte Punkte, falsch −50</option><option value="fair">🕊 Fair – kein Abzug, kein Serienbonus</option><option value="turbo">🔥 Turbo – Serienbonus bis +100</option><option value="wechsel">🔀 Wertung wechselt jede Runde</option></select><label>Tempo der Pixel-Stufen</label><select id="sp"><option value="4000">Gemütlich (4 s)</option><option value="3000" selected>Normal (3 s)</option><option value="2000">Schnell (2 s)</option></select>'+
+  app('<div class="wrap"><div class="h1" style="font-size:26px">Einzelspiel</div><div class="sub" id="ssub"></div>'+
+   '<label>Dein Männchen</label>'+avBuilder()+'<label>Spielmodus</label><select id="gm"><option value="klassisch">🧩 Klassisch – Pixel werden schärfer</option><option value="mut">🎲 Mut-Modus – je unschärfer, desto mehr Punkte</option><option value="blick">👁 Kurzer Blick – 1 Sekunde scharf, dann aus dem Gedächtnis</option><option value="zoom">🔍 Lupe – Ausschnitt wird größer</option><optgroup label="Wirtschaft (ohne Logos)"><option value="wer">🕵️ Wer bin ich? – Wirtschaftsbegriffe (7 Hinweise)</option><option value="konto">📒 Kontenjagd – Aktiv, Passiv, Aufwand oder Ertrag?</option><option value="news">📰 News-Quiz – aktuelle Wirtschaftsmeldungen, täglich neu</option><option value="blitz">💡 Wirtschafts-Blitz – Fakten und Zahlen</option></optgroup></select><label>Wie viele Runden?</label><select id="nr"><option value="7">Kurz (7 Marken)</option><option value="14">Mittel (14 Marken)</option><option value="20">Lang (20 Marken)</option><option value="30">Alle Marken</option></select><label>Punkte-Wertung</label><select id="sm"><option value="standard">⚖️ Standard – falsch −25</option><option value="risiko">🎰 Risiko – doppelte Punkte, falsch −50</option><option value="fair">🕊 Fair – kein Abzug, kein Serienbonus</option><option value="turbo">🔥 Turbo – Serienbonus bis +100</option><option value="wechsel">🔀 Wertung wechselt jede Runde</option></select><label>Rennbahn-Szenerie</label><select id="sc"><option value="strecke">🏁 Rennstrecke</option><option value="wueste">🏜 Wüste</option><option value="schnee">❄️ Schneelandschaft</option><option value="weltall">🚀 Weltall</option><option value="strand">🏖 Strand</option><option value="dschungel">🌴 Dschungel</option><option value="wechsel">🔀 Wechselt jede Runde</option></select><label>Tempo der Pixel-Stufen</label><select id="sp"><option value="4000">Gemütlich (4 s)</option><option value="3000" selected>Normal (3 s)</option><option value="2000">Schnell (2 s)</option></select><label>KI-Gegner (Rennen)</label><select id="nb"><option value="0">Keine</option><option value="3">3 Gegner</option><option value="5">5 Gegner</option><option value="10">10 Gegner</option><option value="20">20 Gegner</option><option value="30" selected>30 Gegner (ganze Klasse)</option></select><label>Stärke der Gegner</label><select id="lv"><option value="0.45">Leicht</option><option value="0.65" selected>Mittel</option><option value="0.85">Schwer</option></select>'+
    '<button class="btn gr" id="go">▶ Los geht’s</button><button class="btn gh" id="bk">← Zurück</button></div>');
-  bindAv();$('#bk').onclick=homeView;
+  bindAv();$('#bk').onclick=homeView;setupSync('gm','nr','sm','ssub');
   $('#go').onclick=()=>{
     const pool=avail();if(pool.length<4&&!TQM.includes($('#gm').value))return;
     const n=Math.min(+$('#nr').value,pool.length);
@@ -2991,7 +3009,7 @@ async function liveRank(){
   G.rankTxt='🏁 '+(x.rank||'–')+'/'+(x.total||'–');hud();
 }
 function hud(){if($('#hR'))$('#hR').textContent='Runde '+(G.r+1)+'/'+nRounds()+(((M==='solo'?G.cfg:R.cfg)||{}).sm==='wechsel'?' · '+SM().t:'');if($('#hS'))$('#hS').textContent='⭐ '+myScore();if($('#hK'))$('#hK').textContent='🔥 '+G.streak;if($('#hP'))$('#hP').textContent=lastR()?'🏁 ❓':(G.rankTxt||'');
-  const m=$('#mu');if(m)m.onclick=()=>{MUTE=!MUTE;ls.set('pm_mute',0);try{localStorage.setItem('pm_mute',MUTE?'1':'0')}catch(e){}m.textContent=MUTE?'🔇':'🔊'}}
+  const m=$('#mu');if(m)m.onclick=()=>{MUTE=!MUTE;ls.set('pm_mute',0);try{localStorage.setItem('pm_mute',MUTE?'1':'0')}catch(e){}m.textContent=MUTE?'🔇':'🔊';if(typeof Mus!=='undefined')Mus.setMute(MUTE)}}
 function startRound(r){
   G.r=r;G.vph='play';G.tsent=false;G.tpend=false;G.tlock=false;G.tfirst=false;G.tby='';G.firstMs=-1;G.firstOk=false;G.firstPts=0;G.answered=false;G.wrong=[];G.gone=[];G.stage=-1;G.hint='';G.rpts=0;G.pen=0;G.rms=0;G.q=G.qs[r];G.peekT=null;G.gridNow=0;G.peekUntil=0;G.lastLive=0;if(M==='solo'&&G.bots&&G.bots.length)botPlan();
   if(!isTQ())G.src=makeSrc(IMG[G.q.id]?G.q.id:'x',W,H);
@@ -3137,12 +3155,12 @@ async function goEnd(){
   if(V==='end')return;V='end';clearTimeout(G.peekT);beep(523,.15);setTimeout(()=>beep(659,.15),150);setTimeout(()=>beep(784,.3),300);
   if(M==='host'){await hostEndView();return}
   let rk='';
-  if(M==='solo'&&G.bots&&G.bots.length){const all=G.bots.map(b=>({n:b.n,e:b.e,s:b.s,m:-1,mt:0})).concat([{n:'Du',e:pick.av,s:G.score,m:-1,mt:0}]).sort((a,b)=>b.s-a.s);endList=all.slice(0,8);if(!endList.some(p=>p.n==='Du'))endList.push(all.find(p=>p.n==='Du'));ceList=all;const pl=all.findIndex(p=>p.n==='Du')+1;rk=cerHTML()+'<div class="card" style="text-align:center"><b style="font-size:20px">'+(pl===1?'🥇 Du hast gewonnen!':'Platz '+pl+' von '+all.length)+'</b></div><h3>🏁 Zieleinlauf</h3><div class="race" id="race"></div><ol class="lb">'+all.map((p,i)=>'<li'+(p.n==='Du'?' class="me"':'')+'><span class="rk">'+(i+1)+'.</span>'+AV(p.e,22)+' '+esc(p.n)+'<span class="sc">'+p.s+'</span></li>').join('')+'</ol>'}
+  if(M==='solo'&&G.bots&&G.bots.length){const all=G.bots.map(b=>({n:b.n,e:b.e,s:b.s,m:-1,mt:0})).concat([{n:'Du',e:pick.av,s:G.score,m:-1,mt:0}]).sort((a,b)=>b.s-a.s);endList=all.slice(0,8);if(!endList.some(p=>p.n==='Du'))endList.push(all.find(p=>p.n==='Du'));ceList=all;const pl=all.findIndex(p=>p.n==='Du')+1;rk=cerHTML()+'<div class="card" style="text-align:center"><b style="font-size:20px">'+(pl===1?'🥇 Du hast gewonnen!':'Platz '+pl+' von '+all.length)+'</b></div><h3>🏁 Zieleinlauf</h3><div class="race" id="race"></div>'}
   if(M==='room'){const x=await api('state',{c:R.code,pid:R.pid,full:1,rw:1,all:1});if(x&&x.ok){applyState(x);G.adj=x.adj||0;ceList=(x.all||x.top).map(p=>({n:p[0],e:p[1],s:p[2]}));endList=x.top.slice(0,8).map(p=>({n:p[0],e:p[1],s:p[2],m:-1,mt:0}));if(!endList.some(p=>p.n===R.name))endList.push({n:R.name,e:R.av,s:myScore(),m:-1,mt:0});rk=cerHTML()+'<h3>🏁 Zieleinlauf</h3><div class="race" id="race"></div><h3>🏆 Rangliste</h3><ol class="lb">'+x.top.map((p,i)=>'<li'+(p[0]===R.name?' class="me"':'')+'><span class="rk">'+(i+1)+'.</span>'+AV(p[1],22)+' '+esc(p[0])+'<span class="sc">'+p[2]+'</span></li>').join('')+(x.rank>10?'<li class="me"><span class="rk">'+x.rank+'.</span>'+AV(R.av,22)+' '+esc(R.name)+'<span class="sc">'+myScore()+'</span></li>':'')+'</ol>'+winnersHTML(x.rw)}}
   app('<div class="wrap"><div class="h1" style="font-size:28px">Geschafft!</div><div class="big">'+myScore()+'</div><div style="text-align:center;font-weight:800;font-size:20px">'+titleFor()+'</div>'+
    '<div class="sub" style="text-align:center">'+G.correct+' von '+nRounds()+(isTQ()?' Fragen richtig':' Marken erkannt')+'</div>'+rk+
    '<div class="card"><b>Deine Runden</b>'+G.log.map(l=>'<div class="cr"><span>'+(l.ok?'✅':'❌')+'</span><span class="nn">'+esc(l.n||BYID[l.id].n)+'</span><span class="grow"></span><span class="pp">'+(l.pts>0?'+'+l.pts:(l.pts<0?'−'+Math.abs(l.pts):'0'))+'</span></div>').join('')+'</div>'+
-   chartHTML()+learnHTML()+
+   (isTQ()?'':chartHTML()+learnHTML())+
    (M==='solo'?'<button class="btn gr" id="again">🔄 Nochmal spielen</button>':'')+'<button class="btn gh" id="home">Zur Startseite</button><div class="foot">'+esc(SRC_NOTE)+'</div></div>');
   if(M==='room')raceRender($('#race'),endList,R.name);if(M==='solo'&&$('#race'))raceRender($('#race'),endList,'Du');if($('#cer'))ceremony(ceList,M==='solo'?'Du':R.name);bindChart();if($('#again'))$('#again').onclick=soloSetup;$('#home').onclick=()=>{leaveRoom();homeView()};
 }
@@ -3154,6 +3172,7 @@ function chartHTML(){
   return '<div class="card"><b>📊 Wer war vorn? Marktanteile</b><div class="yr"><button class="btn sm '+(chartYear==='2007'?'cy':'gh')+'" data-y="2007">2007</button><button class="btn sm '+(chartYear==='2025'?'mg':'gh')+'" data-y="2025">2025</button></div><div id="chart"></div></div>';
 }
 function bindChart(){
+  if(!$('#chart'))return;
   const draw=()=>{
     const k=chartYear==='2007'?['r07','s07']:['r25','s25'];
     const list=BR.filter(b=>b[k[0]]).sort((a,b)=>a[k[0]]-b[k[0]]);
@@ -3238,11 +3257,11 @@ function hostSetup(){
   V='host-setup';clearInterval(heroT);
   app('<div class="wrap"><div class="h1" style="font-size:26px">Raum eröffnen</div><div class="sub">Die Schüler öffnen die Seite per QR-Code, geben Namen und Rolle ein und spielen gleichzeitig – ihr seht live die Rangliste.</div>'+
    '<label>Name des Raums (z. B. Klasse)</label><input id="hn" maxlength="30" placeholder="z. B. IK 1a">'+
-   '<label>Anzahl der Runden</label><select id="hr"><option value="5">5 Marken</option><option value="8" selected>8 Marken</option><option value="14">14 Marken</option><option value="20">20 Marken</option><option value="30">Alle Marken</option></select>'+
-   '<label>Spielmodus</label><select id="hg"><option value="klassisch">🧩 Klassisch – Pixel werden schärfer</option><option value="mut">🎲 Mut-Modus – je unschärfer, desto mehr Punkte</option><option value="blick">👁 Kurzer Blick – 1 Sekunde scharf, dann aus dem Gedächtnis</option><option value="zoom">🔍 Lupe – Ausschnitt wird größer</option><optgroup label="Wirtschaft (ohne Logos)"><option value="wer">🕵️ Wer bin ich? – Wirtschaftsbegriffe (7 Hinweise)</option><option value="konto">📒 Kontenjagd – Aktiv, Passiv, Aufwand oder Ertrag?</option><option value="news">📰 News-Quiz – aktuelle Wirtschaftsmeldungen, täglich neu</option><option value="blitz">💡 Wirtschafts-Blitz – Fakten und Zahlen</option></optgroup></select><label>Rennbahn-Szenerie</label><select id="hsc"><option value="strecke">🏁 Rennstrecke</option><option value="wueste">🏜 Wüste</option><option value="schnee">❄️ Schneelandschaft</option><option value="weltall">🚀 Weltall</option><option value="strand">🏖 Strand</option><option value="dschungel">🌴 Dschungel</option><option value="wechsel">🔀 Wechselt jede Runde</option></select><label>Punkte-Wertung</label><select id="hsm"><option value="standard">⚖️ Standard – falsch −25</option><option value="risiko">🎰 Risiko – doppelte Punkte, falsch −50</option><option value="fair">🕊 Fair – kein Abzug, kein Serienbonus</option><option value="turbo">🔥 Turbo – Serienbonus bis +100</option><option value="wechsel">🔀 Wertung wechselt jede Runde</option></select><label>Tempo der Pixel-Stufen</label><select id="hs"><option value="4000">Gemütlich (4 s je Stufe)</option><option value="3000" selected>Normal (3 s)</option><option value="2000">Schnell (2 s)</option></select>'+
+   ''+
+   '<label>Spielmodus</label><select id="hg"><option value="klassisch">🧩 Klassisch – Pixel werden schärfer</option><option value="mut">🎲 Mut-Modus – je unschärfer, desto mehr Punkte</option><option value="blick">👁 Kurzer Blick – 1 Sekunde scharf, dann aus dem Gedächtnis</option><option value="zoom">🔍 Lupe – Ausschnitt wird größer</option><optgroup label="Wirtschaft (ohne Logos)"><option value="wer">🕵️ Wer bin ich? – Wirtschaftsbegriffe (7 Hinweise)</option><option value="konto">📒 Kontenjagd – Aktiv, Passiv, Aufwand oder Ertrag?</option><option value="news">📰 News-Quiz – aktuelle Wirtschaftsmeldungen, täglich neu</option><option value="blitz">💡 Wirtschafts-Blitz – Fakten und Zahlen</option></optgroup></select><label>Anzahl der Runden</label><select id="hr"><option value="5">5 Marken</option><option value="8" selected>8 Marken</option><option value="14">14 Marken</option><option value="20">20 Marken</option><option value="30">Alle Marken</option></select><label>Rennbahn-Szenerie</label><select id="hsc"><option value="strecke">🏁 Rennstrecke</option><option value="wueste">🏜 Wüste</option><option value="schnee">❄️ Schneelandschaft</option><option value="weltall">🚀 Weltall</option><option value="strand">🏖 Strand</option><option value="dschungel">🌴 Dschungel</option><option value="wechsel">🔀 Wechselt jede Runde</option></select><label>Punkte-Wertung</label><select id="hsm"><option value="standard">⚖️ Standard – falsch −25</option><option value="risiko">🎰 Risiko – doppelte Punkte, falsch −50</option><option value="fair">🕊 Fair – kein Abzug, kein Serienbonus</option><option value="turbo">🔥 Turbo – Serienbonus bis +100</option><option value="wechsel">🔀 Wertung wechselt jede Runde</option></select><label>Tempo der Pixel-Stufen</label><select id="hs"><option value="4000">Gemütlich (4 s je Stufe)</option><option value="3000" selected>Normal (3 s)</option><option value="2000">Schnell (2 s)</option></select>'+
    '<label>Ablauf</label><select id="hm"><option value="auto">Automatisch weiter, sobald alle geantwortet haben</option><option value="manual">Ich klicke bei jeder Frage selbst weiter</option></select>'+
    '<div class="err" id="he"></div><button class="btn gr" id="hc">🚀 Raum eröffnen</button><button class="btn gh" id="hb">← Zurück</button></div>');
-  $('#hb').onclick=homeView;
+  $('#hb').onclick=homeView;setupSync('hg','hr','hsm',null);
   $('#hc').onclick=async()=>{
     $('#hc').disabled=true;
     const x=await api('create',{name:$('#hn').value,cfg:{rounds:+$('#hr').value,step:+$('#hs').value,mode:$('#hm').value,gm:$('#hg').value,sc:$('#hsc').value,sm:$('#hsm').value}});
@@ -3271,7 +3290,7 @@ function hostLobby(){
    '<details><summary>👩‍🏫 Einsatz im Unterricht</summary><div class="card">Ablauf: Raum zeigen → Schüler beitreten lassen → starten. Jede Runde dauert ca. '+Math.round((NS*R.cfg.step+10000)/1000)+' s. Nach dem Spiel die Grafik „Marktanteile 2007 vs. 2025“ besprechen: Wer hat verloren, wer gewonnen, und warum? Nach jeder Auswertung können sich Spieler weiter hinten mit dem Lasso ein Stück nach vorn ziehen (Catch-up: je weiter hinten, desto größer der Zug, immer nur ein Stück). Am Ende gibt es eine Siegerehrung vom letzten bis zum ersten Platz.</div></details></div>');
   $('#hr').value=String(R.cfg.rounds);$('#hs').value=String(R.cfg.step);$('#hm').value=R.cfg.mode||'auto';$('#hg').value=R.cfg.gm||'klassisch';$('#hsc').value=R.cfg.sc||'strecke';$('#hsm').value=R.cfg.sm||'standard';
   const upd=async()=>{const pool=avail().map(b=>b.id);const x=await api('cfg',{c:R.code,hk:R.hk,cfg:{pool,rounds:Math.min(+$('#hr').value,isTQRoom()?tqMax($('#hg').value):(pool.length||30)),step:+$('#hs').value,mode:$('#hm').value,gm:$('#hg').value,sc:$('#hsc').value,sm:$('#hsm').value}});if(x&&x.ok)R.cfg=x.cfg};
-  $('#hr').onchange=upd;$('#hs').onchange=upd;$('#hm').onchange=upd;$('#hg').onchange=upd;$('#hsc').onchange=upd;$('#hsm').onchange=upd;
+  $('#hr').onchange=upd;$('#hs').onchange=upd;$('#hm').onchange=upd;setupSync('hg','hr','hsm',null);$('#hg').onchange=upd;$('#hsc').onchange=upd;$('#hsm').onchange=upd;
   $('#cp').onclick=()=>{try{navigator.clipboard.writeText(url).then(()=>{$('#cp').textContent='✅ Kopiert'})}catch(e){prompt('Link kopieren:',url)}};
   $('#cl').onclick=async()=>{if(!confirm('Raum wirklich schließen? Alle Schüler werden getrennt.'))return;await api('close',{c:R.code,hk:R.hk});stopPoll();ls.del('pm_host');M='home';homeView()};
   $('#st').onclick=async()=>{
@@ -3312,7 +3331,7 @@ async function hostEndView(){
   app('<div class="wrap wide"><div class="h1" style="font-size:30px">Ergebnis</div>'+
    cerHTML()+'<h3>🏁 Zieleinlauf</h3><div class="race" id="race" style="margin-bottom:12px"></div><div class="grid2"><div class="card"><table><tr><th>#</th><th>Name</th><th>Treffer</th><th>Ø Zeit</th><th>Punkte</th></tr>'+
    pl.map((p,i)=>'<tr><td>'+(medal[i]||i+1)+'</td><td>'+AV(p.e,22)+' '+esc(p.n)+'</td><td>'+p.c+'/'+R.cfg.rounds+'</td><td>'+avgT(p)+'</td><td><b>'+p.s+'</b></td></tr>').join('')+'</table></div>'+
-   '<div>'+winnersHTML(hostWinners())+chartHTML()+learnHTML()+'<button class="btn cy" id="csv">⬇ Ergebnis als CSV</button><button class="btn gr" id="nw">🔄 Neues Spiel (gleicher Raum)</button><button class="btn gh" id="cl">Raum schließen</button></div></div></div>');
+   '<div>'+winnersHTML(hostWinners())+(isTQ()?'':chartHTML()+learnHTML())+'<button class="btn cy" id="csv">⬇ Ergebnis als CSV</button><button class="btn gr" id="nw">🔄 Neues Spiel (gleicher Raum)</button><button class="btn gh" id="cl">Raum schließen</button></div></div></div>');
   raceRender($('#race'),pl.slice(0,12).map(p=>({n:p.n,e:p.e,s:p.s,m:-1,mt:0})));
   ceremony(pl.map(p=>({n:p.n,e:p.e,s:p.s})),'');bindChart();
   $('#csv').onclick=()=>{const rows=[['Platz','Name','Treffer','Ø Zeit (s)','Punkte']].concat(pl.map((p,i)=>[i+1,p.n,p.c,avgT(p).replace(' s',''),p.s]));const csv='﻿'+rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(';')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='pixel-marken-'+R.code+'.csv';a.click()};
