@@ -152,6 +152,13 @@ table{width:100%;border-collapse:collapse}td,th{padding:6px 8px;border-bottom:1p
 .conf{font-size:26px;letter-spacing:6px;animation:pop .6s ease-out}
 .race.mini .rider{margin-left:-10px}
 .race.mini{padding:10px 8px 4px;margin-top:12px}.race.mini .lane{height:36px}.race.mini .rn{top:3px}.race.mini .lb2{font-size:11px}.race.mini .bub{top:-14px}.race.mini .rider{margin-left:-10px}
+
+.race[data-sc=wueste]{background-color:#6b3d12;background-image:repeating-linear-gradient(90deg,#ffffff10 0 2px,transparent 2px 26px),linear-gradient(#e0a23a55,#7a431422 60%,#3a1c0833)}
+.race[data-sc=schnee]{background-color:#1d3b5e;background-image:repeating-linear-gradient(90deg,#ffffff18 0 2px,transparent 2px 26px),radial-gradient(#fff 1.5px,transparent 2px),radial-gradient(#ffffffaa 1px,transparent 2px);background-size:auto,38px 31px,23px 27px}
+.race[data-sc=weltall]{background-color:#05031a;background-image:repeating-linear-gradient(90deg,#7c5cff14 0 2px,transparent 2px 26px),radial-gradient(#fff 1px,transparent 1.5px),radial-gradient(#9ad 1px,transparent 2px),radial-gradient(circle at 85% 20%,#ff6ad533,transparent 40%);background-size:auto,53px 47px,31px 37px,auto}
+.race[data-sc=strand]{background-color:#0c6a86;background-image:repeating-linear-gradient(90deg,#ffffff14 0 2px,transparent 2px 26px),linear-gradient(#35c3d933,#f2d68a44 75%,#e8c06a55)}
+.race[data-sc=dschungel]{background-color:#0d3a1c;background-image:repeating-linear-gradient(90deg,#ffffff0e 0 2px,transparent 2px 26px),radial-gradient(circle at 15% 10%,#3ddc6a33,transparent 35%),radial-gradient(circle at 90% 80%,#9be05a2a,transparent 40%)}
+.scbadge{display:inline-block;font-size:12px;font-weight:700;padding:3px 9px;border-radius:99px;background:#ffffff1c;margin:2px 4px}
 </style></head>
 <body>
 <div id="app"></div>
@@ -2449,6 +2456,14 @@ const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=v=>v.toFixed(2).replace('.',',');
 const W=800,H=480,NS=7,STAGES=[5,8,12,18,28,48,999],PTS=[100,80,60,45,30,20,10],PEN=25;
+const SMS={standard:{mult:1,pen:25,sb:50,t:'⚖️ Standard'},risiko:{mult:2,pen:50,sb:50,t:'🎰 Risiko: doppelte Punkte'},fair:{mult:1,pen:0,sb:0,t:'🕊 Fair: kein Abzug, kein Serienbonus'},turbo:{mult:1,pen:25,sb:100,t:'🔥 Turbo: Serienbonus bis +100'}};
+const SMROT=['standard','risiko','fair','turbo','risiko','turbo','fair'];
+const SCS=['strecke','wueste','schnee','weltall','strand','dschungel'];
+const smKey=()=>{const c=(M==='solo'?G.cfg:R.cfg)||{};const k=c.sm||'standard';return k==='wechsel'?SMROT[Math.max(0,G.r)%SMROT.length]:(SMS[k]?k:'standard')};
+const SM=()=>SMS[smKey()];
+const penV=()=>SM().pen,sbV=()=>SM().sb;
+const scKey=()=>{const c=(M==='solo'?G.cfg:R.cfg)||{};const k=c.sc||'strecke';return k==='wechsel'?SCS[Math.max(0,G.r)%SCS.length]:(SCS.includes(k)?k:'strecke')};
+const smTxt=()=>{const s=SM();return 'Falsch = '+(s.pen?'−'+s.pen:'kein Abzug')+(s.mult>1?' · Punkte ×'+s.mult:'')};
 const WK='https://thumb.wikimedia.org/wikipedia/commons/thumb/';
 const BR=[
 {id:'nokia',n:'Nokia',fl:'🇫🇮',land:'Finnland',r07:1,s07:35.82,r25:0,s25:0,col:['#124191','#19a8ff'],em:'🧱',
@@ -2660,7 +2675,7 @@ let pick={av:(()=>{const v=ls.get('pm_av');return avOk(v)?(v.length<6?v+'0':v):a
 const stepMs=()=>M==='solo'?G.cfg.step:R.cfg.step;
 const GM=()=>(M==='solo'?G.cfg.gm:R.cfg.gm)||'klassisch';
 const GMN={klassisch:'🧩 Klassisch',mut:'🎲 Mut-Modus',blick:'👁 Kurzer Blick',zoom:'🔍 Lupe',wer:'🕵️ Wer bin ich?',konto:'📒 Kontenjagd',blitz:'💡 Wirtschafts-Blitz'};
-const ptsFor=s=>GM()==='mut'?PTS[NS-1-s]:PTS[s];
+const ptsFor=s=>(GM()==='mut'?PTS[NS-1-s]:PTS[s])*SM().mult;
 const brkMs=()=>M==='solo'?G.cfg.brk:R.cfg.brk;
 const playMs=()=>NS*stepMs();
 const roundMs=()=>playMs()+brkMs();
@@ -2761,7 +2776,7 @@ function bindAv(){
 const nowT=()=>M==='solo'?Date.now():srvNow();
 const myScore=()=>M==='room'?Math.max(0,G.score+(G.adj||0)):G.score;
 function raceRender(el,list,meName,hooks,opt){
-  if(!el)return;opt=opt||{};hooks=hooks||[];
+  if(!el)return;opt=opt||{};hooks=hooks||[];el.dataset.sc=scKey();
   const mini=el.classList.contains('mini'),sz=mini?28:42,rows=mini?36:50;
   list=list.map((p,i)=>Object.assign({},p,{rk:p.rk===undefined?i+1:p.rk}));
   const rounds=M==='solo'?G.cfg.rounds:R.cfg.rounds,maxP=rounds*100,lead=Math.max(opt.lead||0,list.reduce((m,p)=>Math.max(m,p.s),0)),den=Math.max(maxP*.65,lead,1);
@@ -2848,7 +2863,7 @@ function botPlan(){ // jeder Bot "antwortet" zu einem festen Zeitpunkt der Runde
   const step=G.cfg.step;G.rt0=Date.now();G.botRes=[];
   G.bots.forEach(b=>{
     const st=Math.round((1-b.sk)*5.5+(Math.random()-.4)*3);let pts=0,ms=0,neg=false;
-    if(st<=6){const s2=Math.max(0,st);pts=ptsFor(s2);if(Math.random()<(1-b.sk)*.35)pts-=PEN;ms=Math.round(s2*step+400+Math.random()*(step-800))}
+    if(st<=6){const s2=Math.max(0,st);pts=ptsFor(s2);if(Math.random()<(1-b.sk)*.35)pts-=penV();ms=Math.round(s2*step+400+Math.random()*(step-800))}
     if(st>6&&Math.random()<.35)neg=true;
     const fok=st<=6,fm=st<=6?ms:(neg?Math.round((1+Math.random()*5)*step):1e9);
     b.pl={st,pts,ms,neg,fok,fm,at:st<=6?ms:(neg?fm:1e9),done:false};
@@ -2858,8 +2873,8 @@ function botTick(fin){
   if(!G.bots||!G.bots.length||!G.rt0)return;
   const el=Date.now()-G.rt0;let moved=0;
   G.bots.forEach(b=>{const q=b.pl;if(!q||q.done||(!fin&&q.at>el))return;
-    q.done=true;let pts=q.pts;if(q.neg)pts=-Math.min(PEN,b.s);
-    const fp=q.fok?ptsFor(Math.max(0,q.st)):-Math.min(PEN,b.s);
+    q.done=true;let pts=q.pts;if(q.neg)pts=-Math.min(penV(),b.s);
+    const fp=q.fok?ptsFor(Math.max(0,q.st)):-Math.min(penV(),b.s);
     b.ok=q.st<=6&&pts>0;b.s=Math.max(0,b.s+pts);moved++;
     G.botRes.push({n:b.n,e:b.e,pts,ms:q.ms,fok:q.fok,fm:q.fm,fp})});
   if(moved&&!fin&&M==='solo'&&G.vph==='play')liveSolo();
@@ -2904,13 +2919,13 @@ function soloSetup(){
   V='solo-setup';clearInterval(heroT);
   app('<div class="wrap"><div class="h1" style="font-size:26px">Einzelspiel</div><div class="sub">Falsche Antwort = Punktabzug (−25). Wer schnell und sicher erkennt, gewinnt das Rennen.</div>'+
    '<label>Dein Männchen</label>'+avBuilder()+'<label>KI-Gegner (Rennen)</label><select id="nb"><option value="0">Keine</option><option value="3">3 Gegner</option><option value="5">5 Gegner</option><option value="10">10 Gegner</option><option value="20">20 Gegner</option><option value="30" selected>30 Gegner (ganze Klasse)</option></select><label>Stärke der Gegner</label><select id="lv"><option value="0.45">Leicht</option><option value="0.65" selected>Mittel</option><option value="0.85">Schwer</option></select><label>Wie viele Runden?</label><select id="nr"><option value="7">Kurz (7 Marken)</option><option value="14">Mittel (14 Marken)</option><option value="20">Lang (20 Marken)</option><option value="30">Alle Marken</option></select>'+
-   '<label>Spielmodus</label><select id="gm"><option value="klassisch">🧩 Klassisch – Pixel werden schärfer</option><option value="mut">🎲 Mut-Modus – je unschärfer, desto mehr Punkte</option><option value="blick">👁 Kurzer Blick – 1 Sekunde scharf, dann aus dem Gedächtnis</option><option value="zoom">🔍 Lupe – Ausschnitt wird größer</option><optgroup label="Wirtschaft (ohne Logos)"><option value="wer">🕵️ Wer bin ich? – Wirtschaftsbegriffe (7 Hinweise)</option><option value="konto">📒 Kontenjagd – Aktiv, Passiv, Aufwand oder Ertrag?</option><option value="blitz">💡 Wirtschafts-Blitz – Fakten und Zahlen</option></optgroup></select><label>Tempo der Pixel-Stufen</label><select id="sp"><option value="4000">Gemütlich (4 s)</option><option value="3000" selected>Normal (3 s)</option><option value="2000">Schnell (2 s)</option></select>'+
+   '<label>Spielmodus</label><select id="gm"><option value="klassisch">🧩 Klassisch – Pixel werden schärfer</option><option value="mut">🎲 Mut-Modus – je unschärfer, desto mehr Punkte</option><option value="blick">👁 Kurzer Blick – 1 Sekunde scharf, dann aus dem Gedächtnis</option><option value="zoom">🔍 Lupe – Ausschnitt wird größer</option><optgroup label="Wirtschaft (ohne Logos)"><option value="wer">🕵️ Wer bin ich? – Wirtschaftsbegriffe (7 Hinweise)</option><option value="konto">📒 Kontenjagd – Aktiv, Passiv, Aufwand oder Ertrag?</option><option value="blitz">💡 Wirtschafts-Blitz – Fakten und Zahlen</option></optgroup></select><label>Rennbahn-Szenerie</label><select id="sc"><option value="strecke">🏁 Rennstrecke</option><option value="wueste">🏜 Wüste</option><option value="schnee">❄️ Schneelandschaft</option><option value="weltall">🚀 Weltall</option><option value="strand">🏖 Strand</option><option value="dschungel">🌴 Dschungel</option><option value="wechsel">🔀 Wechselt jede Runde</option></select><label>Punkte-Wertung</label><select id="sm"><option value="standard">⚖️ Standard – falsch −25</option><option value="risiko">🎰 Risiko – doppelte Punkte, falsch −50</option><option value="fair">🕊 Fair – kein Abzug, kein Serienbonus</option><option value="turbo">🔥 Turbo – Serienbonus bis +100</option><option value="wechsel">🔀 Wertung wechselt jede Runde</option></select><label>Tempo der Pixel-Stufen</label><select id="sp"><option value="4000">Gemütlich (4 s)</option><option value="3000" selected>Normal (3 s)</option><option value="2000">Schnell (2 s)</option></select>'+
    '<button class="btn gr" id="go">▶ Los geht’s</button><button class="btn gh" id="bk">← Zurück</button></div>');
   bindAv();$('#bk').onclick=homeView;
   $('#go').onclick=()=>{
     const pool=avail();if(pool.length<4&&!TQM.includes($('#gm').value))return;
     const n=Math.min(+$('#nr').value,pool.length);
-    M='solo';Object.assign(G,{cfg:{rounds:n,step:+$('#sp').value,brk:10000,gm:$('#gm').value},score:0,streak:0,correct:0,log:[],r:-1,reported:{},adj:0,lzUsed:false,rope:null,jmsg:''});
+    M='solo';Object.assign(G,{cfg:{rounds:n,step:+$('#sp').value,brk:10000,gm:$('#gm').value,sc:$('#sc').value,sm:$('#sm').value},score:0,streak:0,correct:0,log:[],r:-1,reported:{},adj:0,lzUsed:false,rope:null,jmsg:''});
     G.bots=makeBots(+$('#nb').value,+$('#lv').value);G.botLog=[];G.myM=null;
     G.qs=isTQ()?buildTQ(Math.floor(Math.random()*2e9),Math.min(n,tqMax(GM())),GM()):buildQs(Math.floor(Math.random()*2e9),n,pool);G.sph='play';G.t0=Date.now();V='play';beep(440,.08);
     startRound(0);
@@ -2963,7 +2978,7 @@ async function liveRank(){
   if(v){raceRender(el,v.rows,R.name,[],{lead:v.lead.s});setMore(v,'mm')}
   G.rankTxt='🏁 '+(x.rank||'–')+'/'+(x.total||'–');hud();
 }
-function hud(){if($('#hR'))$('#hR').textContent='Runde '+(G.r+1)+'/'+nRounds();if($('#hS'))$('#hS').textContent='⭐ '+myScore();if($('#hK'))$('#hK').textContent='🔥 '+G.streak;if($('#hP'))$('#hP').textContent=lastR()?'🏁 ❓':(G.rankTxt||'');
+function hud(){if($('#hR'))$('#hR').textContent='Runde '+(G.r+1)+'/'+nRounds()+(((M==='solo'?G.cfg:R.cfg)||{}).sm==='wechsel'?' · '+SM().t:'');if($('#hS'))$('#hS').textContent='⭐ '+myScore();if($('#hK'))$('#hK').textContent='🔥 '+G.streak;if($('#hP'))$('#hP').textContent=lastR()?'🏁 ❓':(G.rankTxt||'');
   const m=$('#mu');if(m)m.onclick=()=>{MUTE=!MUTE;ls.set('pm_mute',0);try{localStorage.setItem('pm_mute',MUTE?'1':'0')}catch(e){}m.textContent=MUTE?'🔇':'🔊'}}
 function startRound(r){
   G.r=r;G.vph='play';G.tsent=false;G.tpend=false;G.tlock=false;G.tfirst=false;G.tby='';G.firstMs=-1;G.firstOk=false;G.firstPts=0;G.answered=false;G.wrong=[];G.gone=[];G.stage=-1;G.hint='';G.rpts=0;G.pen=0;G.rms=0;G.q=G.qs[r];G.peekT=null;G.gridNow=0;G.peekUntil=0;G.lastLive=0;if(M==='solo'&&G.bots&&G.bots.length)botPlan();
@@ -3003,7 +3018,7 @@ function setStage(st){
   if(isTQ())renderTQ(st);
   
   document.querySelectorAll('#dots i').forEach((d,i)=>{d.className=i<st?'on':(i===st?'cur':'')});
-  const p=$('#pts');if(p)p.textContent=G.answered?'':'Jetzt gibt es '+ptsFor(st)+' Punkte · falsch = −'+PEN;
+  const p=$('#pts');if(p)p.textContent=G.answered?'':'Jetzt gibt es '+ptsFor(st)+' Punkte · '+smTxt();
   if(st>0)beep(260+st*70,.06);
 }
 function answer(id){
@@ -3014,9 +3029,9 @@ function answer(id){
 function doAnswer(id,c){
   if(G.answered||G.vph!=='play')return;
   const stage=Math.min(NS-1,Math.floor(c.t/stepMs()));
-  if(M==='solo'&&G.firstMs<0){G.firstMs=c.t;G.firstOk=id===G.q.id;G.firstPts=G.firstOk?ptsFor(stage)+Math.min(50,G.streak*10):-Math.min(PEN,G.score)}
+  if(M==='solo'&&G.firstMs<0){G.firstMs=c.t;G.firstOk=id===G.q.id;G.firstPts=G.firstOk?ptsFor(stage)+Math.min(sbV(),G.streak*10):-Math.min(penV(),G.score)}
   if(id===G.q.id){
-    const base=ptsFor(stage),bonus=Math.min(50,G.streak*10);
+    const base=ptsFor(stage),bonus=Math.min(sbV(),G.streak*10);
     G.rpts=base+bonus-G.pen;G.rms=c.t;G.score+=base+bonus;G.streak++;G.correct++;G.answered=true;
     G.log.push({id:G.q.id,n:logName(),pts:G.rpts,ok:true});
     const cv=$('#cv');if(cv)drawMosaic(cv.getContext('2d'),G.src,999);if(isTQ())renderTQ(NS-1);
@@ -3026,10 +3041,10 @@ function doAnswer(id,c){
     G.reported[G.r]=1;report();G.lastLive=Date.now()-3300;if(M==='solo')liveSolo();
     if(M==='solo')setTimeout(()=>{if(G.vph==='play'){G.sph='brk';G.t0=Date.now();enterBreak()}},900);
   }else{
-    G.wrong.push(id);G.streak=0;const cut=Math.min(PEN,G.score);G.score-=cut;G.pen+=cut;
+    G.wrong.push(id);G.streak=0;const cut=Math.min(penV(),G.score);G.score-=cut;G.pen+=cut;
     document.querySelectorAll('.opt').forEach(o=>{if(o.dataset.o===id){o.classList.add('bad');o.disabled=true}});
-    const bn=$('#bn');if(bn){bn.textContent='−'+PEN+' Punkte';bn.style.background='var(--rd)';bn.style.color='#fff';bn.classList.add('show');setTimeout(()=>{bn.classList.remove('show');bn.style.background='';bn.style.color=''},900)}
-    $('#pts').textContent='Jetzt gibt es '+ptsFor(stage)+' Punkte · falsch = −'+PEN;hud();beep(140,.2,'sawtooth');report();G.lastLive=Date.now()-3300;if(M==='solo')liveSolo();
+    const bn=$('#bn');if(bn){bn.textContent=penV()?'−'+penV()+' Punkte':'Falsch – kein Abzug';bn.style.background='var(--rd)';bn.style.color='#fff';bn.classList.add('show');setTimeout(()=>{bn.classList.remove('show');bn.style.background='';bn.style.color=''},900)}
+    $('#pts').textContent='Jetzt gibt es '+ptsFor(stage)+' Punkte · '+smTxt();hud();beep(140,.2,'sawtooth');report();G.lastLive=Date.now()-3300;if(M==='solo')liveSolo();
   }
 }
 function updateBar(t){const b=$('#bar');if(b)b.style.width=Math.max(0,100-t/playMs()*100)+'%'}
@@ -3212,13 +3227,13 @@ function hostSetup(){
   app('<div class="wrap"><div class="h1" style="font-size:26px">Raum eröffnen</div><div class="sub">Die Schüler öffnen die Seite per QR-Code, geben Namen und Rolle ein und spielen gleichzeitig – ihr seht live die Rangliste.</div>'+
    '<label>Name des Raums (z. B. Klasse)</label><input id="hn" maxlength="30" placeholder="z. B. IK 1a">'+
    '<label>Anzahl der Runden</label><select id="hr"><option value="5">5 Marken</option><option value="8" selected>8 Marken</option><option value="14">14 Marken</option><option value="20">20 Marken</option><option value="30">Alle Marken</option></select>'+
-   '<label>Spielmodus</label><select id="hg"><option value="klassisch">🧩 Klassisch – Pixel werden schärfer</option><option value="mut">🎲 Mut-Modus – je unschärfer, desto mehr Punkte</option><option value="blick">👁 Kurzer Blick – 1 Sekunde scharf, dann aus dem Gedächtnis</option><option value="zoom">🔍 Lupe – Ausschnitt wird größer</option><optgroup label="Wirtschaft (ohne Logos)"><option value="wer">🕵️ Wer bin ich? – Wirtschaftsbegriffe (7 Hinweise)</option><option value="konto">📒 Kontenjagd – Aktiv, Passiv, Aufwand oder Ertrag?</option><option value="blitz">💡 Wirtschafts-Blitz – Fakten und Zahlen</option></optgroup></select><label>Tempo der Pixel-Stufen</label><select id="hs"><option value="4000">Gemütlich (4 s je Stufe)</option><option value="3000" selected>Normal (3 s)</option><option value="2000">Schnell (2 s)</option></select>'+
+   '<label>Spielmodus</label><select id="hg"><option value="klassisch">🧩 Klassisch – Pixel werden schärfer</option><option value="mut">🎲 Mut-Modus – je unschärfer, desto mehr Punkte</option><option value="blick">👁 Kurzer Blick – 1 Sekunde scharf, dann aus dem Gedächtnis</option><option value="zoom">🔍 Lupe – Ausschnitt wird größer</option><optgroup label="Wirtschaft (ohne Logos)"><option value="wer">🕵️ Wer bin ich? – Wirtschaftsbegriffe (7 Hinweise)</option><option value="konto">📒 Kontenjagd – Aktiv, Passiv, Aufwand oder Ertrag?</option><option value="blitz">💡 Wirtschafts-Blitz – Fakten und Zahlen</option></optgroup></select><label>Rennbahn-Szenerie</label><select id="hsc"><option value="strecke">🏁 Rennstrecke</option><option value="wueste">🏜 Wüste</option><option value="schnee">❄️ Schneelandschaft</option><option value="weltall">🚀 Weltall</option><option value="strand">🏖 Strand</option><option value="dschungel">🌴 Dschungel</option><option value="wechsel">🔀 Wechselt jede Runde</option></select><label>Punkte-Wertung</label><select id="hsm"><option value="standard">⚖️ Standard – falsch −25</option><option value="risiko">🎰 Risiko – doppelte Punkte, falsch −50</option><option value="fair">🕊 Fair – kein Abzug, kein Serienbonus</option><option value="turbo">🔥 Turbo – Serienbonus bis +100</option><option value="wechsel">🔀 Wertung wechselt jede Runde</option></select><label>Tempo der Pixel-Stufen</label><select id="hs"><option value="4000">Gemütlich (4 s je Stufe)</option><option value="3000" selected>Normal (3 s)</option><option value="2000">Schnell (2 s)</option></select>'+
    '<label>Ablauf</label><select id="hm"><option value="auto">Automatisch weiter, sobald alle geantwortet haben</option><option value="manual">Ich klicke bei jeder Frage selbst weiter</option></select>'+
    '<div class="err" id="he"></div><button class="btn gr" id="hc">🚀 Raum eröffnen</button><button class="btn gh" id="hb">← Zurück</button></div>');
   $('#hb').onclick=homeView;
   $('#hc').onclick=async()=>{
     $('#hc').disabled=true;
-    const x=await api('create',{name:$('#hn').value,cfg:{rounds:+$('#hr').value,step:+$('#hs').value,mode:$('#hm').value,gm:$('#hg').value}});
+    const x=await api('create',{name:$('#hn').value,cfg:{rounds:+$('#hr').value,step:+$('#hs').value,mode:$('#hm').value,gm:$('#hg').value,sc:$('#hsc').value,sm:$('#hsm').value}});
     if(!x||!x.ok){$('#he').textContent=(x&&x.err)||'Fehler';$('#hc').disabled=false;return}
     M='host';Object.assign(R,{code:x.c,hk:x.hk,cfg:x.cfg,seed:x.seed,rname:x.name,ph:'lobby',st:0,players:[]});
     ls.set('pm_host',{c:x.c,hk:x.hk});await syncTime();hostLobby();startPoll();
@@ -3239,12 +3254,12 @@ function hostLobby(){
    '<div class="grid2"><div><div class="card" style="text-align:center"><div class="sub">Scannen oder auf <b>'+esc(location.host||'lernspiele')+'</b> den Code eingeben:</div><div class="code">'+esc(R.code)+'</div><div class="qr">'+qrSvg(url)+'</div>'+
    '<div class="row" style="justify-content:center;margin-top:10px"><button class="btn sm cy" id="cp">🔗 Link kopieren</button></div><div class="tag" id="ul" style="word-break:break-all">'+esc(url)+'</div></div></div>'+
    '<div><div class="card"><b>👥 Im Raum: <span id="pc">0</span></b><div class="chips" id="chips" style="margin-top:8px"></div></div>'+
-   '<div class="card"><b>Einstellungen</b><label>Runden</label><select id="hr"><option value="5">5 Marken</option><option value="8">8 Marken</option><option value="14">14 Marken</option><option value="20">20 Marken</option><option value="30">Alle Marken</option></select><label>Spielmodus</label><select id="hg"><option value="klassisch">🧩 Klassisch – Pixel werden schärfer</option><option value="mut">🎲 Mut-Modus – je unschärfer, desto mehr Punkte</option><option value="blick">👁 Kurzer Blick – 1 Sekunde scharf, dann aus dem Gedächtnis</option><option value="zoom">🔍 Lupe – Ausschnitt wird größer</option><optgroup label="Wirtschaft (ohne Logos)"><option value="wer">🕵️ Wer bin ich? – Wirtschaftsbegriffe (7 Hinweise)</option><option value="konto">📒 Kontenjagd – Aktiv, Passiv, Aufwand oder Ertrag?</option><option value="blitz">💡 Wirtschafts-Blitz – Fakten und Zahlen</option></optgroup></select><label>Tempo</label><select id="hs"><option value="4000">Gemütlich (4 s)</option><option value="3000">Normal (3 s)</option><option value="2000">Schnell (2 s)</option></select><label>Ablauf</label><select id="hm"><option value="auto">Automatisch weiter, sobald alle geantwortet haben</option><option value="manual">Ich klicke bei jeder Frage selbst weiter</option></select></div>'+
+   '<div class="card"><b>Einstellungen</b><label>Runden</label><select id="hr"><option value="5">5 Marken</option><option value="8">8 Marken</option><option value="14">14 Marken</option><option value="20">20 Marken</option><option value="30">Alle Marken</option></select><label>Spielmodus</label><select id="hg"><option value="klassisch">🧩 Klassisch – Pixel werden schärfer</option><option value="mut">🎲 Mut-Modus – je unschärfer, desto mehr Punkte</option><option value="blick">👁 Kurzer Blick – 1 Sekunde scharf, dann aus dem Gedächtnis</option><option value="zoom">🔍 Lupe – Ausschnitt wird größer</option><optgroup label="Wirtschaft (ohne Logos)"><option value="wer">🕵️ Wer bin ich? – Wirtschaftsbegriffe (7 Hinweise)</option><option value="konto">📒 Kontenjagd – Aktiv, Passiv, Aufwand oder Ertrag?</option><option value="blitz">💡 Wirtschafts-Blitz – Fakten und Zahlen</option></optgroup></select><label>Rennbahn-Szenerie</label><select id="hsc"><option value="strecke">🏁 Rennstrecke</option><option value="wueste">🏜 Wüste</option><option value="schnee">❄️ Schneelandschaft</option><option value="weltall">🚀 Weltall</option><option value="strand">🏖 Strand</option><option value="dschungel">🌴 Dschungel</option><option value="wechsel">🔀 Wechselt jede Runde</option></select><label>Punkte-Wertung</label><select id="hsm"><option value="standard">⚖️ Standard – falsch −25</option><option value="risiko">🎰 Risiko – doppelte Punkte, falsch −50</option><option value="fair">🕊 Fair – kein Abzug, kein Serienbonus</option><option value="turbo">🔥 Turbo – Serienbonus bis +100</option><option value="wechsel">🔀 Wertung wechselt jede Runde</option></select><label>Tempo</label><select id="hs"><option value="4000">Gemütlich (4 s)</option><option value="3000">Normal (3 s)</option><option value="2000">Schnell (2 s)</option></select><label>Ablauf</label><select id="hm"><option value="auto">Automatisch weiter, sobald alle geantwortet haben</option><option value="manual">Ich klicke bei jeder Frage selbst weiter</option></select></div>'+
    '<button class="btn gr" id="st">▶ Spiel starten</button><button class="btn gh" id="cl">Raum schließen</button></div></div>'+
    '<details><summary>👩‍🏫 Einsatz im Unterricht</summary><div class="card">Ablauf: Raum zeigen → Schüler beitreten lassen → starten. Jede Runde dauert ca. '+Math.round((NS*R.cfg.step+10000)/1000)+' s. Nach dem Spiel die Grafik „Marktanteile 2007 vs. 2025“ besprechen: Wer hat verloren, wer gewonnen, und warum? Nach jeder Auswertung können sich Spieler weiter hinten mit dem Lasso ein Stück nach vorn ziehen (Catch-up: je weiter hinten, desto größer der Zug, immer nur ein Stück). Am Ende gibt es eine Siegerehrung vom letzten bis zum ersten Platz.</div></details></div>');
-  $('#hr').value=String(R.cfg.rounds);$('#hs').value=String(R.cfg.step);$('#hm').value=R.cfg.mode||'auto';$('#hg').value=R.cfg.gm||'klassisch';
-  const upd=async()=>{const pool=avail().map(b=>b.id);const x=await api('cfg',{c:R.code,hk:R.hk,cfg:{pool,rounds:Math.min(+$('#hr').value,isTQRoom()?tqMax($('#hg').value):(pool.length||30)),step:+$('#hs').value,mode:$('#hm').value,gm:$('#hg').value}});if(x&&x.ok)R.cfg=x.cfg};
-  $('#hr').onchange=upd;$('#hs').onchange=upd;$('#hm').onchange=upd;$('#hg').onchange=upd;
+  $('#hr').value=String(R.cfg.rounds);$('#hs').value=String(R.cfg.step);$('#hm').value=R.cfg.mode||'auto';$('#hg').value=R.cfg.gm||'klassisch';$('#hsc').value=R.cfg.sc||'strecke';$('#hsm').value=R.cfg.sm||'standard';
+  const upd=async()=>{const pool=avail().map(b=>b.id);const x=await api('cfg',{c:R.code,hk:R.hk,cfg:{pool,rounds:Math.min(+$('#hr').value,isTQRoom()?tqMax($('#hg').value):(pool.length||30)),step:+$('#hs').value,mode:$('#hm').value,gm:$('#hg').value,sc:$('#hsc').value,sm:$('#hsm').value}});if(x&&x.ok)R.cfg=x.cfg};
+  $('#hr').onchange=upd;$('#hs').onchange=upd;$('#hm').onchange=upd;$('#hg').onchange=upd;$('#hsc').onchange=upd;$('#hsm').onchange=upd;
   $('#cp').onclick=()=>{try{navigator.clipboard.writeText(url).then(()=>{$('#cp').textContent='✅ Kopiert'})}catch(e){prompt('Link kopieren:',url)}};
   $('#cl').onclick=async()=>{if(!confirm('Raum wirklich schließen? Alle Schüler werden getrennt.'))return;await api('close',{c:R.code,hk:R.hk});stopPoll();ls.del('pm_host');M='home';homeView()};
   $('#st').onclick=async()=>{

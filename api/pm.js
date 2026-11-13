@@ -34,7 +34,7 @@ const num = (v, lo, hi, d) => {
   v = Number(v);
   return Number.isFinite(v) ? Math.min(hi, Math.max(lo, Math.round(v))) : d;
 };
-const cleanCfg = (c) => ({ rounds: num(c && c.rounds, 3, 30, 8), step: num(c && c.step, 2000, 6000, 3000), brk: 10000, mode: c && c.mode === 'manual' ? 'manual' : 'auto', gm: ['klassisch', 'mut', 'blick', 'zoom', 'wer', 'konto', 'blitz'].includes(c && c.gm) ? c.gm : 'klassisch', pool: Array.isArray(c && c.pool) ? c.pool.slice(0, 60).map((s) => String(s).replace(/[^a-z0-9]/gi, '').slice(0, 20)).filter(Boolean) : null });
+const cleanCfg = (c) => ({ rounds: num(c && c.rounds, 3, 30, 8), step: num(c && c.step, 2000, 6000, 3000), brk: 10000, mode: c && c.mode === 'manual' ? 'manual' : 'auto', gm: ['klassisch', 'mut', 'blick', 'zoom', 'wer', 'konto', 'blitz'].includes(c && c.gm) ? c.gm : 'klassisch', sc: ['strecke','wueste','schnee','weltall','strand','dschungel','wechsel'].includes(c && c.sc) ? c.sc : 'strecke', sm: ['standard','risiko','fair','turbo','wechsel'].includes(c && c.sm) ? c.sm : 'standard', pool: Array.isArray(c && c.pool) ? c.pool.slice(0, 60).map((s) => String(s).replace(/[^a-z0-9]/gi, '').slice(0, 20)).filter(Boolean) : null });
 const clean = (s, n) => String(s == null ? '' : s).replace(/[<>&"'`]/g, '').replace(/\s+/g, ' ').trim().slice(0, n);
 const sorted = (pl) =>
   Object.keys(pl)
@@ -263,13 +263,13 @@ module.exports = async (req, res) => {
       if (a === 'rep') {
         const p = parse(await r('HGET', key(c, 'p'), pid));
         if (!p) return res.json({ ok: true, kicked: true });
-        p.s = num(b.s, 0, 5000, p.s || 0);
+        p.s = num(b.s, 0, 20000, p.s || 0);
         p.a = num(b.rd, -1, 30, p.a);
         p.c = num(b.cc, 0, 30, p.c || 0);
         const rd = num(b.rd, -1, 30, -1);
         if (rd >= 0) {
           p.rr = p.rr || {};
-          p.rr[rd] = [num(b.pts, -100, 300, 0), num(b.ms, 0, 600000, 0), b.ok ? 1 : 0];
+          p.rr[rd] = [num(b.pts, -100, 800, 0), num(b.ms, 0, 600000, 0), b.ok ? 1 : 0];
         }
         await r('HSET', key(c, 'p'), pid, JSON.stringify(p));
         // Frage vorzeitig beenden, sobald alle geantwortet haben
