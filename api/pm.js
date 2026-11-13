@@ -91,7 +91,7 @@ module.exports = async (req, res) => {
         const pl = sorted(pairs(await r('HGETALL', key(c, 'p'))));
         return res.json({
           ok: true, ph: meta.ph, st: meta.st, cfg: meta.cfg, seed: meta.seed, name: meta.name, now: Date.now(),
-          players: pl.map((p) => ({ id: p.id, n: p.n, e: p.e, ro: p.ro, s: p.s || 0, a: p.a == null ? -1 : p.a, c: p.c || 0, rr: p.rr || {} })),
+          players: pl.map((p) => ({ id: p.id, n: p.n, e: p.e, ro: p.ro, s: p.s || 0, a: p.a == null ? -1 : p.a, c: p.c || 0, rr: p.rr || {}, m: p.m == null ? -1 : p.m, mt: p.mt || 0 })),
         });
       }
       if (a === 'cfg') {
@@ -140,7 +140,7 @@ module.exports = async (req, res) => {
     }
 
     // ---------- Schüler-Geräte ----------
-    if (a === 'join' || a === 'state' || a === 'rep') {
+    if (a === 'join' || a === 'state' || a === 'rep' || a === 'msg') {
       const c = String(b.c || '').toUpperCase().replace(/[^A-Z]/g, '').slice(0, 4);
       const meta = c ? parse(await r('GET', key(c, 'meta'))) : null;
       if (!meta) return res.json({ ok: false, err: 'Diesen Raumcode gibt es nicht', gone: true });
@@ -162,6 +162,17 @@ module.exports = async (req, res) => {
       }
 
       const pid = String(b.pid || '');
+      if (a === 'msg') {
+        const p = parse(await r('HGET', key(c, 'p'), pid));
+        if (!p) return res.json({ ok: true, kicked: true });
+        const t = Date.now();
+        if (t - (p.mt || 0) < 2500) return res.json({ ok: false, err: 'Moment noch …' });
+        p.m = num(b.m, 0, 9, 0);
+        p.mt = t;
+        await r('HSET', key(c, 'p'), pid, JSON.stringify(p));
+        return res.json({ ok: true });
+      }
+
       if (a === 'rep') {
         const p = parse(await r('HGET', key(c, 'p'), pid));
         if (!p) return res.json({ ok: true, kicked: true });
@@ -183,7 +194,7 @@ module.exports = async (req, res) => {
           const pl = sorted(pairs(await r('HGETALL', key(c, 'p'))));
           const idx = pl.findIndex((p) => p.id === pid);
           out.total = pl.length;
-          out.top = pl.slice(0, 10).map((p) => [p.n, p.e, p.s || 0, p.c || 0]);
+          out.top = pl.slice(0, 10).map((p) => [p.n, p.e, p.s || 0, p.c || 0, p.m == null ? -1 : p.m, p.mt || 0]);
           if (b.rw) {
             out.rw = [];
             for (let rd = 0; rd < (pub.cfg.rounds || 0); rd++) {
