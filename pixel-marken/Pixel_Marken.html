@@ -2703,7 +2703,7 @@ async function goEnd(){
   if(V==='end')return;V='end';clearTimeout(G.peekT);beep(523,.15);setTimeout(()=>beep(659,.15),150);setTimeout(()=>beep(784,.3),300);
   if(M==='host'){await hostEndView();return}
   let rk='';
-  if(M==='room'){const x=await api('state',{c:R.code,pid:R.pid,full:1});if(x&&x.ok){applyState(x);rk='<h3>🏆 Rangliste</h3><ol class="lb">'+x.top.map((p,i)=>'<li'+(p[0]===R.name?' class="me"':'')+'><span class="rk">'+(i+1)+'.</span>'+esc(p[1])+' '+esc(p[0])+'<span class="sc">'+p[2]+'</span></li>').join('')+(x.rank>10?'<li class="me"><span class="rk">'+x.rank+'.</span>'+esc(R.av)+' '+esc(R.name)+'<span class="sc">'+G.score+'</span></li>':'')+'</ol>'}}
+  if(M==='room'){const x=await api('state',{c:R.code,pid:R.pid,full:1,rw:1});if(x&&x.ok){applyState(x);rk='<h3>🏆 Rangliste</h3><ol class="lb">'+x.top.map((p,i)=>'<li'+(p[0]===R.name?' class="me"':'')+'><span class="rk">'+(i+1)+'.</span>'+esc(p[1])+' '+esc(p[0])+'<span class="sc">'+p[2]+'</span></li>').join('')+(x.rank>10?'<li class="me"><span class="rk">'+x.rank+'.</span>'+esc(R.av)+' '+esc(R.name)+'<span class="sc">'+G.score+'</span></li>':'')+'</ol>'+winnersHTML(x.rw)}}
   app('<div class="wrap"><div class="h1" style="font-size:28px">Geschafft!</div><div class="big">'+G.score+'</div><div style="text-align:center;font-weight:800;font-size:20px">'+titleFor()+'</div>'+
    '<div class="sub" style="text-align:center">'+G.correct+' von '+nRounds()+' Marken erkannt</div>'+rk+
    '<div class="card"><b>Deine Runden</b>'+G.log.map(l=>'<div class="cr"><span>'+(l.ok?'✅':'❌')+'</span><span class="nn">'+esc(BYID[l.id].n)+'</span><span class="grow"></span><span class="pp">'+(l.ok?'+'+l.pts:'0')+'</span></div>').join('')+'</div>'+
@@ -2711,6 +2711,9 @@ async function goEnd(){
    (M==='solo'?'<button class="btn gr" id="again">🔄 Nochmal spielen</button>':'')+'<button class="btn gh" id="home">Zur Startseite</button><div class="foot">'+esc(SRC_NOTE)+'</div></div>');
   bindChart();if($('#again'))$('#again').onclick=soloSetup;$('#home').onclick=()=>{leaveRoom();homeView()};
 }
+function winnersHTML(rw){
+  if(!rw||!rw.some(Boolean))return '';
+  return '<div class="card"><b>⚡ Rundensieger</b>'+rw.map((w,i)=>'<div class="cr"><span class="nn">Runde '+(i+1)+'</span><span class="grow">'+(w?esc(w[1])+' '+esc(w[0]):'–')+'</span><span class="pp" style="width:auto">'+(w?'+'+w[2]+' · '+fs_(w[3]):'')+'</span></div>').join('')+'</div>'}
 let chartYear='2007';
 function chartHTML(){
   return '<div class="card"><b>📊 Wer war vorn? Marktanteile</b><div class="yr"><button class="btn sm '+(chartYear==='2007'?'cy':'gh')+'" data-y="2007">2007</button><button class="btn sm '+(chartYear==='2025'?'mg':'gh')+'" data-y="2025">2025</button></div><div id="chart"></div></div>';
@@ -2861,15 +2864,17 @@ async function hostSkip(){
   const x=await api('skip',{c:R.code,hk:R.hk,d:Math.ceil(d)+50});if(x&&x.ok){R.st=x.st}
 }
 async function hostEnd(){if(!confirm('Spiel jetzt beenden und die Ergebnisse zeigen?'))return;await api('end',{c:R.code,hk:R.hk});R.ph='end'}
+function avgT(p){const v=Object.values(p.rr||{}).filter(x=>x[0]>0);return v.length?fs_(v.reduce((s,x)=>s+x[1],0)/v.length):'–'}
+function hostWinners(){const o=[];for(let r=0;r<R.cfg.rounds;r++){const l=R.players.filter(p=>p.rr&&p.rr[r]&&p.rr[r][0]>0).sort((x,y)=>y.rr[r][0]-x.rr[r][0]||x.rr[r][1]-y.rr[r][1]);o.push(l.length?[l[0].n,l[0].e,l[0].rr[r][0],l[0].rr[r][1]]:null)}return o}
 async function hostEndView(){
   const x=await api('hstate',{c:R.code,hk:R.hk});if(x&&x.ok)R.players=x.players;
   const pl=R.players,medal=['🥇','🥈','🥉'];
   app('<div class="wrap wide"><div class="h1" style="font-size:30px">Ergebnis</div>'+
-   '<div class="grid2"><div class="card"><table><tr><th>#</th><th>Name</th><th>Rolle</th><th>Treffer</th><th>Punkte</th></tr>'+
-   pl.map((p,i)=>'<tr><td>'+(medal[i]||i+1)+'</td><td>'+esc(p.e)+' '+esc(p.n)+'</td><td>'+((ROLES.find(r=>r.id===p.ro)||{}).e||'')+'</td><td>'+p.c+'/'+R.cfg.rounds+'</td><td><b>'+p.s+'</b></td></tr>').join('')+'</table></div>'+
-   '<div>'+chartHTML()+learnHTML()+'<button class="btn cy" id="csv">⬇ Ergebnis als CSV</button><button class="btn gr" id="nw">🔄 Neues Spiel (gleicher Raum)</button><button class="btn gh" id="cl">Raum schließen</button></div></div></div>');
+   '<div class="grid2"><div class="card"><table><tr><th>#</th><th>Name</th><th>Rolle</th><th>Treffer</th><th>Ø Zeit</th><th>Punkte</th></tr>'+
+   pl.map((p,i)=>'<tr><td>'+(medal[i]||i+1)+'</td><td>'+esc(p.e)+' '+esc(p.n)+'</td><td>'+((ROLES.find(r=>r.id===p.ro)||{}).e||'')+'</td><td>'+p.c+'/'+R.cfg.rounds+'</td><td>'+avgT(p)+'</td><td><b>'+p.s+'</b></td></tr>').join('')+'</table></div>'+
+   '<div>'+winnersHTML(hostWinners())+chartHTML()+learnHTML()+'<button class="btn cy" id="csv">⬇ Ergebnis als CSV</button><button class="btn gr" id="nw">🔄 Neues Spiel (gleicher Raum)</button><button class="btn gh" id="cl">Raum schließen</button></div></div></div>');
   bindChart();
-  $('#csv').onclick=()=>{const rows=[['Platz','Name','Rolle','Treffer','Punkte']].concat(pl.map((p,i)=>[i+1,p.n,p.ro,p.c,p.s]));const csv='﻿'+rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(';')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='pixel-marken-'+R.code+'.csv';a.click()};
+  $('#csv').onclick=()=>{const rows=[['Platz','Name','Rolle','Treffer','Ø Zeit (s)','Punkte']].concat(pl.map((p,i)=>[i+1,p.n,p.ro,p.c,avgT(p).replace(' s',''),p.s]));const csv='﻿'+rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(';')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='pixel-marken-'+R.code+'.csv';a.click()};
   $('#nw').onclick=async()=>{const x=await api('reset',{c:R.code,hk:R.hk});if(x&&x.ok){R.ph='lobby';R.seed=x.seed;R.st=0;G.r=-1;G.vph='';hostLobby()}};
   $('#cl').onclick=async()=>{await api('close',{c:R.code,hk:R.hk});stopPoll();ls.del('pm_host');M='home';homeView()};
 }

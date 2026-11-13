@@ -184,6 +184,14 @@ module.exports = async (req, res) => {
           const idx = pl.findIndex((p) => p.id === pid);
           out.total = pl.length;
           out.top = pl.slice(0, 10).map((p) => [p.n, p.e, p.s || 0, p.c || 0]);
+          if (b.rw) {
+            out.rw = [];
+            for (let rd = 0; rd < (pub.cfg.rounds || 0); rd++) {
+              const rl = pl.filter((p) => p.rr && p.rr[rd] && p.rr[rd][0] > 0)
+                .sort((x, y) => y.rr[rd][0] - x.rr[rd][0] || x.rr[rd][1] - y.rr[rd][1]);
+              out.rw.push(rl.length ? [rl[0].n, rl[0].e, rl[0].rr[rd][0], rl[0].rr[rd][1]] : null);
+            }
+          }
           if (b.rd != null && b.rd !== '') {
             const rd = num(b.rd, 0, 30, 0);
             const rl = pl.filter((p) => p.rr && p.rr[rd]).map((p) => ({ p, v: p.rr[rd] }))
