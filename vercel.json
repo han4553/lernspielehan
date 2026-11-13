@@ -23,6 +23,14 @@
     {
       "source": "/escape/",
       "destination": "/escape/Sternenfracht.html"
+    },
+    {
+      "source": "/pixel-marken",
+      "destination": "/pixel-marken/Pixel_Marken.html"
+    },
+    {
+      "source": "/pixel-marken/",
+      "destination": "/pixel-marken/Pixel_Marken.html"
     }
   ]
 }
