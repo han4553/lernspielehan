@@ -2653,7 +2653,6 @@ function bindAv(){
 }
 const nowT=()=>M==='solo'?Date.now():srvNow();
 const myScore=()=>M==='room'?Math.max(0,G.score+(G.adj||0)):G.score;
-const reachOf=idx=>idx<=0?0:Math.max(1,Math.min(6,Math.ceil(idx/2)));
 function raceRender(el,list,meName,hooks,opt){
   if(!el)return;opt=opt||{};hooks=hooks||[];
   const mini=el.classList.contains('mini'),sz=mini?28:42,rows=mini?36:50;
@@ -2704,98 +2703,75 @@ async function sendMsg(i){
 }
 function raceBox(t,withMsgs){
   if($('#race'))return;
-  t.innerHTML='<h3>🏁 Rennbahn</h3><div class="more" id="mUp"></div><div class="race pk" id="race"></div><div class="more" id="mDn"></div><div class="tag" style="text-align:center">🪢 Tippe ein markiertes Pferd vor dir an und hänge dich mit dem Lasso dran</div><div id="jsel"></div><div id="jp"></div>'+(withMsgs?'<div class="tag" style="margin:8px 0 4px">Schnellnachricht senden:</div>'+msgsHTML():'')+'<div id="rl"></div>';
+  t.innerHTML='<h3>🏁 Rennbahn</h3><div class="more" id="mUp"></div><div class="race" id="race"></div><div class="more" id="mDn"></div><div id="jp"></div>'+(withMsgs?'<div class="tag" style="margin:8px 0 4px">Schnellnachricht senden:</div>'+msgsHTML():'')+'<div id="rl"></div>';
   if(withMsgs)bindMsgs();
-  $('#race').onclick=e=>{const l=e.target.closest('.lane');if(!l)return;G.sel=l.dataset.n;jselRender()};
 }
-function jselRender(){
-  const el=$('#jsel');if(!el)return;const J=G.jx;
-  if(!J||!G.sel){el.innerHTML='';return}
-  const me=J.solo?'Du':R.name,s=G.sel,x=J.x,mine=J.hooks.find(H=>H.h===me&&H.r===G.r+1),fw=(x.fw||[]).find(q=>q[0]===s);let b='';
-  if(s===me)b=mine?'<button type="button" class="btn sm gh" data-ja="unhook">🪢 Lasso von '+esc(mine.t)+' lösen</button>':'<span class="tag">Das bist du 😎</span>';
-  else if(mine&&mine.t===s)b='<span class="tag">Du hängst schon an '+esc(s)+'.</span> <button type="button" class="btn sm gh" data-ja="unhook">Lasso lösen</button>';
-  else if(fw)b=fw[3]?'<span class="tag">'+esc(s)+' spielt lieber allein.</span>':'<button type="button" class="btn sm mg" data-ja="hook" data-t="'+esc(s)+'">🪢 An '+esc(s)+' hängen</button>';
-  else b='<span class="tag">'+(x.reach?'Zu weit weg oder hinter dir – dein Lasso reicht '+x.reach+' Plätze nach vorn.':'Du führst – dein Lasso brauchst du nicht 😎')+'</span>';
-  el.innerHTML='<div class="jbox"><b>'+esc(s)+'</b><br>'+b+'</div>';
-  el.querySelectorAll('[data-ja]').forEach(bt=>bt.onclick=()=>{G.sel='';hookAct(bt.dataset.ja,{t:bt.dataset.t})});
+function lassoInfo(all,idx){ // Catch-up: je weiter hinten, desto größer der Zug
+  const N=all.length;if(idx<=0||N<2)return 0;
+  const gapL=all[0].s-all[idx].s,gapA=all[idx-1].s-all[idx].s;if(gapL<=0)return 0;
+  return Math.max(1,Math.min(60,Math.round(gapL*(.1+.3*idx/(N-1))),Math.max(5,gapA+3)));
 }
-async function hookAct(a,body){
-  if(M==='solo')return soloAct(a,body||{});
-  const x=await api(a,Object.assign({c:R.code,pid:R.pid},body||{}));
-  G.jmsg=x&&x.ok?(a==='hook'?'🪢 Lasso sitzt: du hängst an '+x.t+'!':(a==='unhook'?'Lasso gelöst':'')):((x&&x.err)||'Fehler');
-  await roomRank();
-  if(a==='hook'&&x&&x.ok)lassoFx(R.name,'🪢');
-  setTimeout(()=>{G.jmsg='';const e=$('#jmsg');if(e)e.textContent=''},4500);
-}
-function lassoPanel(x,hooks,isSolo){
-  const el=$('#jp');if(!el)return;G.jx={x,hooks,solo:!!isSolo};jselRender();
+const ropeList=me=>G.rope&&Date.now()<G.rope.until&&G.rope.h===me?[{h:G.rope.h,t:G.rope.t}]:[];
+function lassoPanel(x){
+  const el=$('#jp');if(!el)return;
   if(G.r+1>=nRounds()){el.innerHTML='';return}
-  const me=isSolo?'Du':R.name,nx=hooks.filter(H=>H.r===G.r+1),mine=nx.find(H=>H.h===me),onMe=nx.filter(H=>H.t===me);let h='';
-  if(x.sl&&!isSolo)h+='<div class="jbox">🚫 Du spielst allein: niemand kann sich an dich hängen und du dich nicht an andere.</div>';
-  else if(x.reach>0)h+='<div class="jbox">🪢 <b>Dein Lasso reicht '+x.reach+(x.reach===1?' Platz':' Plätze')+' nach vorn</b> – je weiter hinten, desto länger.<div class="tag">Tippe oben ein Pferd mit 🪢 an und hänge dich dran. Liegt es in der nächsten Runde richtig, ziehst du mit (+50 % seiner Punkte). Liegst nur du falsch, wirst du nicht zurückgezogen.</div>'+(x.fw||[]).filter(q=>!q[3]).map(q=>'<button type="button" class="btn sm mg jbtn" data-hk="'+esc(q[0])+'"'+(mine&&mine.t===q[0]?' disabled':'')+'>🪢 '+AV(q[1],20)+' '+esc(q[0])+'</button>').join('')+'</div>';
-  else h+='<div class="jbox">🏆 Du führst – ein Lasso brauchst du nicht. Hinter dir liegende Spieler können sich aber an dich hängen.</div>';
-  if(mine)h+='<div class="jbox">🪢 <b>Du hängst an '+esc(mine.t)+'.</b> Liegt '+esc(mine.t)+' in der nächsten Runde richtig, ziehst du mit nach vorn. <button type="button" class="btn sm gh jbtn" id="unh">Lasso lösen</button></div>';
-  if(onMe.length)h+='<div class="jbox">👥 '+onMe.map(H=>esc(H.h)).join(' + ')+' hängt an dir: Wenn du richtig liegst, ziehst du sie mit nach vorn!</div>';
-  if(!isSolo)h+='<label class="tag" style="display:block;margin-top:6px"><input type="checkbox" id="solo" '+(x.sl?'checked':'')+' style="width:auto;display:inline"> Ich spiele lieber allein (niemand hängt sich an mich)</label>';
+  let h='';
+  if(x.rank===1)h='<div class="jbox">🏆 Du führst – ein Lasso brauchst du nicht. Wer hinten liegt, zieht sich nach der Auswertung ein Stück nach vorn.</div>';
+  else if(!x.pull)h='<div class="jbox">🪢 Du liegst gleichauf mit der Spitze – kein Lasso nötig.</div>';
+  else h='<div class="jbox">🪢 <b>Lasso: bis zu +'+x.pull+' Punkte nach vorn</b><div class="tag">Je weiter hinten du liegst, desto weiter zieht es dich – immer nur ein Stück. Einmal pro Pause.</div><button type="button" class="btn sm mg jbtn" id="lz"'+(x.lzu?' disabled':'')+'>🪢 Lasso werfen</button></div>';
   h+='<div class="tag" id="jmsg" style="color:var(--ye);font-weight:800">'+esc(G.jmsg||'')+'</div>';
   if(el.dataset.h===h)return;el.dataset.h=h;el.innerHTML=h;
-  el.querySelectorAll('[data-hk]').forEach(b=>b.onclick=()=>hookAct('hook',{t:b.dataset.hk}));
-  const un=$('#unh');if(un)un.onclick=()=>hookAct('unhook');
-  const so=$('#solo');if(so)so.onchange=()=>hookAct('solo',{on:so.checked?1:0});
+  const lz=$('#lz');if(lz)lz.onclick=()=>lassoAct();
 }
-const hookLines=prev=>prev.filter(H=>H.ok!==null).map(H=>'<div class="fact" style="border-color:'+(H.ok?'var(--gr)':'var(--rd)')+'">🪢 '+esc(H.h)+' hing an '+esc(H.t)+': '+(H.ok?'✅ '+esc(H.t)+' lag richtig – '+esc(H.h)+' wird mitgezogen +'+H.b+' 🎉':'❌ '+esc(H.t)+' lag nicht richtig – kein Zug.')+'</div>').join('');
+async function lassoAct(){
+  if(M==='solo')return soloLasso();
+  const x=await api('lasso',{c:R.code,pid:R.pid});
+  if(x&&x.ok){G.jmsg='🪢 Lasso! +'+x.pull+' Punkte – du ziehst dich nach vorn';if(G.ahead)G.rope={h:R.name,t:G.ahead,until:Date.now()+4500}}else G.jmsg=(x&&x.err)||'Fehler';
+  await roomRank();if(x&&x.ok)lassoFx(R.name,'🪢 +'+x.pull);
+  setTimeout(()=>{G.jmsg='';const e=$('#jmsg');if(e)e.textContent=''},4500);
+}
 /* ---- KI-Gegner (Einzelspiel) ---- */
 const BNAMES=['Pixel-Paul','Logo-Lena','Handy-Hans','Nokia-Nina','Byte-Ben','Max-Mobil','Tina-Touch','Emre-Edge','Sofia-Screen','Jonas-Jack','Lara-Logo','Kim-Kamera','Ali-App','Mia-Marke','Noah-Nano','Zoe-Zoom','Leo-Link','Eva-Emoji','Tim-Tarif','Ida-Icon','Ole-Online','Pia-Pixel','Rico-Ring','Sam-Signal','Uta-Update','Vik-Video','Wanda-WLAN','Xaver-Xtra','Yara-Yoga','Zeki-Zack'];
 const BOTS=BNAMES.map((n,i)=>({n,e:''+(i*3%8)+(i%5)+((i*5+1)%8)+(i%6)+((i*2)%5)+((i*7+3)%8),d:((i*37)%21-10)/100}));
 function makeBots(n,lv){return BOTS.slice(0,n).map(b=>({n:b.n,e:b.e,s:0,sk:Math.min(.95,Math.max(.25,lv+b.d)),m:-1,mt:0}))}
 const soloAll=()=>G.bots.map(b=>({n:b.n,e:b.e,s:b.s})).concat([{n:'Du',e:pick.av,s:G.score}]).sort((a,b)=>b.s-a.s);
-function botRound(){
-  const step=G.cfg.step,res=[];
+function botPlan(){ // jeder Bot "antwortet" zu einem festen Zeitpunkt der Runde und bewegt sich dann live
+  const step=G.cfg.step;G.rt0=Date.now();G.botRes=[];
   G.bots.forEach(b=>{
-    const st=Math.round((1-b.sk)*5.5+(Math.random()-.4)*3);let pts=0,ms=0;
+    const st=Math.round((1-b.sk)*5.5+(Math.random()-.4)*3);let pts=0,ms=0,neg=false;
     if(st<=6){const s2=Math.max(0,st);pts=PTS[s2];if(Math.random()<(1-b.sk)*.35)pts-=PEN;ms=Math.round(s2*step+400+Math.random()*(step-800))}
-    if(st>6&&Math.random()<.35)pts=-Math.min(PEN,b.s);
-    const fok=st<=6,fm=st<=6?ms:(pts<0?Math.round((1+Math.random()*5)*step):1e9),fp=fok?PTS[Math.max(0,st)]:-Math.min(PEN,b.s);
-    b.ok=st<=6&&pts>0;b.s=Math.max(0,b.s+pts);res.push({n:b.n,e:b.e,pts,ms,fok,fm,fp});
+    if(st>6&&Math.random()<.35)neg=true;
+    const fok=st<=6,fm=st<=6?ms:(neg?Math.round((1+Math.random()*5)*step):1e9);
+    b.pl={st,pts,ms,neg,fok,fm,at:st<=6?ms:(neg?fm:1e9),done:false};
   });
+}
+function botTick(fin){
+  if(!G.bots||!G.bots.length||!G.rt0)return;
+  const el=Date.now()-G.rt0;let moved=0;
+  G.bots.forEach(b=>{const q=b.pl;if(!q||q.done||(!fin&&q.at>el))return;
+    q.done=true;let pts=q.pts;if(q.neg)pts=-Math.min(PEN,b.s);
+    const fp=q.fok?PTS[Math.max(0,q.st)]:-Math.min(PEN,b.s);
+    b.ok=q.st<=6&&pts>0;b.s=Math.max(0,b.s+pts);moved++;
+    G.botRes.push({n:b.n,e:b.e,pts,ms:q.ms,fok:q.fok,fm:q.fm,fp})});
+  if(moved&&!fin&&M==='solo'&&G.vph==='play')liveSolo();
+}
+function botRound(){
+  botTick(true);const res=G.botRes||[];
   G.botLog[G.r]=res;G.bots.forEach(b=>b.m=-1);
   if(G.bots.length&&Math.random()<.7){
     const all=soloAll(),bot=G.bots[Math.floor(Math.random()*G.bots.length)],rk=all.findIndex(x=>x.n===bot.n);
     bot.m=rk===0?0:(rk===all.length-1?1:[2,3,4,5,6,7,8,9][Math.floor(Math.random()*8)]);bot.mt=Date.now()+1200;
   }
 }
-function botHooks(){ // KI-Gegner hängen sich manchmal mit dem Lasso an jemanden vor ihnen
-  G.hooks=G.hooks||[];if(G.r+1>=nRounds())return;
-  const all=soloAll();
-  G.bots.forEach(b=>{const idx=all.findIndex(p=>p.n===b.n),re=reachOf(idx);if(re<1||Math.random()>.5)return;
-    const cand=all.slice(Math.max(0,idx-re),idx).filter(p=>G.hooks.filter(H=>H.tr===G.r+1&&H.t===p.n).length<2);
-    if(cand.length)G.hooks.push({tr:G.r+1,h:b.n,t:cand[Math.floor(Math.random()*cand.length)].n})});
+function soloLasso(){
+  const all=soloAll(),idx=all.findIndex(p=>p.n==='Du');
+  if(G.lzUsed)G.jmsg='Dein Lasso ist in dieser Pause schon benutzt';
+  else{const pull=lassoInfo(all,idx);
+    if(!pull)G.jmsg='Du brauchst kein Lasso – du bist vorn';
+    else{G.score+=pull;G.lzUsed=true;G.jmsg='🪢 Lasso! +'+pull+' Punkte – du ziehst dich nach vorn';G.rope={h:'Du',t:all[idx-1].n,until:Date.now()+4500};hud()}}
+  soloRank();if(G.lzUsed)lassoFx('Du','🪢');
+  setTimeout(()=>{G.jmsg='';const e=$('#jmsg');if(e)e.textContent=''},4500);
 }
-function soloSettle(){
-  const msgs=[];G.hooks=G.hooks||[];
-  const row=n=>(G.botLog[G.r]||[]).find(x=>x.n===n);
-  G.hooks.filter(H=>H.tr===G.r).forEach(H=>{
-    const tp=H.t==='Du'?(G.answered?G.rpts:-G.pen):((row(H.t)||{}).pts||0),ok=tp>0,b=ok?Math.max(1,Math.round(tp*.5)):0;
-    if(b){if(H.h==='Du'){G.rpts=(G.answered?G.rpts:-G.pen)+b;G.score+=b;if(G.log.length)G.log[G.log.length-1].pts=G.rpts}
-      else{const bot=G.bots.find(x=>x.n===H.h),rw=row(H.h);if(bot){bot.s+=b;if(rw)rw.pts+=b}}}
-    if(H.h==='Du')msgs.push('🪢 Du hingst an '+H.t+': '+(ok?'✅ '+H.t+' lag richtig – du wirst mitgezogen +'+b+' 🎉':'❌ '+H.t+' lag nicht richtig – kein Zug.'));
-    else if(H.t==='Du')msgs.push('🪢 '+H.h+' hing an dir: '+(ok?'du lagst richtig – '+H.h+' wird mitgezogen.':'du lagst nicht richtig – kein Zug.'));
-  });
-  G.hooks=G.hooks.filter(H=>H.tr>G.r);G.teamMsg=msgs.join(' ');
-}
-function soloAct(a,body){
-  const all=soloAll(),N=all.length,idx=all.findIndex(p=>p.n==='Du'),tr=G.r+1;G.hooks=G.hooks||[];
-  if(a==='unhook'){G.hooks=G.hooks.filter(H=>!(H.tr===tr&&H.h==='Du'));G.jmsg='Lasso gelöst'}
-  else if(a==='hook'){
-    const it=all.findIndex(p=>p.n===body.t);
-    if(it<0||it>=idx)G.jmsg='Das Lasso geht nur nach vorn';
-    else if(idx-it>reachOf(idx))G.jmsg='Zu weit weg – dein Lasso reicht '+reachOf(idx)+' Plätze';
-    else if(G.hooks.filter(H=>H.tr===tr&&H.t===body.t&&H.h!=='Du').length>=2)G.jmsg='An '+body.t+' hängen schon 2 Spieler';
-    else{G.hooks=G.hooks.filter(H=>!(H.tr===tr&&H.h==='Du'));G.hooks.push({tr,h:'Du',t:body.t});G.jmsg='🪢 Lasso sitzt: du hängst an '+body.t+'!';lassoFx('Du','🪢')}
-  }
-  soloRank();setTimeout(()=>{G.jmsg='';const e=$('#jmsg');if(e)e.textContent=''},4500);
-}
-const soloFw=(all,idx)=>all.slice(Math.max(0,idx-reachOf(idx)),idx).map((p,k)=>[p.n,p.e,p.s,0,Math.max(0,idx-reachOf(idx))+k+1]);
 function soloRows(){
   const rows=[{n:'Du',e:pick.av,pts:G.answered?G.rpts:-G.pen,ms:G.answered?G.rms:0}].concat(G.botLog[G.r]||[]);
   return rows.sort((a,b)=>b.pts-a.pts||(a.pts>0?a.ms-b.ms:0)||a.n.localeCompare(b.n));
@@ -2803,29 +2779,29 @@ function soloRows(){
 function soloRank(){
   const t=$('#top');if(!t||!G.bots||!G.bots.length)return;
   raceBox(t,true);
-  const all=soloAll(),idx=all.findIndex(p=>p.n==='Du'),hk=G.hooks||[],fw=soloFw(all,idx);
+  const all=soloAll(),idx=all.findIndex(p=>p.n==='Du');
   const list=all.map((p,i)=>Object.assign({m:-1,mt:0,rk:i+1},p));
   G.bots.forEach(b=>{const q=list.find(x=>x.n===b.n);q.m=b.m;q.mt=b.mt});
   const me=list[idx];if(G.myM){me.m=G.myM[0];me.mt=G.myM[1]}
-  const v=mkView(list,idx,Math.max(3,reachOf(idx)));
-  raceRender($('#race'),v.rows,'Du',hk.filter(H=>H.tr===G.r+1).map(H=>({h:H.h,t:H.t})),{fw:fw.map(q=>q[0]),lead:v.lead.s});setMore(v,'m');
-  lassoPanel({total:all.length,rank:idx+1,reach:reachOf(idx),fw},hk.map(H=>({r:H.tr,h:H.h,t:H.t})),true);
+  const v=mkView(list,idx,3);
+  raceRender($('#race'),v.rows,'Du',ropeList('Du'),{lead:v.lead.s});setMore(v,'m');
+  lassoPanel({total:all.length,rank:idx+1,pull:lassoInfo(all,idx),lzu:G.lzUsed});
   const rws=soloRows();
-  $('#rl').innerHTML=(G.teamMsg?'<div class="fact" style="border-color:var(--ye)">'+esc(G.teamMsg)+'</div>':'')+'<h3>⚡ Beste dieser Runde</h3><ol class="lb">'+rws.map((p,i)=>({p,i})).filter(q=>q.i<8||q.p.n==='Du').map(q=>'<li'+(q.p.n==='Du'?' class="me"':'')+'><span class="rk">'+(q.i+1)+'.</span>'+AV(q.p.e,22)+' '+esc(q.p.n)+'<span class="sc">'+ptsTxt(q.p.pts,q.p.ms)+'</span></li>').join('')+'</ol>';
+  $('#rl').innerHTML='<h3>⚡ Beste dieser Runde</h3><ol class="lb">'+rws.map((p,i)=>({p,i})).filter(q=>q.i<8||q.p.n==='Du').map(q=>'<li'+(q.p.n==='Du'?' class="me"':'')+'><span class="rk">'+(q.i+1)+'.</span>'+AV(q.p.e,22)+' '+esc(q.p.n)+'<span class="sc">'+ptsTxt(q.p.pts,q.p.ms)+'</span></li>').join('')+'</ol>';
 }
 
 /* ===================== Einzelspiel ===================== */
 function soloSetup(){
   V='solo-setup';clearInterval(heroT);
   app('<div class="wrap"><div class="h1" style="font-size:26px">Einzelspiel</div><div class="sub">Falsche Antwort = Punktabzug (−25). Wer schnell und sicher erkennt, gewinnt das Rennen.</div>'+
-   '<label>Dein Männchen</label>'+avBuilder()+'<label>KI-Gegner (Rennen)</label><select id="nb"><option value="0">Keine</option><option value="3" selected>3 Gegner</option><option value="5">5 Gegner</option><option value="10">10 Gegner</option><option value="20">20 Gegner</option><option value="30">30 Gegner (ganze Klasse)</option></select><label>Stärke der Gegner</label><select id="lv"><option value="0.45">Leicht</option><option value="0.65" selected>Mittel</option><option value="0.85">Schwer</option></select><label>Wie viele Runden?</label><select id="nr"><option value="7">Kurz (7 Marken)</option><option value="14">Alle (14 Marken)</option></select>'+
+   '<label>Dein Männchen</label>'+avBuilder()+'<label>KI-Gegner (Rennen)</label><select id="nb"><option value="0">Keine</option><option value="3">3 Gegner</option><option value="5">5 Gegner</option><option value="10">10 Gegner</option><option value="20">20 Gegner</option><option value="30" selected>30 Gegner (ganze Klasse)</option></select><label>Stärke der Gegner</label><select id="lv"><option value="0.45">Leicht</option><option value="0.65" selected>Mittel</option><option value="0.85">Schwer</option></select><label>Wie viele Runden?</label><select id="nr"><option value="7">Kurz (7 Marken)</option><option value="14">Alle (14 Marken)</option></select>'+
    '<label>Tempo der Pixel-Stufen</label><select id="sp"><option value="4000">Gemütlich (4 s)</option><option value="3000" selected>Normal (3 s)</option><option value="2000">Schnell (2 s)</option></select>'+
    '<button class="btn gr" id="go">▶ Los geht’s</button><button class="btn gh" id="bk">← Zurück</button></div>');
   bindAv();$('#bk').onclick=homeView;
   $('#go').onclick=()=>{
     const pool=avail();if(pool.length<4)return;
     const n=Math.min(+$('#nr').value,pool.length);
-    M='solo';Object.assign(G,{cfg:{rounds:n,step:+$('#sp').value,brk:10000},score:0,streak:0,correct:0,log:[],r:-1,reported:{},adj:0,hooks:[],teamMsg:'',jmsg:''});
+    M='solo';Object.assign(G,{cfg:{rounds:n,step:+$('#sp').value,brk:10000},score:0,streak:0,correct:0,log:[],r:-1,reported:{},adj:0,lzUsed:false,rope:null,jmsg:''});
     G.bots=makeBots(+$('#nb').value,+$('#lv').value);G.botLog=[];G.myM=null;
     G.qs=buildQs(Math.floor(Math.random()*2e9),n,pool);G.sph='play';G.t0=Date.now();V='play';beep(440,.08);
     startRound(0);
@@ -2833,7 +2809,8 @@ function soloSetup(){
 }
 function clock(){
   if(M==='solo'){if(G.sph==='play'&&Date.now()-G.t0>=playMs())return {r:G.r,ph:'brk',t:0};return {r:G.r,ph:G.sph,t:G.sph==='play'?Date.now()-G.t0:Date.now()-G.t0}}
-  const t=srvNow()-R.st;
+  let t=srvNow()-R.st;
+  if(R.cfg&&R.cfg.mode==='manual')t=Math.min(t,(R.gate||1)*roundMs()-1);
   if(R.ph==='end'||t>=R.cfg.rounds*roundMs())return {ph:'done'};
   if(t<0)return {ph:'pre',t};
   const r=Math.floor(t/roundMs()),tin=t-r*roundMs();
@@ -2860,8 +2837,6 @@ function setMore(v,pre){
   if(u)u.innerHTML=v.rank===1?'🏆 Du führst das Rennen!':(v.up>0?'⬆ <b>'+v.up+'</b> weitere vor dir · Spitze: <b>'+esc(v.lead.n)+'</b> ('+v.lead.s+' P.)'+(v.nu&&v.nu.n!==v.lead.n?' · als Nächster: '+esc(v.nu.n)+' ('+v.nu.s+')':''):'');
   if(d)d.innerHTML=v.down>0?'⬇ <b>'+v.down+'</b> weitere hinter dir'+(v.nd?' · Verfolger: <b>'+esc(v.nd.n)+'</b> ('+v.nd.s+' P.)':'')+' · Letzter: '+esc(v.last.n):'';
 }
-function hookNote(cur,me){const tn=$('#teamNote');if(!tn)return;const mine=cur.find(H=>H.h===me),onMe=cur.filter(H=>H.t===me);
-  tn.textContent=(mine?'🪢 Du hängst an '+mine.t+': liegt '+mine.t+' richtig, ziehst du mit! ':'')+(onMe.length?'👥 '+onMe.map(H=>H.h).join(' + ')+' hängt an dir – triff richtig!':'')}
 function liveList(all,me){ // all: [{n,e,s,m,mt}] sortiert; zeigt Top 3 + eigene Position
   const rk=all.map((p,i)=>Object.assign({rk:i+1},p)),top=rk.slice(0,3),mi=rk.findIndex(p=>p.n===me);
   if(mi>=3)top.push(rk[mi]);return top;
@@ -2869,22 +2844,20 @@ function liveList(all,me){ // all: [{n,e,s,m,mt}] sortiert; zeigt Top 3 + eigene
 function liveSolo(){
   const el=$('#miniRace');if(!el||!G.bots)return;
   const all=soloAll().map((p,i)=>Object.assign({m:-1,mt:0,rk:i+1},p)),idx=all.findIndex(p=>p.n==='Du'),v=mkView(all,idx,2);
-  const cur=(G.hooks||[]).filter(H=>H.tr===G.r).map(H=>({h:H.h,t:H.t}));
-  raceRender(el,v.rows,'Du',cur,{lead:v.lead.s});setMore(v,'mm');hookNote(cur,'Du');
+  raceRender(el,v.rows,'Du',[],{lead:v.lead.s});setMore(v,'mm');
   G.rankTxt='🏁 '+(idx+1)+'/'+all.length;hud();
 }
 async function liveRank(){
   const el=$('#miniRace');if(!el||M!=='room'||G.vph!=='play')return;
   const x=await api('state',{c:R.code,pid:R.pid,full:1});if(!x||!x.ok||!$('#miniRace'))return;
   G.adj=x.adj||0;const v=roomView(x,2);
-  if(v){const cur=(x.hooks||[]).filter(H=>H.r===G.r).map(H=>({h:H.h,t:H.t}));
-    raceRender(el,v.rows,R.name,cur,{lead:v.lead.s});setMore(v,'mm');hookNote(cur,R.name)}
+  if(v){raceRender(el,v.rows,R.name,[],{lead:v.lead.s});setMore(v,'mm')}
   G.rankTxt='🏁 '+(x.rank||'–')+'/'+(x.total||'–');hud();
 }
 function hud(){if($('#hR'))$('#hR').textContent='Runde '+(G.r+1)+'/'+nRounds();if($('#hS'))$('#hS').textContent='⭐ '+myScore();if($('#hK'))$('#hK').textContent='🔥 '+G.streak;if($('#hP'))$('#hP').textContent=G.rankTxt||'';
   const m=$('#mu');if(m)m.onclick=()=>{MUTE=!MUTE;ls.set('pm_mute',0);try{localStorage.setItem('pm_mute',MUTE?'1':'0')}catch(e){}m.textContent=MUTE?'🔇':'🔊'}}
 function startRound(r){
-  G.r=r;G.vph='play';G.tsent=false;G.tpend=false;G.tlock=false;G.tfirst=false;G.tby='';G.firstMs=-1;G.firstOk=false;G.firstPts=0;G.answered=false;G.wrong=[];G.gone=[];G.stage=-1;G.hint='';G.rpts=0;G.pen=0;G.rms=0;G.q=G.qs[r];G.peekT=null;G.gridNow=0;G.peekUntil=0;G.lastLive=0;
+  G.r=r;G.vph='play';G.tsent=false;G.tpend=false;G.tlock=false;G.tfirst=false;G.tby='';G.firstMs=-1;G.firstOk=false;G.firstPts=0;G.answered=false;G.wrong=[];G.gone=[];G.stage=-1;G.hint='';G.rpts=0;G.pen=0;G.rms=0;G.q=G.qs[r];G.peekT=null;G.gridNow=0;G.peekUntil=0;G.lastLive=0;if(M==='solo'&&G.bots&&G.bots.length)botPlan();
   G.src=makeSrc(IMG[G.q.id]?G.q.id:'x',W,H);
   const b=BYID[G.q.id];
   if(M==='host'){
@@ -2898,7 +2871,7 @@ function startRound(r){
     app('<div class="wrap">'+hudHTML()+'<div class="stage"><canvas id="cv" width="'+W+'" height="'+H+'"></canvas><div class="banner" id="bn"></div></div>'+
      '<div class="dots" id="dots">'+'<i></i>'.repeat(NS)+'</div><div class="bar"><i id="bar"></i></div><div class="pts" id="pts"></div>'+
      '<div class="opts" id="opts">'+G.q.opts.map(id=>'<button class="opt" data-o="'+id+'">'+esc(BYID[id].n)+'</button>').join('')+'</div>'+
-     (M==='solo'&&!(G.bots&&G.bots.length)?'':'<div class="more" id="mmUp"></div><div class="race mini" id="miniRace"></div><div class="more" id="mmDn"></div><div class="tag" id="teamNote" style="text-align:center;margin-top:6px;color:var(--ye);font-weight:800"></div>')+'</div>');
+     (M==='solo'&&!(G.bots&&G.bots.length)?'':'<div class="more" id="mmUp"></div><div class="race mini" id="miniRace"></div><div class="more" id="mmDn"></div>')+'</div>');
     document.querySelectorAll('.opt').forEach(o=>o.onclick=()=>answer(o.dataset.o));
     hud();
   }
@@ -2952,8 +2925,8 @@ function enterBreak(){
   if(M==='solo'&&G.bots&&G.bots.length)botRound();
   const b=BYID[G.q.id];
   if(!G.answered){G.streak=0;G.log.push({id:G.q.id,pts:-G.pen,ok:false});if(!G.reported[G.r]){G.reported[G.r]=1;report()}}
-  if(M==='solo'&&G.bots&&G.bots.length){soloSettle();botHooks()}
-  G.jmsg='';G.sel='';G.jx=null;
+  if(M==='solo'&&G.bots&&G.bots.length){G.lzUsed=false}
+  G.jmsg='';G.jx=null;
   const isH=M==='host';
   let top='';
   const banner=isH?'<div class="res host">Lösung</div>':G.answered?'<div class="res ok">✅ Richtig! '+(G.rpts>=0?'+':'−')+Math.abs(G.rpts)+'</div>':(G.wrong.length?'<div class="res no">❌ Nicht erkannt'+(G.pen?' · −'+G.pen+' Abzug':'')+'</div>':'<div class="res to">⏱ Zeit abgelaufen</div>');
@@ -2962,14 +2935,14 @@ function enterBreak(){
   app('<div class="wrap'+(isH?' wide':'')+'">'+(isH?'':hudHTML())+banner+'<canvas id="cv" width="'+W+'" height="'+H+'"></canvas>'+
     '<div class="nm">'+esc(b.n)+'</div><div style="text-align:center">'+b.fl+' '+esc(b.land)+'</div>'+
     '<div class="card">'+shareRows(b)+'</div><div class="fact">💡 '+esc(b.fact)+'</div>'+memeHTML(b)+foot+
-    (isH?'<div class="row"><button class="btn sm cy" id="hSkip">⏭ Nächste Runde</button><button class="btn sm gh" id="hEnd">⏹ Spiel beenden</button></div><div id="top"></div>':'')+'</div>');
+    (isH?'<div class="row"><button class="btn sm cy" id="hSkip">⏭ Nächste Frage</button><button class="btn sm gh" id="hEnd">⏹ Spiel beenden</button></div><div id="top"></div>':'')+'</div>');
   drawMosaic($('#cv').getContext('2d'),G.src,999);hud();
   if(M==='solo'){$('#nx').onclick=()=>{if(last)return goEnd();G.sph='play';G.t0=Date.now();V='play';beep(440,.08);startRound(G.r+1)}}
   if(isH){$('#hSkip').onclick=hostSkip;$('#hEnd').onclick=hostEnd;hostTop()}
   if(M==='room')G.lastRank=Date.now()-1500;
   if(M==='solo')soloRank();
 }
-function updateBrk(c){const e=$('#cdn');if(!e)return;const s=Math.max(0,Math.ceil((brkMs()-c.t)/1000));e.textContent=(G.r>=nRounds()-1?'Ergebnis in ':'Nächste Runde in ')+s+' s'}
+function updateBrk(c){const e=$('#cdn');if(!e)return;const s=Math.max(0,Math.ceil((brkMs()-c.t)/1000));e.textContent=M==='room'&&R.cfg&&R.cfg.mode==='manual'&&s<=0?(G.r>=nRounds()-1?'Warten auf die Lehrkraft …':'Warten, bis die Lehrkraft weiterklickt …'):(G.r>=nRounds()-1?'Ergebnis in ':'Nächste Runde in ')+s+' s'}
 const ptsTxt=(p,ms)=>p>0?'+'+p+' · '+fs_(ms):(p<0?'−'+Math.abs(p):'–');
 const fs_=ms=>(ms/1000).toFixed(1).replace('.',',')+' s';
 function roundLi(p,i,me){return '<li'+(me?' class="me"':'')+'><span class="rk">'+(i+1)+'.</span>'+AV(p[1],22)+' '+esc(p[0])+'<span class="sc">'+ptsTxt(p[2],p[3])+'</span></li>'}
@@ -2977,11 +2950,11 @@ async function roomRank(){
   const x=await api('state',{c:R.code,pid:R.pid,full:1,rd:G.r});if(!x||!x.ok)return;applyState(x);G.adj=x.adj||0;
   const t=$('#top');if(!t||V!=='play'||G.vph!=='brk')return;
   raceBox(t,true);
-  const hk=x.hooks||[],nxt=hk.filter(H=>H.r===G.r+1).map(H=>({h:H.h,t:H.t})),prev=hk.filter(H=>H.r===G.r);
-  const v=roomView(x,Math.max(3,x.reach||0));
-  if(v){raceRender($('#race'),v.rows,R.name,nxt,{fw:(x.fw||[]).map(q=>q[0]),lead:v.lead.s});setMore(v,'m')}
-  $('#rl').innerHTML=hookLines(prev)+(x.rtop&&x.rtop.length?'<h3>⚡ Beste dieser Runde</h3><ol class="lb">'+x.rtop.map((p,i)=>roundLi(p,i,p[0]===R.name)).join('')+(x.rme&&x.rme[0]>5?'<li class="me"><span class="rk">'+x.rme[0]+'.</span>'+AV(R.av,22)+' '+esc(R.name)+'<span class="sc">'+ptsTxt(x.rme[1],x.rme[2])+'</span></li>':'')+'</ol>':'');
-  lassoPanel(x,hk,false);
+  G.ahead=x.ahead?x.ahead[0]:null;
+  const v=roomView(x,3);
+  if(v){raceRender($('#race'),v.rows,R.name,ropeList(R.name),{lead:v.lead.s});setMore(v,'m')}
+  $('#rl').innerHTML=(x.rtop&&x.rtop.length?'<h3>⚡ Beste dieser Runde</h3><ol class="lb">'+x.rtop.map((p,i)=>roundLi(p,i,p[0]===R.name)).join('')+(x.rme&&x.rme[0]>5?'<li class="me"><span class="rk">'+x.rme[0]+'.</span>'+AV(R.av,22)+' '+esc(R.name)+'<span class="sc">'+ptsTxt(x.rme[1],x.rme[2])+'</span></li>':'')+'</ol>':'');
+  lassoPanel(x);
 }
 
 /* ===================== Takt ===================== */
@@ -3000,7 +2973,7 @@ function tick(){
     const st=Math.min(NS-1,Math.floor(c.t/stepMs()));
     if(!G.answered&&st!==G.stage)setStage(st);
     if(!G.answered&&!(G.peekUntil&&Date.now()<G.peekUntil))drawGrid(gridAt(c.t));
-    updateBar(c.t);
+    updateBar(c.t);if(M==='solo')botTick();
     if(M==='room'&&Date.now()-(G.lastLive||0)>2200){G.lastLive=Date.now();liveRank()}
   }else if(c.ph==='brk'){
     if(G.vph!=='brk')enterBreak();
@@ -3071,7 +3044,7 @@ function joinView(code){
     await syncTime();applyState(x);roomAfterJoin();
   };
 }
-function applyState(x){if(!x)return;if(x.cfg)R.cfg=x.cfg;if(x.ph)R.ph=x.ph;if(x.st!=null)R.st=x.st;if(x.seed!=null)R.seed=x.seed;if(x.name)R.rname=x.name;if(x.total!=null)R.total=x.total;if(x.rank)R.rank=x.rank}
+function applyState(x){if(!x)return;if(x.cfg)R.cfg=x.cfg;if(x.ph)R.ph=x.ph;if(x.st!=null)R.st=x.st;if(x.gate)R.gate=x.gate;if(x.seed!=null)R.seed=x.seed;if(x.name)R.rname=x.name;if(x.total!=null)R.total=x.total;if(x.rank)R.rank=x.rank}
 function roomAfterJoin(){
   if(R.ph==='play'){V='pre';app('<div class="wrap"><div class="h1" style="font-size:26px">Gleich geht’s los!</div><div class="cd" id="cd">–</div></div>');startPoll();return}
   lobbyView();startPoll();
@@ -3104,7 +3077,7 @@ async function poll(){
     const x=await api('hstate',{c:R.code,hk:R.hk});
     if(!x)return;if(x.gone){stopPoll();ls.del('pm_host');alert('Raum nicht mehr vorhanden.');homeView();return}
     if(!x.ok)return;
-    R.players=x.players;R.hooks=x.hooks||[];R.ph=x.ph;R.st=x.st;R.cfg=x.cfg;R.seed=x.seed;R.total=x.players.length;
+    R.players=x.players;R.ph=x.ph;R.st=x.st;R.gate=x.gate||1;R.cfg=x.cfg;R.seed=x.seed;R.total=x.players.length;
     if(V==='host-lobby')hostLobbyUpd();
     if(V==='play'){hostTop();const n=R.players.filter(p=>p.a>=G.r).length;if($('#hAn'))$('#hAn').textContent=n;if($('#hTot'))$('#hTot').textContent=R.players.length}
   }
@@ -3120,11 +3093,12 @@ function hostSetup(){
    '<label>Name des Raums (z. B. Klasse)</label><input id="hn" maxlength="30" placeholder="z. B. IK 1a">'+
    '<label>Anzahl der Runden</label><select id="hr"><option value="5">5 Marken</option><option value="8" selected>8 Marken</option><option value="14">Alle 14 Marken</option></select>'+
    '<label>Tempo der Pixel-Stufen</label><select id="hs"><option value="4000">Gemütlich (4 s je Stufe)</option><option value="3000" selected>Normal (3 s)</option><option value="2000">Schnell (2 s)</option></select>'+
+   '<label>Ablauf</label><select id="hm"><option value="auto">Automatisch weiter, sobald alle geantwortet haben</option><option value="manual">Ich klicke bei jeder Frage selbst weiter</option></select>'+
    '<div class="err" id="he"></div><button class="btn gr" id="hc">🚀 Raum eröffnen</button><button class="btn gh" id="hb">← Zurück</button></div>');
   $('#hb').onclick=homeView;
   $('#hc').onclick=async()=>{
     $('#hc').disabled=true;
-    const x=await api('create',{name:$('#hn').value,cfg:{rounds:+$('#hr').value,step:+$('#hs').value}});
+    const x=await api('create',{name:$('#hn').value,cfg:{rounds:+$('#hr').value,step:+$('#hs').value,mode:$('#hm').value}});
     if(!x||!x.ok){$('#he').textContent=(x&&x.err)||'Fehler';$('#hc').disabled=false;return}
     M='host';Object.assign(R,{code:x.c,hk:x.hk,cfg:x.cfg,seed:x.seed,rname:x.name,ph:'lobby',st:0,players:[]});
     ls.set('pm_host',{c:x.c,hk:x.hk});await syncTime();hostLobby();startPoll();
@@ -3145,19 +3119,19 @@ function hostLobby(){
    '<div class="grid2"><div><div class="card" style="text-align:center"><div class="sub">Scannen oder auf <b>'+esc(location.host||'lernspiele')+'</b> den Code eingeben:</div><div class="code">'+esc(R.code)+'</div><div class="qr">'+qrSvg(url)+'</div>'+
    '<div class="row" style="justify-content:center;margin-top:10px"><button class="btn sm cy" id="cp">🔗 Link kopieren</button></div><div class="tag" id="ul" style="word-break:break-all">'+esc(url)+'</div></div></div>'+
    '<div><div class="card"><b>👥 Im Raum: <span id="pc">0</span></b><div class="chips" id="chips" style="margin-top:8px"></div></div>'+
-   '<div class="card"><b>Einstellungen</b><label>Runden</label><select id="hr"><option value="5">5 Marken</option><option value="8">8 Marken</option><option value="14">Alle 14 Marken</option></select><label>Tempo</label><select id="hs"><option value="4000">Gemütlich (4 s)</option><option value="3000">Normal (3 s)</option><option value="2000">Schnell (2 s)</option></select></div>'+
+   '<div class="card"><b>Einstellungen</b><label>Runden</label><select id="hr"><option value="5">5 Marken</option><option value="8">8 Marken</option><option value="14">Alle 14 Marken</option></select><label>Tempo</label><select id="hs"><option value="4000">Gemütlich (4 s)</option><option value="3000">Normal (3 s)</option><option value="2000">Schnell (2 s)</option></select><label>Ablauf</label><select id="hm"><option value="auto">Automatisch weiter, sobald alle geantwortet haben</option><option value="manual">Ich klicke bei jeder Frage selbst weiter</option></select></div>'+
    '<button class="btn gr" id="st">▶ Spiel starten</button><button class="btn gh" id="cl">Raum schließen</button></div></div>'+
-   '<details><summary>👩‍🏫 Einsatz im Unterricht</summary><div class="card">Ablauf: Raum zeigen → Schüler beitreten lassen → starten. Jede Runde dauert ca. '+Math.round((NS*R.cfg.step+10000)/1000)+' s. Nach dem Spiel die Grafik „Marktanteile 2007 vs. 2025“ besprechen: Wer hat verloren, wer gewonnen, und warum? In der Pause können sich Spieler weiter hinten mit dem Lasso an jemanden vor ihnen hängen (je weiter hinten, desto länger das Lasso, Catch-up-Prinzip). Liegt der Vordere in der nächsten Runde richtig, wird der Hintere mitgezogen (+50 % der Punkte); wer falsch liegt, wird nicht zurückgezogen. Am Ende gibt es eine Siegerehrung vom letzten bis zum ersten Platz.</div></details></div>');
-  $('#hr').value=String(R.cfg.rounds);$('#hs').value=String(R.cfg.step);
-  const upd=async()=>{const x=await api('cfg',{c:R.code,hk:R.hk,cfg:{rounds:+$('#hr').value,step:+$('#hs').value}});if(x&&x.ok)R.cfg=x.cfg};
-  $('#hr').onchange=upd;$('#hs').onchange=upd;
+   '<details><summary>👩‍🏫 Einsatz im Unterricht</summary><div class="card">Ablauf: Raum zeigen → Schüler beitreten lassen → starten. Jede Runde dauert ca. '+Math.round((NS*R.cfg.step+10000)/1000)+' s. Nach dem Spiel die Grafik „Marktanteile 2007 vs. 2025“ besprechen: Wer hat verloren, wer gewonnen, und warum? Nach jeder Auswertung können sich Spieler weiter hinten mit dem Lasso ein Stück nach vorn ziehen (Catch-up: je weiter hinten, desto größer der Zug, immer nur ein Stück). Am Ende gibt es eine Siegerehrung vom letzten bis zum ersten Platz.</div></details></div>');
+  $('#hr').value=String(R.cfg.rounds);$('#hs').value=String(R.cfg.step);$('#hm').value=R.cfg.mode||'auto';
+  const upd=async()=>{const x=await api('cfg',{c:R.code,hk:R.hk,cfg:{rounds:+$('#hr').value,step:+$('#hs').value,mode:$('#hm').value}});if(x&&x.ok)R.cfg=x.cfg};
+  $('#hr').onchange=upd;$('#hs').onchange=upd;$('#hm').onchange=upd;
   $('#cp').onclick=()=>{try{navigator.clipboard.writeText(url).then(()=>{$('#cp').textContent='✅ Kopiert'})}catch(e){prompt('Link kopieren:',url)}};
   $('#cl').onclick=async()=>{if(!confirm('Raum wirklich schließen? Alle Schüler werden getrennt.'))return;await api('close',{c:R.code,hk:R.hk});stopPoll();ls.del('pm_host');M='home';homeView()};
   $('#st').onclick=async()=>{
     $('#st').disabled=true;await upd();
     const x=await api('start',{c:R.code,hk:R.hk});
     if(!x||!x.ok){$('#st').disabled=false;alert((x&&x.err)||'Fehler');return}
-    await syncTime();R.ph='play';R.st=x.st;G.r=-1;G.vph='';G.qs=buildQs(R.seed,R.cfg.rounds,BR);
+    await syncTime();R.ph='play';R.st=x.st;R.gate=1;G.r=-1;G.vph='';G.qs=buildQs(R.seed,R.cfg.rounds,BR);
     V='pre';app('<div class="wrap"><div class="h1" style="font-size:30px;text-align:center">Gleich geht’s los!</div><div class="cd" id="cd">–</div></div>');
   };
   hostLobbyUpd();
@@ -3169,15 +3143,15 @@ function hostLobbyUpd(){
 }
 function hostTop(){const t=$('#top');if(!t)return;
   if(!$('#race'))t.innerHTML='<h3>🏁 Rennbahn</h3><div class="race" id="race"></div><div id="rl"></div>';
-  const tr=G.vph==='brk'?G.r+1:G.r,hk=(R.hooks||[]).filter(H=>H.r===tr).map(H=>({h:H.h,t:H.t}));
-  raceRender($('#race'),R.players.slice(0,12).map((p,i)=>({n:p.n,e:p.e,s:p.s,m:p.m==null?-1:p.m,mt:p.mt||0,rk:i+1})),undefined,hk);
+  raceRender($('#race'),R.players.slice(0,12).map((p,i)=>({n:p.n,e:p.e,s:p.s,m:p.m==null?-1:p.m,mt:p.mt||0,rk:i+1})),undefined,[]);
   const rl=$('#rl');if(!rl)return;
   if(G.vph!=='brk'){rl.innerHTML='';return}
   const li=(i,p,r)=>'<li><span class="rk">'+(i+1)+'.</span>'+AV(p.e,22)+' '+esc(p.n)+'<span class="sc">'+r+'</span></li>';
   const rr=R.players.filter(p=>p.rr&&p.rr[G.r]).map(p=>({p,v:p.rr[G.r]})).sort((x,y)=>y.v[0]-x.v[0]||(x.v[0]>0?x.v[1]-y.v[1]:0));
-  rl.innerHTML=hookLines((R.hooks||[]).filter(H=>H.r===G.r))+'<h3>⚡ Beste dieser Runde</h3><ol class="lb">'+(rr.slice(0,8).map((x,i)=>li(i,x.p,ptsTxt(x.v[0],x.v[1]))).join('')||'<li class="mut">Noch keine Antworten</li>')+'</ol>'}
+  rl.innerHTML='<h3>⚡ Beste dieser Runde</h3><ol class="lb">'+(rr.slice(0,8).map((x,i)=>li(i,x.p,ptsTxt(x.v[0],x.v[1]))).join('')||'<li class="mut">Noch keine Antworten</li>')+'</ol>'}
 async function hostSkip(){
   const c=clock();if(c.ph!=='play'&&c.ph!=='brk')return;
+  if(c.ph==='brk'&&R.cfg.mode==='manual'){const y=await api('next',{c:R.code,hk:R.hk});if(y&&y.ok){R.st=y.st;R.gate=y.gate}return}
   const d=c.ph==='play'?playMs()-c.t:roundMs()-c.t;
   const x=await api('skip',{c:R.code,hk:R.hk,d:Math.ceil(d)+50});if(x&&x.ok){R.st=x.st}
 }

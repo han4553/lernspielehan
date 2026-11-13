@@ -34,7 +34,7 @@ const num = (v, lo, hi, d) => {
   v = Number(v);
   return Number.isFinite(v) ? Math.min(hi, Math.max(lo, Math.round(v))) : d;
 };
-const cleanCfg = (c) => ({ rounds: num(c && c.rounds, 3, 14, 8), step: num(c && c.step, 2000, 6000, 3000), brk: 10000 });
+const cleanCfg = (c) => ({ rounds: num(c && c.rounds, 3, 14, 8), step: num(c && c.step, 2000, 6000, 3000), brk: 10000, mode: c && c.mode === 'manual' ? 'manual' : 'auto' });
 const clean = (s, n) => String(s == null ? '' : s).replace(/[<>&"'`]/g, '').replace(/\s+/g, ' ').trim().slice(0, n);
 const sorted = (pl) =>
   Object.keys(pl)
@@ -42,11 +42,20 @@ const sorted = (pl) =>
     .sort((a, b) => (b.s || 0) - (a.s || 0) || (b.c || 0) - (a.c || 0) || String(a.n).localeCompare(String(b.n)));
 
 const NSTAGE = 7, GRACE = 2500;
-// Lasso-Reichweite (Plätze nach vorn): je weiter hinten, desto länger; Platz 1 hat keins
-const reachOf = (idx) => (idx <= 0 ? 0 : Math.max(1, Math.min(6, Math.ceil(idx / 2))));
+// Lasso (Catch-up): je weiter hinten, desto größer der Zug – immer nur ein Stück
+function lassoPull(pl, idx) {
+  const N = pl.length;
+  if (idx <= 0 || N < 2) return 0;
+  const gapLead = (pl[0].s || 0) - (pl[idx].s || 0), gapAhead = (pl[idx - 1].s || 0) - (pl[idx].s || 0);
+  if (gapLead <= 0) return 0;
+  const t = idx / (N - 1);
+  return Math.max(1, Math.min(60, Math.round(gapLead * (0.1 + 0.3 * t)), Math.max(5, gapAhead + 3)));
+}
 function phaseInfo(meta, now) {
   if (meta.ph !== 'play') return null;
-  const cfg = meta.cfg, play = NSTAGE * cfg.step, round = play + cfg.brk, t = now - meta.st;
+  const cfg = meta.cfg, play = NSTAGE * cfg.step, round = play + cfg.brk;
+  let t = now - meta.st;
+  if (cfg.mode === 'manual') t = Math.min(t, (meta.gate || 1) * round - 1);
   if (t < 0) return { r: -1, ph: 'pre' };
   const r = Math.floor(t / round);
   if (r >= cfg.rounds) return { r: cfg.rounds, ph: 'done' };
@@ -60,25 +69,7 @@ async function loadAll(c, meta) {
   const by = {};
   players.forEach((p) => (by[p.id] = p));
   const now = Date.now(), cfg = meta.cfg, roundMs = NSTAGE * cfg.step + cfg.brk;
-  // Lasso-Haken: Feld "h:<runde>:<hakerId>" -> Zielspieler (gilt nur für diese eine Runde)
-  const hooks = Object.keys(tm).filter((f) => f.indexOf('h:') === 0).map((f) => {
-    const q = f.split(':');
-    return { f, tr: Number(q[1]), hid: q[2], tid: String(tm[f]).replace(/"/g, '') };
-  }).filter((H) => by[H.hid] && by[H.tid]);
-  const adj = {}, rnd = {}, res = [];
-  hooks.forEach((H) => {
-    let ok = null, b = 0;
-    if (meta.st && now >= meta.st + H.tr * roundMs + NSTAGE * cfg.step + GRACE) {
-      const tp = by[H.tid].rr && by[H.tid].rr[H.tr] ? by[H.tid].rr[H.tr][0] : 0;
-      ok = tp > 0;
-      b = ok ? Math.max(1, Math.round(tp * 0.5)) : 0;
-      if (b) {
-        adj[H.hid] = (adj[H.hid] || 0) + b;
-        (rnd[H.hid] = rnd[H.hid] || {})[H.tr] = ((rnd[H.hid] || {})[H.tr] || 0) + b;
-      }
-    }
-    res.push({ r: H.tr, h: by[H.hid].n, t: by[H.tid].n, ok, b, hid: H.hid, tid: H.tid });
-  });
+  const adj = {}, rnd = {}, res = [], hooks = [];
   players.forEach((p) => {
     p.raw = p.s || 0;
     p.adj = (adj[p.id] || 0) + (p.lz || 0);
@@ -125,7 +116,7 @@ module.exports = async (req, res) => {
       return res.json({ ok: false, err: 'Kein Raumcode frei' });
     }
 
-    if (['hstate', 'start', 'end', 'reset', 'cfg', 'skip', 'kick', 'close'].includes(a)) {
+    if (['hstate', 'start', 'end', 'reset', 'cfg', 'skip', 'next', 'kick', 'close'].includes(a)) {
       const c = String(b.c || '').toUpperCase().replace(/[^A-Z]/g, '').slice(0, 4);
       const hk = c ? await r('GET', key(c, 'hk')) : null;
       if (!hk) return res.json({ ok: false, err: 'Raum nicht gefunden', gone: true });
@@ -144,8 +135,7 @@ module.exports = async (req, res) => {
       if (a === 'hstate') {
         const L = await loadAll(c, meta);
         return res.json({
-          ok: true, ph: meta.ph, st: meta.st, cfg: meta.cfg, seed: meta.seed, name: meta.name, now: Date.now(),
-          hooks: L.res.filter((H) => { const q = phaseInfo(meta, Date.now()); return !q || H.r === q.r || H.r === q.r + 1; }).map((H) => ({ r: H.r, h: H.h, t: H.t, ok: H.ok, b: H.b })),
+          ok: true, ph: meta.ph, st: meta.st, cfg: meta.cfg, seed: meta.seed, name: meta.name, gate: meta.gate || 1, now: Date.now(),
           players: L.players.map((p) => {
             const rr = {};
             Object.keys(p.rr || {}).forEach((k) => (rr[k] = effRound(p, k)));
@@ -163,6 +153,7 @@ module.exports = async (req, res) => {
         if (meta.ph === 'play') return res.json({ ok: true, ph: meta.ph, st: meta.st, now: Date.now() });
         meta.ph = 'play';
         meta.st = Date.now() + 5000;
+        meta.gate = 1;
         await save();
         return res.json({ ok: true, ph: meta.ph, st: meta.st, now: Date.now() });
       }
@@ -170,6 +161,19 @@ module.exports = async (req, res) => {
         meta.ph = 'end';
         await save();
         return res.json({ ok: true, ph: 'end' });
+      }
+      if (a === 'next') {
+        if (meta.ph !== 'play') return res.json({ ok: false, err: 'Spiel läuft nicht' });
+        const round = NSTAGE * meta.cfg.step + meta.cfg.brk, g = meta.gate || 1;
+        if (meta.cfg.mode === 'manual') {
+          const ph = phaseInfo(meta, Date.now());
+          if (ph && ph.ph === 'brk' && ph.r === g - 1) {
+            meta.st = Date.now() - g * round;
+            meta.gate = g + 1;
+            await save();
+          }
+        }
+        return res.json({ ok: true, st: meta.st, gate: meta.gate || 1, now: Date.now() });
       }
       if (a === 'skip') {
         if (meta.ph !== 'play') return res.json({ ok: false, err: 'Spiel läuft nicht' });
@@ -184,6 +188,7 @@ module.exports = async (req, res) => {
       if (a === 'reset') {
         meta.ph = 'lobby';
         meta.st = 0;
+        meta.gate = 1;
         meta.seed = Math.floor(Math.random() * 2e9);
         const pl = pairs(await r('HGETALL', key(c, 'p')));
         const args = [];
@@ -200,11 +205,11 @@ module.exports = async (req, res) => {
     }
 
     // ---------- Schüler-Geräte ----------
-    if (a === 'join' || a === 'state' || a === 'rep' || a === 'msg' || a === 'hook' || a === 'unhook' || a === 'solo') {
+    if (a === 'join' || a === 'state' || a === 'rep' || a === 'msg' || a === 'lasso') {
       const c = String(b.c || '').toUpperCase().replace(/[^A-Z]/g, '').slice(0, 4);
       const meta = c ? parse(await r('GET', key(c, 'meta'))) : null;
       if (!meta) return res.json({ ok: false, err: 'Diesen Raumcode gibt es nicht', gone: true });
-      const pub = { ph: meta.ph, st: meta.st, cfg: meta.cfg, seed: meta.seed, name: meta.name, now: Date.now() };
+      const pub = { gate: meta.gate || 1, ph: meta.ph, st: meta.st, cfg: meta.cfg, seed: meta.seed, name: meta.name, now: Date.now() };
 
       if (a === 'join') {
         if (meta.ph === 'end') return res.json({ ok: false, err: 'Das Spiel ist schon beendet' });
@@ -233,46 +238,20 @@ module.exports = async (req, res) => {
         return res.json({ ok: true });
       }
 
-      if (a === 'hook' || a === 'unhook' || a === 'solo') {
-        const fail = (err) => res.json({ ok: false, err });
+      if (a === 'lasso') {
         const L = await loadAll(c, meta);
         const me = L.by[pid];
         if (!me) return res.json({ ok: true, kicked: true });
         const ph = phaseInfo(meta, Date.now());
-        const inBreak = ph && ph.ph === 'brk' && ph.r + 1 < meta.cfg.rounds;
-        const tr = ph ? ph.r + 1 : -1;
-        const saveRaw = async (id, fn) => {
-          const p = parse(await r('HGET', key(c, 'p'), id));
-          if (!p) return;
-          fn(p);
-          await r('HSET', key(c, 'p'), id, JSON.stringify(p));
-        };
-        if (a === 'solo') {
-          const on = b.on ? 1 : 0;
-          if (on && inBreak) {
-            await r('HDEL', key(c, 't'), 'h:' + tr + ':' + pid);
-            for (const H of L.hooks) if (H.tr === tr && H.tid === pid) await r('HDEL', key(c, 't'), H.f);
-          }
-          await saveRaw(pid, (p) => (p.sl = on));
-          return res.json({ ok: true, sl: on });
-        }
-        if (!inBreak) return fail('Das Lasso geht nur in der Pause nach einer Runde');
-        if (a === 'unhook') {
-          await r('HDEL', key(c, 't'), 'h:' + tr + ':' + pid);
-          return res.json({ ok: true });
-        }
-        if (me.sl) return fail('Du spielst allein – schalte das erst aus');
-        const target = L.players.find((p) => p.n === String(b.t || ''));
-        if (!target || target.id === pid) return fail('Spieler nicht gefunden');
-        if (target.sl) return fail(target.n + ' spielt lieber allein');
-        const im = L.players.findIndex((p) => p.id === pid), it = L.players.findIndex((p) => p.id === target.id);
-        if (it >= im) return fail('Das Lasso geht nur nach vorn zu jemandem, der vor dir liegt');
-        if (im - it > reachOf(im)) return fail('Zu weit weg – dein Lasso reicht ' + reachOf(im) + ' Plätze nach vorn');
-        const already = L.hooks.filter((H) => H.tr === tr && H.tid === target.id && H.hid !== pid).length;
-        if (already >= 2) return fail('An ' + target.n + ' hängen schon 2 Spieler');
-        await r('HSET', key(c, 't'), 'h:' + tr + ':' + pid, target.id);
-        await r('EXPIRE', key(c, 't'), TTL);
-        return res.json({ ok: true, t: target.n });
+        if (!(ph && ph.ph === 'brk' && ph.r + 1 < meta.cfg.rounds)) return res.json({ ok: false, err: 'Das Lasso geht nur nach der Auswertung einer Runde' });
+        if (me.lzr === ph.r) return res.json({ ok: false, err: 'Dein Lasso ist in dieser Pause schon benutzt' });
+        const pull = lassoPull(L.players, L.players.findIndex((p) => p.id === pid));
+        if (!pull) return res.json({ ok: false, err: 'Du brauchst kein Lasso – du bist vorn' });
+        const p = parse(await r('HGET', key(c, 'p'), pid));
+        p.lz = (p.lz || 0) + pull;
+        p.lzr = ph.r;
+        await r('HSET', key(c, 'p'), pid, JSON.stringify(p));
+        return res.json({ ok: true, pull });
       }
 
       if (a === 'rep') {
@@ -287,6 +266,23 @@ module.exports = async (req, res) => {
           p.rr[rd] = [num(b.pts, -100, 300, 0), num(b.ms, 0, 600000, 0), b.ok ? 1 : 0];
         }
         await r('HSET', key(c, 'p'), pid, JSON.stringify(p));
+        // Frage vorzeitig beenden, sobald alle geantwortet haben
+        if (rd >= 0 && p.rr[rd] && p.rr[rd][2]) {
+          const ph = phaseInfo(meta, Date.now());
+          if (ph && ph.ph === 'play' && ph.r === rd) {
+            const pls = pairs(await r('HGETALL', key(c, 'p')));
+            const ids = Object.keys(pls);
+            const all = ids.length > 0 && ids.every((id) => { const q = parse(pls[id]) || {}; return q.rr && q.rr[rd] && q.rr[rd][2]; });
+            if (all) {
+              const round = NSTAGE * meta.cfg.step + meta.cfg.brk, tin = (Date.now() - meta.st) - rd * round;
+              const rest = NSTAGE * meta.cfg.step - tin;
+              if (rest > 1500) {
+                const m2 = parse(await r('GET', key(c, 'meta')));
+                if (m2 && m2.st === meta.st) { m2.st -= rest - 600; await r('SET', key(c, 'meta'), JSON.stringify(m2), 'EX', TTL); }
+              }
+            }
+          }
+        }
         return res.json({ ok: true });
       }
 
@@ -316,24 +312,22 @@ module.exports = async (req, res) => {
             const ri = rl.findIndex((x) => x.p.id === pid);
             if (ri >= 0) out.rme = [ri + 1, rl[ri].v[0], rl[ri].v[1]];
           }
-          out.hooks = L.res.filter((H) => ph && (H.r === ph.r || H.r === ph.r + 1)).map((H) => ({ r: H.r, h: H.h, t: H.t, ok: H.ok, b: H.b }));
           if (pid && idx < 0) out.kicked = true;
           if (idx >= 0) {
             out.rank = idx + 1;
             out.me = [pl[idx].s || 0, pl[idx].c || 0];
             out.adj = pl[idx].adj || 0;
             out.sl = pl[idx].sl || 0;
-            out.reach = reachOf(idx);
-            const span = Math.max(3, out.reach), a0 = Math.max(0, idx - span);
+            out.pull = lassoPull(pl, idx);
+            out.lzu = !!(ph && pl[idx].lzr === ph.r);
+            out.ahead = idx > 0 ? [pl[idx - 1].n, pl[idx - 1].e, pl[idx - 1].s || 0] : null;
+            const span = 3, a0 = Math.max(0, idx - span);
             out.win = pl.slice(a0, idx + 4).map((p, k) => [p.n, p.e, p.s || 0, p.sl || 0, a0 + k + 1, p.m == null ? -1 : p.m, p.mt || 0]);
             const q3 = (p) => (p ? [p.n, p.e, p.s || 0] : null);
             out.lead = q3(pl[0]);
             out.last = q3(pl[pl.length - 1]);
             out.nu = q3(pl[a0 - 1]);
             out.nd = q3(pl[idx + 4]);
-            const fwd = [];
-            for (let k = Math.max(0, idx - out.reach); k < idx; k++) fwd.push([pl[k].n, pl[k].e, pl[k].s || 0, pl[k].sl || 0, k + 1]);
-            out.fw = fwd;
           }
         }
         return res.json(out);
