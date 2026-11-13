@@ -182,7 +182,7 @@ module.exports = async (req, res) => {
         const rd = num(b.rd, -1, 30, -1);
         if (rd >= 0) {
           p.rr = p.rr || {};
-          p.rr[rd] = [num(b.pts, 0, 300, 0), num(b.ms, 0, 600000, 0)];
+          p.rr[rd] = [num(b.pts, -100, 300, 0), num(b.ms, 0, 600000, 0)];
         }
         await r('HSET', key(c, 'p'), pid, JSON.stringify(p));
         return res.json({ ok: true });
