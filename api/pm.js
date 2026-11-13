@@ -91,7 +91,7 @@ module.exports = async (req, res) => {
         const pl = sorted(pairs(await r('HGETALL', key(c, 'p'))));
         return res.json({
           ok: true, ph: meta.ph, st: meta.st, cfg: meta.cfg, seed: meta.seed, name: meta.name, now: Date.now(),
-          players: pl.map((p) => ({ id: p.id, n: p.n, e: p.e, ro: p.ro, s: p.s || 0, a: p.a == null ? -1 : p.a, c: p.c || 0 })),
+          players: pl.map((p) => ({ id: p.id, n: p.n, e: p.e, ro: p.ro, s: p.s || 0, a: p.a == null ? -1 : p.a, c: p.c || 0, rr: p.rr || {} })),
         });
       }
       if (a === 'cfg') {
@@ -168,6 +168,11 @@ module.exports = async (req, res) => {
         p.s = num(b.s, 0, 5000, p.s || 0);
         p.a = num(b.rd, -1, 30, p.a);
         p.c = num(b.cc, 0, 30, p.c || 0);
+        const rd = num(b.rd, -1, 30, -1);
+        if (rd >= 0) {
+          p.rr = p.rr || {};
+          p.rr[rd] = [num(b.pts, 0, 300, 0), num(b.ms, 0, 600000, 0)];
+        }
         await r('HSET', key(c, 'p'), pid, JSON.stringify(p));
         return res.json({ ok: true });
       }
@@ -179,6 +184,14 @@ module.exports = async (req, res) => {
           const idx = pl.findIndex((p) => p.id === pid);
           out.total = pl.length;
           out.top = pl.slice(0, 10).map((p) => [p.n, p.e, p.s || 0, p.c || 0]);
+          if (b.rd != null && b.rd !== '') {
+            const rd = num(b.rd, 0, 30, 0);
+            const rl = pl.filter((p) => p.rr && p.rr[rd]).map((p) => ({ p, v: p.rr[rd] }))
+              .sort((x, y) => y.v[0] - x.v[0] || (x.v[0] ? x.v[1] - y.v[1] : 0) || String(x.p.n).localeCompare(String(y.p.n)));
+            out.rtop = rl.slice(0, 5).map((x) => [x.p.n, x.p.e, x.v[0], x.v[1]]);
+            const ri = rl.findIndex((x) => x.p.id === pid);
+            if (ri >= 0) out.rme = [ri + 1, rl[ri].v[0], rl[ri].v[1]];
+          }
           if (pid && idx < 0) out.kicked = true;
           if (idx >= 0) { out.rank = idx + 1; out.me = [pl[idx].s || 0, pl[idx].c || 0]; }
         }

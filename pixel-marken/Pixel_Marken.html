@@ -2581,7 +2581,7 @@ function hudHTML(){return '<div class="hud"><span id="hR"></span><span id="hS"><
 function hud(){if($('#hR'))$('#hR').textContent='Runde '+(G.r+1)+'/'+nRounds();if($('#hS'))$('#hS').textContent='⭐ '+G.score;if($('#hK'))$('#hK').textContent='🔥 '+G.streak;
   const m=$('#mu');if(m)m.onclick=()=>{MUTE=!MUTE;ls.set('pm_mute',0);try{localStorage.setItem('pm_mute',MUTE?'1':'0')}catch(e){}m.textContent=MUTE?'🔇':'🔊'}}
 function startRound(r){
-  G.r=r;G.vph='play';G.answered=false;G.wrong=[];G.gone=[];G.stage=-1;G.hint='';G.rpts=0;G.q=G.qs[r];G.peekT=null;
+  G.r=r;G.vph='play';G.answered=false;G.wrong=[];G.gone=[];G.stage=-1;G.hint='';G.rpts=0;G.rms=0;G.q=G.qs[r];G.peekT=null;
   G.src=makeSrc(IMG[G.q.id]?G.q.id:'x',W,H);
   const b=BYID[G.q.id];
   if(M==='host'){
@@ -2615,7 +2615,7 @@ function answer(id){
   const stage=Math.min(NS-1,Math.floor(c.t/stepMs()));
   if(id===G.q.id){
     const base=Math.max(0,PTS[stage]-15*G.wrong.length),bonus=base>0?Math.min(50,G.streak*10):0;
-    G.rpts=base+bonus;G.score+=G.rpts;G.streak++;G.correct++;G.answered=true;
+    G.rpts=base+bonus;G.rms=c.t;G.score+=G.rpts;G.streak++;G.correct++;G.answered=true;
     G.log.push({id:G.q.id,pts:G.rpts,ok:true});
     const cv=$('#cv');if(cv)drawMosaic(cv.getContext('2d'),G.src,999);
     document.querySelectorAll('.opt').forEach(o=>{if(o.dataset.o===id)o.classList.add('good');o.disabled=true});
@@ -2654,21 +2654,24 @@ function enterBreak(){
   let top='';
   const banner=isH?'<div class="res host">Lösung</div>':G.answered?'<div class="res ok">✅ Richtig! +'+G.rpts+'</div>':(G.wrong.length?'<div class="res no">❌ Leider nicht erkannt</div>':'<div class="res to">⏱ Zeit abgelaufen</div>');
   const last=G.r>=nRounds()-1;
-  const foot=M==='solo'?'<button class="btn gr" id="nx">'+(last?'🏁 Zum Ergebnis':'Weiter ▶')+'</button>':'<div class="pts" id="cdn"></div>'+(isH?'':'<ol class="lb" id="top"></ol>');
+  const foot=M==='solo'?'<button class="btn gr" id="nx">'+(last?'🏁 Zum Ergebnis':'Weiter ▶')+'</button>':'<div class="pts" id="cdn"></div>'+(isH?'':'<div id="top"></div>');
   app('<div class="wrap'+(isH?' wide':'')+'">'+(isH?'':hudHTML())+banner+'<canvas id="cv" width="'+W+'" height="'+H+'"></canvas>'+
     '<div class="nm">'+esc(b.n)+'</div><div style="text-align:center">'+b.fl+' '+esc(b.land)+'</div>'+
     '<div class="card">'+shareRows(b)+'</div><div class="fact">💡 '+esc(b.fact)+'</div>'+memeHTML(b)+foot+
-    (isH?'<div class="row"><button class="btn sm cy" id="hSkip">⏭ Nächste Runde</button><button class="btn sm gh" id="hEnd">⏹ Spiel beenden</button></div><ol class="lb" id="top"></ol>':'')+'</div>');
+    (isH?'<div class="row"><button class="btn sm cy" id="hSkip">⏭ Nächste Runde</button><button class="btn sm gh" id="hEnd">⏹ Spiel beenden</button></div><div id="top"></div>':'')+'</div>');
   drawMosaic($('#cv').getContext('2d'),G.src,999);hud();
   if(M==='solo'){$('#nx').onclick=()=>{if(last)return goEnd();G.sph='play';G.t0=Date.now();V='play';beep(440,.08);startRound(G.r+1)}}
   if(isH){$('#hSkip').onclick=hostSkip;$('#hEnd').onclick=hostEnd;hostTop()}
   if(M==='room')setTimeout(()=>roomRank(),1300);
 }
 function updateBrk(c){const e=$('#cdn');if(!e)return;const s=Math.max(0,Math.ceil((brkMs()-c.t)/1000));e.textContent=(G.r>=nRounds()-1?'Ergebnis in ':'Nächste Runde in ')+s+' s'}
+const fs_=ms=>(ms/1000).toFixed(1).replace('.',',')+' s';
+function roundLi(p,i,me){return '<li'+(me?' class="me"':'')+'><span class="rk">'+(i+1)+'.</span>'+esc(p[1])+' '+esc(p[0])+'<span class="sc">'+(p[2]?'+'+p[2]+' · '+fs_(p[3]):'–')+'</span></li>'}
 async function roomRank(){
-  const x=await api('state',{c:R.code,pid:R.pid,full:1});if(!x||!x.ok)return;applyState(x);
+  const x=await api('state',{c:R.code,pid:R.pid,full:1,rd:G.r});if(!x||!x.ok)return;applyState(x);
   const t=$('#top');if(!t||V!=='play')return;
-  t.innerHTML=x.top.slice(0,5).map((p,i)=>'<li><span class="rk">'+(i+1)+'.</span>'+esc(p[1])+' '+esc(p[0])+'<span class="sc">'+p[2]+'</span></li>').join('')+(x.rank>5?'<li class="me"><span class="rk">'+x.rank+'.</span>'+esc(R.av)+' '+esc(R.name)+'<span class="sc">'+G.score+'</span></li>':'');
+  t.innerHTML=(x.rtop&&x.rtop.length?'<h3>⚡ Beste dieser Runde</h3><ol class="lb">'+x.rtop.map((p,i)=>roundLi(p,i,p[0]===R.name)).join('')+(x.rme&&x.rme[0]>5?'<li class="me"><span class="rk">'+x.rme[0]+'.</span>'+esc(R.av)+' '+esc(R.name)+'<span class="sc">'+(x.rme[1]?'+'+x.rme[1]+' · '+fs_(x.rme[2]):'–')+'</span></li>':'')+'</ol>':'')+
+   '<h3>🏆 Gesamt</h3><ol class="lb">'+x.top.slice(0,5).map((p,i)=>'<li'+(p[0]===R.name?' class="me"':'')+'><span class="rk">'+(i+1)+'.</span>'+esc(p[1])+' '+esc(p[0])+'<span class="sc">'+p[2]+'</span></li>').join('')+(x.rank>5?'<li class="me"><span class="rk">'+x.rank+'.</span>'+esc(R.av)+' '+esc(R.name)+'<span class="sc">'+G.score+'</span></li>':'')+'</ol>';
 }
 
 /* ===================== Takt ===================== */
@@ -2791,7 +2794,7 @@ async function poll(){
 }
 function stopPoll(){clearInterval(pollT);pollT=null}
 function leaveRoom(){stopPoll();M='home';R.code='';R.pid='';ls.del('pm_p')}
-async function report(){if(M!=='room')return;const x=await api('rep',{c:R.code,pid:R.pid,s:G.score,rd:G.r,cc:G.correct});if(x&&x.kicked){stopPoll();ls.del('pm_p');alert('Du wurdest aus dem Raum entfernt.');homeView()}}
+async function report(){if(M!=='room')return;const x=await api('rep',{c:R.code,pid:R.pid,s:G.score,rd:G.r,cc:G.correct,pts:G.answered?G.rpts:0,ms:G.answered?Math.round(G.rms||0):0});if(x&&x.kicked){stopPoll();ls.del('pm_p');alert('Du wurdest aus dem Raum entfernt.');homeView()}}
 
 /* ===================== Lehrkraft ===================== */
 function hostSetup(){
@@ -2847,7 +2850,11 @@ function hostLobbyUpd(){
   c.innerHTML=R.players.map(p=>'<span class="chip">'+esc(p.e)+' '+esc(p.n)+' <small class="mut">'+((ROLES.find(r=>r.id===p.ro)||{}).e||'')+'</small><button data-k="'+esc(p.id)+'" title="Entfernen">✕</button></span>').join('')||'<span class="mut">Noch niemand …</span>';
   c.querySelectorAll('[data-k]').forEach(b=>b.onclick=async()=>{await api('kick',{c:R.code,hk:R.hk,pid:b.dataset.k});R.players=R.players.filter(p=>p.id!==b.dataset.k);hostLobbyUpd()});
 }
-function hostTop(){const t=$('#top');if(!t)return;t.innerHTML=R.players.slice(0,8).map((p,i)=>'<li><span class="rk">'+(i+1)+'.</span>'+esc(p.e)+' '+esc(p.n)+'<span class="sc">'+p.s+'</span></li>').join('')||'<li class="mut">Noch keine Punkte</li>'}
+function hostTop(){const t=$('#top');if(!t)return;
+  const li=(i,p,r)=>'<li><span class="rk">'+(i+1)+'.</span>'+esc(p.e)+' '+esc(p.n)+'<span class="sc">'+r+'</span></li>';
+  if(t.tagName==='OL'){t.innerHTML=R.players.slice(0,8).map((p,i)=>li(i,p,p.s)).join('')||'<li class="mut">Noch keine Punkte</li>';return}
+  const rl=R.players.filter(p=>p.rr&&p.rr[G.r]).map(p=>({p,v:p.rr[G.r]})).sort((x,y)=>y.v[0]-x.v[0]||(x.v[0]?x.v[1]-y.v[1]:0));
+  t.innerHTML='<h3>⚡ Beste dieser Runde</h3><ol class="lb">'+(rl.slice(0,8).map((x,i)=>li(i,x.p,x.v[0]?'+'+x.v[0]+' · '+fs_(x.v[1]):'–')).join('')||'<li class="mut">Noch keine Antworten</li>')+'</ol><h3>🏆 Gesamt</h3><ol class="lb">'+(R.players.slice(0,8).map((p,i)=>li(i,p,p.s)).join('')||'<li class="mut">–</li>')+'</ol>'}
 async function hostSkip(){
   const c=clock();if(c.ph!=='play'&&c.ph!=='brk')return;
   const d=c.ph==='play'?playMs()-c.t:roundMs()-c.t;
