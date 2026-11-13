@@ -41,7 +41,9 @@ const sorted = (pl) =>
     .map((id) => Object.assign({ id }, parse(pl[id]) || {}))
     .sort((a, b) => (b.s || 0) - (a.s || 0) || (b.c || 0) - (a.c || 0) || String(a.n).localeCompare(String(b.n)));
 
-const NSTAGE = 7, BONUS = 15, GRACE = 2500;
+const NSTAGE = 7, GRACE = 2500;
+// Lasso-Reichweite (Plätze nach vorn): je weiter hinten, desto länger; Platz 1 hat keins
+const reachOf = (idx) => (idx <= 0 ? 0 : Math.max(1, Math.min(6, Math.ceil(idx / 2))));
 function phaseInfo(meta, now) {
   if (meta.ph !== 'play') return null;
   const cfg = meta.cfg, play = NSTAGE * cfg.step, round = play + cfg.brk, t = now - meta.st;
@@ -58,41 +60,24 @@ async function loadAll(c, meta) {
   const by = {};
   players.forEach((p) => (by[p.id] = p));
   const now = Date.now(), cfg = meta.cfg, roundMs = NSTAGE * cfg.step + cfg.brk;
-  const teams = Object.keys(tm).filter((f) => f.indexOf('c') !== 0).map((f) => ({ f, tr: Number(f.split(':')[0]), m: parse(tm[f]) || [] }));
-  // Teams bleiben bestehen: Teams der Vorrunde werden in die jeweils nächste Runde übernommen
-  const phx = phaseInfo(meta, now);
-  if (phx && (phx.ph === 'play' || phx.ph === 'brk')) {
-    const target = Math.min(phx.ph === 'brk' ? phx.r + 1 : phx.r, (cfg.rounds || 1) - 1);
-    for (let k = 1; k <= target; k++) {
-      if (tm['c' + k]) continue;
-      const src = teams.filter((T) => T.tr === k - 1 && T.m.filter((id) => by[id]).length >= 2);
-      for (const T of src) {
-        const nt = { f: k + ':' + T.m[0], tr: k, m: T.m.filter((id) => by[id]) };
-        if (!teams.some((x) => x.f === nt.f)) {
-          teams.push(nt);
-          await r('HSET', key(c, 't'), nt.f, JSON.stringify(nt.m));
-        }
-      }
-      await r('HSET', key(c, 't'), 'c' + k, '1');
-      tm['c' + k] = '1';
-    }
-    await r('EXPIRE', key(c, 't'), TTL);
-  }
+  // Lasso-Haken: Feld "h:<runde>:<hakerId>" -> Zielspieler (gilt nur für diese eine Runde)
+  const hooks = Object.keys(tm).filter((f) => f.indexOf('h:') === 0).map((f) => {
+    const q = f.split(':');
+    return { f, tr: Number(q[1]), hid: q[2], tid: String(tm[f]).replace(/"/g, '') };
+  }).filter((H) => by[H.hid] && by[H.tid]);
   const adj = {}, rnd = {}, res = [];
-  teams.forEach((T) => {
-    const m = T.m.filter((id) => by[id]);
+  hooks.forEach((H) => {
     let ok = null, b = 0;
-    if (meta.st && now >= meta.st + T.tr * roundMs + NSTAGE * cfg.step + GRACE) {
-      ok = m.length === T.m.length && m.length >= 2 && m.every((id) => by[id].rr && by[id].rr[T.tr] && by[id].rr[T.tr][2] === 1);
-      b = ok ? BONUS * (m.length - 1) : 0;
-      m.forEach((id) => {
-        const pts = by[id].rr && by[id].rr[T.tr] ? by[id].rr[T.tr][0] : 0;
-        const d = ok ? b : -Math.max(0, pts);
-        adj[id] = (adj[id] || 0) + d;
-        (rnd[id] = rnd[id] || {})[T.tr] = d;
-      });
+    if (meta.st && now >= meta.st + H.tr * roundMs + NSTAGE * cfg.step + GRACE) {
+      const tp = by[H.tid].rr && by[H.tid].rr[H.tr] ? by[H.tid].rr[H.tr][0] : 0;
+      ok = tp > 0;
+      b = ok ? Math.max(1, Math.round(tp * 0.5)) : 0;
+      if (b) {
+        adj[H.hid] = (adj[H.hid] || 0) + b;
+        (rnd[H.hid] = rnd[H.hid] || {})[H.tr] = ((rnd[H.hid] || {})[H.tr] || 0) + b;
+      }
     }
-    res.push({ r: T.tr, m: m.map((id) => [by[id].n, by[id].e, 0]), ok, b, ids: m });
+    res.push({ r: H.tr, h: by[H.hid].n, t: by[H.tid].n, ok, b, hid: H.hid, tid: H.tid });
   });
   players.forEach((p) => {
     p.raw = p.s || 0;
@@ -101,12 +86,13 @@ async function loadAll(c, meta) {
     p.rnd = rnd[p.id] || {};
   });
   players.sort((a, b) => (b.s || 0) - (a.s || 0) || (b.c || 0) - (a.c || 0) || String(a.n).localeCompare(String(b.n)));
-  res.forEach((T) => T.m.forEach((x, i) => (x[2] = (by[T.ids[i]] || {}).s || 0)));
-  return { players, teams, res, by };
+  return { players, hooks, res, by };
 }
 const effRound = (p, rd) => {
   const v = p.rr && p.rr[rd];
-  return v ? [v[0] + ((p.rnd && p.rnd[rd]) || 0), v[1], v[2] || 0] : null;
+  const d = (p.rnd && p.rnd[rd]) || 0;
+  if (!v) return p.rnd && p.rnd[rd] != null ? [d, 0, 0] : null;
+  return [v[0] + d, v[1], v[2] || 0];
 };
 
 module.exports = async (req, res) => {
@@ -159,7 +145,7 @@ module.exports = async (req, res) => {
         const L = await loadAll(c, meta);
         return res.json({
           ok: true, ph: meta.ph, st: meta.st, cfg: meta.cfg, seed: meta.seed, name: meta.name, now: Date.now(),
-          teams: L.res.filter((T) => { const q = phaseInfo(meta, Date.now()); return !q || T.r === q.r || T.r === q.r + 1; }).map((T) => ({ r: T.r, m: T.m, ok: T.ok, b: T.b })),
+          hooks: L.res.filter((H) => { const q = phaseInfo(meta, Date.now()); return !q || H.r === q.r || H.r === q.r + 1; }).map((H) => ({ r: H.r, h: H.h, t: H.t, ok: H.ok, b: H.b })),
           players: L.players.map((p) => {
             const rr = {};
             Object.keys(p.rr || {}).forEach((k) => (rr[k] = effRound(p, k)));
@@ -214,7 +200,7 @@ module.exports = async (req, res) => {
     }
 
     // ---------- Schüler-Geräte ----------
-    if (a === 'join' || a === 'state' || a === 'rep' || a === 'msg' || a === 'jump' || a === 'shove' || a === 'lasso' || a === 'lassot' || a === 'solo') {
+    if (a === 'join' || a === 'state' || a === 'rep' || a === 'msg' || a === 'hook' || a === 'unhook' || a === 'solo') {
       const c = String(b.c || '').toUpperCase().replace(/[^A-Z]/g, '').slice(0, 4);
       const meta = c ? parse(await r('GET', key(c, 'meta'))) : null;
       if (!meta) return res.json({ ok: false, err: 'Diesen Raumcode gibt es nicht', gone: true });
@@ -247,7 +233,7 @@ module.exports = async (req, res) => {
         return res.json({ ok: true });
       }
 
-      if (a === 'jump' || a === 'shove' || a === 'lasso' || a === 'lassot' || a === 'solo') {
+      if (a === 'hook' || a === 'unhook' || a === 'solo') {
         const fail = (err) => res.json({ ok: false, err });
         const L = await loadAll(c, meta);
         const me = L.by[pid];
@@ -255,80 +241,38 @@ module.exports = async (req, res) => {
         const ph = phaseInfo(meta, Date.now());
         const inBreak = ph && ph.ph === 'brk' && ph.r + 1 < meta.cfg.rounds;
         const tr = ph ? ph.r + 1 : -1;
-        const myTeam = L.teams.find((T) => T.tr === tr && T.m.includes(pid));
         const saveRaw = async (id, fn) => {
           const p = parse(await r('HGET', key(c, 'p'), id));
           if (!p) return;
           fn(p);
           await r('HSET', key(c, 'p'), id, JSON.stringify(p));
         };
-        const saveTeam = async (T) => {
-          if (T.m.length < 2) await r('HDEL', key(c, 't'), T.f);
-          else await r('HSET', key(c, 't'), T.f, JSON.stringify(T.m));
-          await r('EXPIRE', key(c, 't'), TTL);
-        };
         if (a === 'solo') {
           const on = b.on ? 1 : 0;
-          if (on && myTeam && inBreak) {
-            const i = myTeam.m.indexOf(pid);
-            myTeam.m = myTeam.m.slice(0, i);
-            await saveTeam(myTeam);
+          if (on && inBreak) {
+            await r('HDEL', key(c, 't'), 'h:' + tr + ':' + pid);
+            for (const H of L.hooks) if (H.tr === tr && H.tid === pid) await r('HDEL', key(c, 't'), H.f);
           }
           await saveRaw(pid, (p) => (p.sl = on));
           return res.json({ ok: true, sl: on });
         }
-        if (!inBreak) return fail('Das geht nur in der Pause vor der nächsten Runde');
-        if (a === 'jump') {
-          if (me.sl) return fail('Du spielst allein – schalte das erst aus');
-          const target = L.players.find((p) => p.n === String(b.t || ''));
-          if (!target || target.id === pid) return fail('Spieler nicht gefunden');
-          if (target.sl) return fail(target.n + ' spielt lieber allein');
-          if (myTeam) return fail('Du sitzt schon in einem Team – steig erst ab');
-          const im = L.players.findIndex((p) => p.id === pid), it = L.players.findIndex((p) => p.id === target.id);
-          if (Math.abs(im - it) < 1 || Math.abs(im - it) > 2) return fail('Du kannst nur auf Spieler direkt neben dir (max. 2 Plätze Abstand) springen');
-          const tt = L.teams.find((T) => T.tr === tr && T.m.includes(target.id));
-          if (tt) {
-            if (tt.m.length >= 3) return fail('Da sitzen schon 3 aufeinander');
-            tt.m.push(pid);
-            await saveTeam(tt);
-          } else {
-            await saveTeam({ f: tr + ':' + target.id, m: [target.id, pid] });
-          }
+        if (!inBreak) return fail('Das Lasso geht nur in der Pause nach einer Runde');
+        if (a === 'unhook') {
+          await r('HDEL', key(c, 't'), 'h:' + tr + ':' + pid);
           return res.json({ ok: true });
         }
-        if (a === 'shove') {
-          if (!myTeam) return fail('Du sitzt in keinem Team');
-          const ri = myTeam.m.findIndex((id) => L.by[id] && L.by[id].n === String(b.t || '')), mi = myTeam.m.indexOf(pid);
-          if (ri < 0 || ri < mi) return fail('Nur wer über dir sitzt (oder du selbst) kann herunter');
-          myTeam.m = myTeam.m.slice(0, ri);
-          await saveTeam(myTeam);
-          return res.json({ ok: true });
-        }
-        if (a === 'lassot') {
-          if (me.lzr === ph.r) return fail('Dein Lasso ist in dieser Pause schon benutzt');
-          const target = L.players.find((p) => p.n === String(b.t || ''));
-          if (!target || target.id === pid) return fail('Spieler nicht gefunden');
-          const T = L.teams.find((x) => x.tr === tr && x.m.includes(target.id));
-          if (!T) return fail(target.n + ' sitzt in keinem Team');
-          if (T.m.includes(pid)) return fail('Das ist dein eigenes Team');
-          const im = L.players.findIndex((p) => p.id === pid), it = L.players.findIndex((p) => p.id === target.id);
-          if (Math.abs(im - it) > 2) return fail('Zu weit weg – das Lasso reicht nur 2 Plätze');
-          T.m = T.m.slice(0, T.m.indexOf(target.id));
-          await saveTeam(T);
-          await saveRaw(pid, (p) => { p.lzr = ph.r; });
-          return res.json({ ok: true, shot: target.n });
-        }
-        if (a === 'lasso') {
-          if (me.lzr === ph.r) return fail('Dein Lasso ist in dieser Pause schon benutzt');
-          const N = L.players.length, idx = L.players.findIndex((p) => p.id === pid), last = Math.max(1, Math.ceil(N / 3));
-          if (N < 3 || idx < N - last) return fail('Das Lasso haben nur die letzten Spieler');
-          const gapLead = L.players[0].s - me.s, gapAhead = idx > 0 ? L.players[idx - 1].s - me.s : 0;
-          if (gapLead <= 0) return fail('Du bist schon ganz vorn');
-          const t = (idx - (N - last) + 1) / last;
-          const pull = Math.max(1, Math.min(60, Math.round(gapLead * (0.12 + 0.28 * t)), Math.max(5, gapAhead + 3)));
-          await saveRaw(pid, (p) => { p.lz = (p.lz || 0) + pull; p.lzr = ph.r; });
-          return res.json({ ok: true, pull });
-        }
+        if (me.sl) return fail('Du spielst allein – schalte das erst aus');
+        const target = L.players.find((p) => p.n === String(b.t || ''));
+        if (!target || target.id === pid) return fail('Spieler nicht gefunden');
+        if (target.sl) return fail(target.n + ' spielt lieber allein');
+        const im = L.players.findIndex((p) => p.id === pid), it = L.players.findIndex((p) => p.id === target.id);
+        if (it >= im) return fail('Das Lasso geht nur nach vorn zu jemandem, der vor dir liegt');
+        if (im - it > reachOf(im)) return fail('Zu weit weg – dein Lasso reicht ' + reachOf(im) + ' Plätze nach vorn');
+        const already = L.hooks.filter((H) => H.tr === tr && H.tid === target.id && H.hid !== pid).length;
+        if (already >= 2) return fail('An ' + target.n + ' hängen schon 2 Spieler');
+        await r('HSET', key(c, 't'), 'h:' + tr + ':' + pid, target.id);
+        await r('EXPIRE', key(c, 't'), TTL);
+        return res.json({ ok: true, t: target.n });
       }
 
       if (a === 'rep') {
@@ -372,16 +316,24 @@ module.exports = async (req, res) => {
             const ri = rl.findIndex((x) => x.p.id === pid);
             if (ri >= 0) out.rme = [ri + 1, rl[ri].v[0], rl[ri].v[1]];
           }
-          out.teams = L.res.filter((T) => ph && (T.r === ph.r || T.r === ph.r + 1)).map((T) => ({ r: T.r, m: T.m, ok: T.ok, b: T.b }));
+          out.hooks = L.res.filter((H) => ph && (H.r === ph.r || H.r === ph.r + 1)).map((H) => ({ r: H.r, h: H.h, t: H.t, ok: H.ok, b: H.b }));
           if (pid && idx < 0) out.kicked = true;
           if (idx >= 0) {
             out.rank = idx + 1;
             out.me = [pl[idx].s || 0, pl[idx].c || 0];
             out.adj = pl[idx].adj || 0;
             out.sl = pl[idx].sl || 0;
-            out.lzu = !!(ph && pl[idx].lzr === ph.r);
-            const nbr = (p, k) => (p ? [p.n, p.e, p.s || 0, p.sl || 0, k] : null);
-            out.nb = [nbr(pl[idx - 2], idx - 1), nbr(pl[idx - 1], idx), nbr(pl[idx + 1], idx + 2), nbr(pl[idx + 2], idx + 3)].filter(Boolean);
+            out.reach = reachOf(idx);
+            const span = Math.max(3, out.reach), a0 = Math.max(0, idx - span);
+            out.win = pl.slice(a0, idx + 4).map((p, k) => [p.n, p.e, p.s || 0, p.sl || 0, a0 + k + 1, p.m == null ? -1 : p.m, p.mt || 0]);
+            const q3 = (p) => (p ? [p.n, p.e, p.s || 0] : null);
+            out.lead = q3(pl[0]);
+            out.last = q3(pl[pl.length - 1]);
+            out.nu = q3(pl[a0 - 1]);
+            out.nd = q3(pl[idx + 4]);
+            const fwd = [];
+            for (let k = Math.max(0, idx - out.reach); k < idx; k++) fwd.push([pl[k].n, pl[k].e, pl[k].s || 0, pl[k].sl || 0, k + 1]);
+            out.fw = fwd;
           }
         }
         return res.json(out);
