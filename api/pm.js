@@ -34,7 +34,7 @@ const num = (v, lo, hi, d) => {
   v = Number(v);
   return Number.isFinite(v) ? Math.min(hi, Math.max(lo, Math.round(v))) : d;
 };
-const cleanCfg = (c) => ({ rounds: num(c && c.rounds, 3, 14, 8), step: num(c && c.step, 2000, 6000, 3000), brk: 10000, mode: c && c.mode === 'manual' ? 'manual' : 'auto' });
+const cleanCfg = (c) => ({ rounds: num(c && c.rounds, 3, 30, 8), step: num(c && c.step, 2000, 6000, 3000), brk: 10000, mode: c && c.mode === 'manual' ? 'manual' : 'auto', gm: ['klassisch', 'mut', 'blick', 'zoom'].includes(c && c.gm) ? c.gm : 'klassisch', pool: Array.isArray(c && c.pool) ? c.pool.slice(0, 60).map((s) => String(s).replace(/[^a-z0-9]/gi, '').slice(0, 20)).filter(Boolean) : null });
 const clean = (s, n) => String(s == null ? '' : s).replace(/[<>&"'`]/g, '').replace(/\s+/g, ' ').trim().slice(0, n);
 const sorted = (pl) =>
   Object.keys(pl)
@@ -116,7 +116,7 @@ module.exports = async (req, res) => {
       return res.json({ ok: false, err: 'Kein Raumcode frei' });
     }
 
-    if (['hstate', 'start', 'end', 'reset', 'cfg', 'skip', 'next', 'kick', 'close'].includes(a)) {
+    if (['hstate', 'start', 'end', 'reset', 'cfg', 'skip', 'next', 'mus', 'kick', 'close'].includes(a)) {
       const c = String(b.c || '').toUpperCase().replace(/[^A-Z]/g, '').slice(0, 4);
       const hk = c ? await r('GET', key(c, 'hk')) : null;
       if (!hk) return res.json({ ok: false, err: 'Raum nicht gefunden', gone: true });
@@ -135,7 +135,7 @@ module.exports = async (req, res) => {
       if (a === 'hstate') {
         const L = await loadAll(c, meta);
         return res.json({
-          ok: true, ph: meta.ph, st: meta.st, cfg: meta.cfg, seed: meta.seed, name: meta.name, gate: meta.gate || 1, now: Date.now(),
+          ok: true, ph: meta.ph, st: meta.st, cfg: meta.cfg, seed: meta.seed, name: meta.name, gate: meta.gate || 1, mus: meta.mus || null, now: Date.now(),
           players: L.players.map((p) => {
             const rr = {};
             Object.keys(p.rr || {}).forEach((k) => (rr[k] = effRound(p, k)));
@@ -161,6 +161,12 @@ module.exports = async (req, res) => {
         meta.ph = 'end';
         await save();
         return res.json({ ok: true, ph: 'end' });
+      }
+      if (a === 'mus') {
+        const SE = ['auto', 'fruehling', 'sommer', 'herbst', 'winter'];
+        meta.mus = { on: !!b.on, season: SE.includes(b.season) ? b.season : 'auto', i: num(b.i, 0, 50, 0), v: Date.now() };
+        await save();
+        return res.json({ ok: true, mus: meta.mus });
       }
       if (a === 'next') {
         if (meta.ph !== 'play') return res.json({ ok: false, err: 'Spiel läuft nicht' });
@@ -209,7 +215,7 @@ module.exports = async (req, res) => {
       const c = String(b.c || '').toUpperCase().replace(/[^A-Z]/g, '').slice(0, 4);
       const meta = c ? parse(await r('GET', key(c, 'meta'))) : null;
       if (!meta) return res.json({ ok: false, err: 'Diesen Raumcode gibt es nicht', gone: true });
-      const pub = { gate: meta.gate || 1, ph: meta.ph, st: meta.st, cfg: meta.cfg, seed: meta.seed, name: meta.name, now: Date.now() };
+      const pub = { mus: meta.mus || null, gate: meta.gate || 1, ph: meta.ph, st: meta.st, cfg: meta.cfg, seed: meta.seed, name: meta.name, now: Date.now() };
 
       if (a === 'join') {
         if (meta.ph === 'end') return res.json({ ok: false, err: 'Das Spiel ist schon beendet' });

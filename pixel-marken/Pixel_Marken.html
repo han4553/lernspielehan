@@ -86,6 +86,15 @@ input:focus,select:focus{outline:none;border-color:var(--cy)}
 .chip button{background:none;border:0;color:var(--rd);font-size:16px;cursor:pointer;margin-left:4px}
 .qr{background:#fff;border-radius:14px;padding:8px;max-width:340px;margin:0 auto}.qr svg{display:block;width:100%;height:auto}
 .code{font:900 56px "Courier New",monospace;letter-spacing:10px;text-align:center;color:var(--ye);text-shadow:4px 4px 0 var(--mg)}
+.rdock{position:sticky;top:0;z-index:6;background:var(--bg);padding:2px 0 4px;margin:0 -2px}
+.rdock .race.mini{margin-top:4px;padding:8px 8px 2px}.rdock .race .lane{height:30px}.rdock .more{margin:2px 0}
+.bk .br .fact,.bk .br .card{margin-top:8px}
+@media(min-width:900px){.wrap.bk{max-width:1100px}.bcols{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}.bk .rdock{top:4px}.bk .br canvas{max-width:100%}}
+#mfab{position:fixed;right:10px;bottom:10px;z-index:50;width:44px;height:44px;border-radius:50%;border:2px solid #ffffff44;background:#33216bee;color:#fff;font-size:20px;cursor:pointer}
+#mpan{display:none;position:fixed;right:10px;bottom:64px;z-index:51;width:min(320px,calc(100vw - 20px));max-height:70vh;overflow:auto;background:#241552f5;border:2px solid var(--ye);border-radius:14px;padding:10px 12px}
+#mpan .mx{float:right;background:none;border:0;color:#fff;font-size:18px}.mrow{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.mlab{font-size:13px;color:var(--mut)}
+.chipb{border:2px solid #ffffff33;background:#33216b;color:#fff;border-radius:999px;padding:4px 10px;font-size:13px}.chipb.on{border-color:var(--ye);background:#5a3fb5}
+.mtl{display:flex;flex-direction:column;gap:4px}.mt{text-align:left;background:#33216b;border:2px solid #ffffff22;color:#fff;border-radius:10px;padding:7px 10px;font-size:14px}.mt.on{border-color:var(--gr)}
 .grid2{display:grid;grid-template-columns:1.25fr 1fr;gap:18px}
 @media(max-width:820px){.grid2{grid-template-columns:1fr}}
 .yr{display:flex;gap:8px;margin:8px 0}.yr button{flex:1}
@@ -124,6 +133,13 @@ table{width:100%;border-collapse:collapse}td,th{padding:6px 8px;border-bottom:1p
 .lane.lz .fg{animation:lzs .35s ease-in-out 5}@keyframes lzs{50%{transform:translateX(10px) rotate(4deg)}}
 .jbox{background:#ffffff14;border:2px solid #ffffff2a;border-radius:12px;padding:8px 10px;margin:8px 0;font-size:14px}.jbtn{margin:4px 4px 0 0}
 .cer{background:linear-gradient(#2a1458,#150c2b);border:3px solid var(--ye);border-radius:16px;padding:12px;text-align:center;margin-bottom:12px}
+.cerwait{display:none!important}
+.stairs{display:flex;align-items:flex-end;justify-content:center;gap:2px;margin:8px 0 4px;padding-top:44px;min-height:60px}
+.stp{position:relative;background:linear-gradient(#5a3fb5,#33216b);border:2px solid #ffffff22;border-bottom:0;border-radius:5px 5px 0 0;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;font-size:10px;color:#cdbfff;opacity:.55}
+.stp.on{opacity:1;border-color:var(--ye)}.stp b{padding-bottom:2px}
+.stp:nth-last-child(-n+3){background:linear-gradient(#ffe14a,#d99a00);color:#3a2500}.stp:nth-last-child(2){background:linear-gradient(#e6e6f0,#9a9ab0)}.stp:nth-last-child(3){background:linear-gradient(#e0a060,#9a5a20)}
+.stav{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);line-height:0}.stav.me{filter:drop-shadow(0 0 4px var(--cy))}.stav.cur{filter:drop-shadow(0 0 6px var(--ye))}
+.stav.hop{animation:hopup .7s cubic-bezier(.2,.9,.3,1.2)}@keyframes hopup{0%{transform:translate(-160%,70%) scale(.6);opacity:0}60%{transform:translate(-50%,-55%) scale(1.15);opacity:1}100%{transform:translateX(-50%)}}
 .cerc{min-height:170px}.cerc.pop{animation:pop .35s ease-out}.cerp{font:900 22px "Trebuchet MS",sans-serif;color:var(--ye)}.cerav{margin:6px 0}.cern{font:900 24px "Trebuchet MS",sans-serif;overflow-wrap:anywhere}.cers{font-weight:800;color:var(--cy)}
 .pod{display:flex;justify-content:center;align-items:flex-end;gap:8px;margin-top:10px}.pcol{display:flex;flex-direction:column;align-items:center;max-width:32%;font-size:13px}.pcol b{overflow-wrap:anywhere}.pbar{width:80px;max-width:100%;background:linear-gradient(#ffd23f,#e09f00);color:#1b1035;border-radius:8px 8px 0 0;display:flex;align-items:flex-start;justify-content:center;font-size:30px;padding-top:4px}
 .conf{font-size:26px;letter-spacing:6px;animation:pop .6s ease-out}
@@ -2469,7 +2485,49 @@ const BR=[
  u:WK+'a/a2/Realme_logo.svg/330px-Realme_logo.svg.png',cr:'Realme, gemeinfrei (Wikimedia Commons: Realme logo.svg)'},
 {id:'huawei',n:'Huawei',fl:'🇨🇳',land:'China',r07:0,s07:0,r25:8,s25:2.48,col:['#c7000b','#ff5370'],em:'📡',
  fact:'Huawei wurde 1987 in Shenzhen gegründet und baut auch Mobilfunknetze, nicht nur Handys.',meme:['Handys UND Funkmasten','Doppelt hält besser'],
- u:WK+'d/db/Huawei_wordmark_2019.svg/330px-Huawei_wordmark_2019.svg.png',cr:'Huawei, gemeinfrei (Wikimedia Commons: Huawei wordmark 2019.svg)'}
+ u:WK+'d/db/Huawei_wordmark_2019.svg/330px-Huawei_wordmark_2019.svg.png',cr:'Huawei, gemeinfrei (Wikimedia Commons: Huawei wordmark 2019.svg)'},
+{id:'sony',n:'Sony',fl:'🇯🇵',land:'Japan',r07:0,s07:0,r25:0,s25:0,col:['#0b1f6b','#19a8ff'],em:'🎮',
+ fact:'Sony und Ericsson gründeten 2001 ein Gemeinschaftsunternehmen. Seit 2012 baut Sony die Xperia-Handys allein.',meme:['Erst gemeinsam','dann solo'],
+ u:'https://commons.wikimedia.org/wiki/Special:FilePath/Sony_logo.svg?width=330',cr:'Logo: Sony, Wikimedia Commons (Sony logo.svg)'},
+{id:'htc',n:'HTC',fl:'🇹🇼',land:'Taiwan',r07:0,s07:0,r25:0,s25:0,col:['#2a7d2e','#3dff8b'],em:'🤖',
+ fact:'HTC baute 2008 das erste Android-Handy der Welt: das HTC Dream.',meme:['Das erste Android-Handy','kam aus Taiwan'],
+ u:'https://commons.wikimedia.org/wiki/Special:FilePath/HTC_logo.svg?width=330',cr:'Logo: HTC, Wikimedia Commons (HTC logo.svg)'},
+{id:'oneplus',n:'OnePlus',fl:'🇨🇳',land:'China',r07:0,s07:0,r25:0,s25:0,col:['#b3001b','#ff5370'],em:'➕',
+ fact:'OnePlus wurde 2013 gegründet. Die ersten Handys gab es nur mit Einladung zu kaufen.',meme:['Nur mit Einladung','Handy-VIP-Liste'],
+ u:'https://commons.wikimedia.org/wiki/Special:FilePath/OnePlus_logo.svg?width=330',cr:'Logo: OnePlus, Wikimedia Commons (OnePlus logo.svg)'},
+{id:'asus',n:'ASUS',fl:'🇹🇼',land:'Taiwan',r07:0,s07:0,r25:0,s25:0,col:['#0a2a6b','#19e3ff'],em:'🐴',
+ fact:'Der Name ASUS kommt von „Pegasus“, dem geflügelten Pferd aus der griechischen Sage.',meme:['Pegasus ohne „Pega“','übrig: ASUS'],
+ u:'https://commons.wikimedia.org/wiki/Special:FilePath/AsusTek-black-logo.svg?width=330',cr:'Logo: ASUS, Wikimedia Commons (AsusTek-black-logo.svg)'},
+{id:'lenovo',n:'Lenovo',fl:'🇨🇳',land:'China',r07:0,s07:0,r25:0,s25:0,col:['#b30000','#ff5370'],em:'💻',
+ fact:'Lenovo kaufte 2014 die Handysparte von Motorola – von Google, dem damaligen Besitzer.',meme:['Motorola ändert','die Besitzer'],
+ u:'https://commons.wikimedia.org/wiki/Special:FilePath/Lenovo_logo_2015.svg?width=330',cr:'Logo: Lenovo, Wikimedia Commons (Lenovo logo 2015.svg)'},
+{id:'microsoft',n:'Microsoft',fl:'🇺🇸',land:'USA',r07:0,s07:0,r25:0,s25:0,col:['#0b5ed7','#ffe14a'],em:'🪟',
+ fact:'Microsoft kaufte 2014 das Handygeschäft von Nokia und baute die Lumia-Handys. Später wurde das Geschäft eingestellt.',meme:['Windows Phone','wo bist du?'],
+ u:'https://commons.wikimedia.org/wiki/Special:FilePath/Microsoft_logo_(2012).svg?width=330',cr:'Logo: Microsoft, Wikimedia Commons (Microsoft logo (2012).svg)'},
+{id:'siemens',n:'Siemens',fl:'🇩🇪',land:'Deutschland',r07:0,s07:0,r25:0,s25:0,col:['#00747a','#3dff8b'],em:'🏭',
+ fact:'Siemens verkaufte sein Handygeschäft 2005 an BenQ. Schon 2006 ging BenQ Mobile in Deutschland pleite.',meme:['Verkauft 2005','pleite 2006'],
+ u:'https://commons.wikimedia.org/wiki/Special:FilePath/Siemens-logo.svg?width=330',cr:'Logo: Siemens, Wikimedia Commons (Siemens-logo.svg)'},
+{id:'ericsson',n:'Ericsson',fl:'🇸🇪',land:'Schweden',r07:0,s07:0,r25:0,s25:0,col:['#0a3b8c','#19a8ff'],em:'📶',
+ fact:'Ericsson ist heute vor allem Netzausrüster. Das Handygeschäft ging in Sony Ericsson auf.',meme:['Funkmast statt Handy','Ericsson weiß Bescheid'],
+ u:'https://commons.wikimedia.org/wiki/Special:FilePath/Ericsson_logo.svg?width=330',cr:'Logo: Ericsson, Wikimedia Commons (Ericsson logo.svg)'},
+{id:'philips',n:'Philips',fl:'🇳🇱',land:'Niederlande',r07:0,s07:0,r25:0,s25:0,col:['#0b3d91','#19e3ff'],em:'💡',
+ fact:'Philips aus Eindhoven baute früher auch Handys. Heute kennt man die Marke eher von Lampen und Rasierern.',meme:['Handy? Ach ja','Philips auch'],
+ u:'https://commons.wikimedia.org/wiki/Special:FilePath/Philips_logo_new.svg?width=330',cr:'Logo: Philips, Wikimedia Commons (Philips logo new.svg)'},
+{id:'google',n:'Google (Pixel)',fl:'🇺🇸',land:'USA',r07:0,s07:0,r25:0,s25:0,col:['#1a73e8','#ffe14a'],em:'🔎',
+ fact:'Das erste Google-Pixel-Handy erschien 2016. Das Betriebssystem Android gehört ebenfalls zu Google.',meme:['Pixel kommt von Google','Pixel-Spiel hier auch'],
+ u:'https://commons.wikimedia.org/wiki/Special:FilePath/Google_2015_logo.svg?width=330',cr:'Logo: Google (Pixel), Wikimedia Commons (Google 2015 logo.svg)'},
+{id:'fairphone',n:'Fairphone',fl:'🇳🇱',land:'Niederlande',r07:0,s07:0,r25:0,s25:0,col:['#1a8a5a','#3dff8b'],em:'🌱',
+ fact:'Fairphone will besonders faire und reparierbare Handys bauen, mit wechselbaren Teilen.',meme:['Handy reparieren','statt wegwerfen'],
+ u:'https://commons.wikimedia.org/wiki/Special:FilePath/Fairphone_logo.svg?width=330',cr:'Logo: Fairphone, Wikimedia Commons (Fairphone logo.svg)'},
+{id:'zte',n:'ZTE',fl:'🇨🇳',land:'China',r07:0,s07:0,r25:0,s25:0,col:['#0a4fa3','#19a8ff'],em:'📱',
+ fact:'ZTE sitzt in Shenzhen und baut Handys und Netztechnik für Mobilfunkanbieter in aller Welt.',meme:['Kennt jeder','nennt keiner'],
+ u:'https://commons.wikimedia.org/wiki/Special:FilePath/ZTE_logo.svg?width=330',cr:'Logo: ZTE, Wikimedia Commons (ZTE logo.svg)'},
+{id:'honor',n:'Honor',fl:'🇨🇳',land:'China',r07:0,s07:0,r25:0,s25:0,col:['#0a2a8c','#19e3ff'],em:'🏅',
+ fact:'Honor war bis 2020 eine Marke von Huawei und wurde dann ein eigenständiges Unternehmen.',meme:['Vom Huawei-Kind','zum Chef'],
+ u:'https://commons.wikimedia.org/wiki/Special:FilePath/Honor_logo.svg?width=330',cr:'Logo: Honor, Wikimedia Commons (Honor logo.svg)'},
+{id:'sharp',n:'Sharp',fl:'🇯🇵',land:'Japan',r07:0,s07:0,r25:0,s25:0,col:['#b30000','#ffe14a'],em:'📷',
+ fact:'Ein Sharp-Handy war im Jahr 2000 das erste mit eingebauter Kamera, allerdings nur in Japan.',meme:['Selfie? Noch nicht','aber Kamera schon'],
+ u:'https://commons.wikimedia.org/wiki/Special:FilePath/Sharp_Corporation_logo.svg?width=330',cr:'Logo: Sharp, Wikimedia Commons (Sharp Corporation logo.svg)'}
 ];
 const BYID={};BR.forEach(b=>BYID[b.id]=b);
 
@@ -2593,13 +2651,18 @@ const G={qs:[],r:-1,vph:'',sph:'play',t0:0,stage:-1,wrong:[],gone:[],answered:fa
 const R={code:'',pid:'',hk:'',cfg:{rounds:8,step:3000,brk:7000},ph:'lobby',st:0,off:0,name:'',av:'😎',seed:0,rname:'',players:[],total:0,rank:0,top:[],me:null};
 let pick={av:(()=>{const v=ls.get('pm_av');return avOk(v)?(v.length<6?v+'0':v):avRand()})()};
 const stepMs=()=>M==='solo'?G.cfg.step:R.cfg.step;
+const GM=()=>(M==='solo'?G.cfg.gm:R.cfg.gm)||'klassisch';
+const GMN={klassisch:'🧩 Klassisch',mut:'🎲 Mut-Modus',blick:'👁 Kurzer Blick',zoom:'🔍 Lupe'};
+const ptsFor=s=>GM()==='mut'?PTS[NS-1-s]:PTS[s];
 const brkMs=()=>M==='solo'?G.cfg.brk:R.cfg.brk;
 const playMs=()=>NS*stepMs();
 const roundMs=()=>playMs()+brkMs();
 const nRounds=()=>M==='solo'?G.qs.length:R.cfg.rounds;
+const lastR=()=>G.r>=nRounds()-1; // letzte Runde: Auswertung erst bei der Siegerehrung
 const srvNow=()=>Date.now()+R.off;
 const app=h=>{$('#app').innerHTML=h;window.scrollTo(0,0)};
 async function syncTime(){let best=null;for(let i=0;i<3;i++){const t0=Date.now();const x=await api('time');const t1=Date.now();if(x&&x.ok){const rtt=t1-t0,off=x.t+rtt/2-t1;if(!best||rtt<best.rtt)best={rtt,off}}}if(best)R.off=best.off;return !!best}
+const roomPool=()=>{const p=R.cfg&&R.cfg.pool;const l=p&&p.length?BR.filter(b=>p.includes(b.id)):BR;return l.length>=4?l:BR};
 function buildQs(seed,count,pool){
   const r=rng(seed),ids=shuffle(pool.map(b=>b.id),r).slice(0,count);
   const all=BR.map(b=>b.id);
@@ -2703,6 +2766,8 @@ async function sendMsg(i){
 }
 function raceBox(t,withMsgs){
   if($('#race'))return;
+  const dk=$('#rdock');
+  if(dk){dk.innerHTML='<div class="more" id="mUp"></div><div class="race mini" id="race"></div><div class="more" id="mDn"></div>';t.innerHTML='<div id="jp"></div>'+(withMsgs?'<div class="tag" style="margin:8px 0 4px">Schnellnachricht senden:</div>'+msgsHTML():'')+'<div id="rl"></div>';if(withMsgs)bindMsgs();return}
   t.innerHTML='<h3>🏁 Rennbahn</h3><div class="more" id="mUp"></div><div class="race" id="race"></div><div class="more" id="mDn"></div><div id="jp"></div>'+(withMsgs?'<div class="tag" style="margin:8px 0 4px">Schnellnachricht senden:</div>'+msgsHTML():'')+'<div id="rl"></div>';
   if(withMsgs)bindMsgs();
 }
@@ -2739,7 +2804,7 @@ function botPlan(){ // jeder Bot "antwortet" zu einem festen Zeitpunkt der Runde
   const step=G.cfg.step;G.rt0=Date.now();G.botRes=[];
   G.bots.forEach(b=>{
     const st=Math.round((1-b.sk)*5.5+(Math.random()-.4)*3);let pts=0,ms=0,neg=false;
-    if(st<=6){const s2=Math.max(0,st);pts=PTS[s2];if(Math.random()<(1-b.sk)*.35)pts-=PEN;ms=Math.round(s2*step+400+Math.random()*(step-800))}
+    if(st<=6){const s2=Math.max(0,st);pts=ptsFor(s2);if(Math.random()<(1-b.sk)*.35)pts-=PEN;ms=Math.round(s2*step+400+Math.random()*(step-800))}
     if(st>6&&Math.random()<.35)neg=true;
     const fok=st<=6,fm=st<=6?ms:(neg?Math.round((1+Math.random()*5)*step):1e9);
     b.pl={st,pts,ms,neg,fok,fm,at:st<=6?ms:(neg?fm:1e9),done:false};
@@ -2750,7 +2815,7 @@ function botTick(fin){
   const el=Date.now()-G.rt0;let moved=0;
   G.bots.forEach(b=>{const q=b.pl;if(!q||q.done||(!fin&&q.at>el))return;
     q.done=true;let pts=q.pts;if(q.neg)pts=-Math.min(PEN,b.s);
-    const fp=q.fok?PTS[Math.max(0,q.st)]:-Math.min(PEN,b.s);
+    const fp=q.fok?ptsFor(Math.max(0,q.st)):-Math.min(PEN,b.s);
     b.ok=q.st<=6&&pts>0;b.s=Math.max(0,b.s+pts);moved++;
     G.botRes.push({n:b.n,e:b.e,pts,ms:q.ms,fok:q.fok,fm:q.fm,fp})});
   if(moved&&!fin&&M==='solo'&&G.vph==='play')liveSolo();
@@ -2783,7 +2848,7 @@ function soloRank(){
   const list=all.map((p,i)=>Object.assign({m:-1,mt:0,rk:i+1},p));
   G.bots.forEach(b=>{const q=list.find(x=>x.n===b.n);q.m=b.m;q.mt=b.mt});
   const me=list[idx];if(G.myM){me.m=G.myM[0];me.mt=G.myM[1]}
-  const v=mkView(list,idx,3);
+  const v=mkView(list,idx,2);
   raceRender($('#race'),v.rows,'Du',ropeList('Du'),{lead:v.lead.s});setMore(v,'m');
   lassoPanel({total:all.length,rank:idx+1,pull:lassoInfo(all,idx),lzu:G.lzUsed});
   const rws=soloRows();
@@ -2794,14 +2859,14 @@ function soloRank(){
 function soloSetup(){
   V='solo-setup';clearInterval(heroT);
   app('<div class="wrap"><div class="h1" style="font-size:26px">Einzelspiel</div><div class="sub">Falsche Antwort = Punktabzug (−25). Wer schnell und sicher erkennt, gewinnt das Rennen.</div>'+
-   '<label>Dein Männchen</label>'+avBuilder()+'<label>KI-Gegner (Rennen)</label><select id="nb"><option value="0">Keine</option><option value="3">3 Gegner</option><option value="5">5 Gegner</option><option value="10">10 Gegner</option><option value="20">20 Gegner</option><option value="30" selected>30 Gegner (ganze Klasse)</option></select><label>Stärke der Gegner</label><select id="lv"><option value="0.45">Leicht</option><option value="0.65" selected>Mittel</option><option value="0.85">Schwer</option></select><label>Wie viele Runden?</label><select id="nr"><option value="7">Kurz (7 Marken)</option><option value="14">Alle (14 Marken)</option></select>'+
-   '<label>Tempo der Pixel-Stufen</label><select id="sp"><option value="4000">Gemütlich (4 s)</option><option value="3000" selected>Normal (3 s)</option><option value="2000">Schnell (2 s)</option></select>'+
+   '<label>Dein Männchen</label>'+avBuilder()+'<label>KI-Gegner (Rennen)</label><select id="nb"><option value="0">Keine</option><option value="3">3 Gegner</option><option value="5">5 Gegner</option><option value="10">10 Gegner</option><option value="20">20 Gegner</option><option value="30" selected>30 Gegner (ganze Klasse)</option></select><label>Stärke der Gegner</label><select id="lv"><option value="0.45">Leicht</option><option value="0.65" selected>Mittel</option><option value="0.85">Schwer</option></select><label>Wie viele Runden?</label><select id="nr"><option value="7">Kurz (7 Marken)</option><option value="14">Mittel (14 Marken)</option><option value="20">Lang (20 Marken)</option><option value="30">Alle Marken</option></select>'+
+   '<label>Spielmodus</label><select id="gm"><option value="klassisch">🧩 Klassisch – Pixel werden schärfer</option><option value="mut">🎲 Mut-Modus – je unschärfer, desto mehr Punkte</option><option value="blick">👁 Kurzer Blick – 1 Sekunde scharf, dann aus dem Gedächtnis</option><option value="zoom">🔍 Lupe – Ausschnitt wird größer</option></select><label>Tempo der Pixel-Stufen</label><select id="sp"><option value="4000">Gemütlich (4 s)</option><option value="3000" selected>Normal (3 s)</option><option value="2000">Schnell (2 s)</option></select>'+
    '<button class="btn gr" id="go">▶ Los geht’s</button><button class="btn gh" id="bk">← Zurück</button></div>');
   bindAv();$('#bk').onclick=homeView;
   $('#go').onclick=()=>{
     const pool=avail();if(pool.length<4)return;
     const n=Math.min(+$('#nr').value,pool.length);
-    M='solo';Object.assign(G,{cfg:{rounds:n,step:+$('#sp').value,brk:10000},score:0,streak:0,correct:0,log:[],r:-1,reported:{},adj:0,lzUsed:false,rope:null,jmsg:''});
+    M='solo';Object.assign(G,{cfg:{rounds:n,step:+$('#sp').value,brk:10000,gm:$('#gm').value},score:0,streak:0,correct:0,log:[],r:-1,reported:{},adj:0,lzUsed:false,rope:null,jmsg:''});
     G.bots=makeBots(+$('#nb').value,+$('#lv').value);G.botLog=[];G.myM=null;
     G.qs=buildQs(Math.floor(Math.random()*2e9),n,pool);G.sph='play';G.t0=Date.now();V='play';beep(440,.08);
     startRound(0);
@@ -2854,7 +2919,7 @@ async function liveRank(){
   if(v){raceRender(el,v.rows,R.name,[],{lead:v.lead.s});setMore(v,'mm')}
   G.rankTxt='🏁 '+(x.rank||'–')+'/'+(x.total||'–');hud();
 }
-function hud(){if($('#hR'))$('#hR').textContent='Runde '+(G.r+1)+'/'+nRounds();if($('#hS'))$('#hS').textContent='⭐ '+myScore();if($('#hK'))$('#hK').textContent='🔥 '+G.streak;if($('#hP'))$('#hP').textContent=G.rankTxt||'';
+function hud(){if($('#hR'))$('#hR').textContent='Runde '+(G.r+1)+'/'+nRounds();if($('#hS'))$('#hS').textContent='⭐ '+myScore();if($('#hK'))$('#hK').textContent='🔥 '+G.streak;if($('#hP'))$('#hP').textContent=lastR()?'🏁 ❓':(G.rankTxt||'');
   const m=$('#mu');if(m)m.onclick=()=>{MUTE=!MUTE;ls.set('pm_mute',0);try{localStorage.setItem('pm_mute',MUTE?'1':'0')}catch(e){}m.textContent=MUTE?'🔇':'🔊'}}
 function startRound(r){
   G.r=r;G.vph='play';G.tsent=false;G.tpend=false;G.tlock=false;G.tfirst=false;G.tby='';G.firstMs=-1;G.firstOk=false;G.firstPts=0;G.answered=false;G.wrong=[];G.gone=[];G.stage=-1;G.hint='';G.rpts=0;G.pen=0;G.rms=0;G.q=G.qs[r];G.peekT=null;G.gridNow=0;G.peekUntil=0;G.lastLive=0;if(M==='solo'&&G.bots&&G.bots.length)botPlan();
@@ -2868,22 +2933,32 @@ function startRound(r){
     $('#hSkip').onclick=hostSkip;$('#hEnd').onclick=hostEnd;
     $('#hR').textContent='Runde '+(r+1)+'/'+nRounds();hostTop();
   }else{
-    app('<div class="wrap">'+hudHTML()+'<div class="stage"><canvas id="cv" width="'+W+'" height="'+H+'"></canvas><div class="banner" id="bn"></div></div>'+
+    app('<div class="wrap">'+hudHTML()+(lastR()||(M==='solo'&&!(G.bots&&G.bots.length))?'':'<div class="rdock"><div class="more" id="mmUp"></div><div class="race mini" id="miniRace"></div><div class="more" id="mmDn"></div></div>')+'<div class="stage"><canvas id="cv" width="'+W+'" height="'+H+'"></canvas><div class="banner" id="bn"></div></div>'+
      '<div class="dots" id="dots">'+'<i></i>'.repeat(NS)+'</div><div class="bar"><i id="bar"></i></div><div class="pts" id="pts"></div>'+
      '<div class="opts" id="opts">'+G.q.opts.map(id=>'<button class="opt" data-o="'+id+'">'+esc(BYID[id].n)+'</button>').join('')+'</div>'+
-     (M==='solo'&&!(G.bots&&G.bots.length)?'':'<div class="more" id="mmUp"></div><div class="race mini" id="miniRace"></div><div class="more" id="mmDn"></div>')+'</div>');
+     '</div>');
     document.querySelectorAll('.opt').forEach(o=>o.onclick=()=>answer(o.dataset.o));
     hud();
   }
   hud();if(M==='solo')liveSolo();
 }
-function gridAt(t){const s=stepMs(),T=(NS-1)*s;if(t>=T)return 999;return Math.max(4,Math.round(5*Math.pow(13,t/T)))}
-function drawGrid(g){const cv=$('#cv');if(!cv||!G.src||G.gridNow===g)return;G.gridNow=g;drawMosaic(cv.getContext('2d'),G.src,g)}
+function gridAt(t){const s=stepMs(),T=(NS-1)*s,gm=GM();
+  if(gm==='mut'){if(t>=T)return 5;return Math.max(5,Math.round(5*Math.pow(13,(T-t)/T))) >=64?999:Math.max(5,Math.round(5*Math.pow(13,(T-t)/T)))}
+  if(gm==='blick'){if(t<1200)return 999;return Math.min(16,5+Math.floor((t-1200)/Math.max(1,T-1200)*11))}
+  if(gm==='zoom'){if(t>=T)return 999;return 1000+Math.round(24+76*t/T)}
+  if(t>=T)return 999;return Math.max(4,Math.round(5*Math.pow(13,t/T)))}
+function drawZoom(ctx,src,fr){
+  const w=src.width,h=src.height,id=G.q?G.q.id:'x';let hs=0;for(let i=0;i<id.length;i++)hs=(hs*31+id.charCodeAt(i))>>>0;
+  const cx=.4+((hs%97)/97)*.2,cy=.4+(((hs>>3)%89)/89)*.2,f=Math.max(.12,fr/100),sw=w*f,sh=h*f;
+  const sx=Math.min(w-sw,Math.max(0,cx*w-sw/2)),sy=Math.min(h-sh,Math.max(0,cy*h-sh/2));
+  const t=document.createElement('canvas');t.width=38;t.height=23;const tc=t.getContext('2d');tc.fillStyle='#fff';tc.fillRect(0,0,38,23);tc.imageSmoothingEnabled=true;tc.drawImage(src,sx,sy,sw,sh,0,0,38,23);
+  ctx.imageSmoothingEnabled=false;ctx.drawImage(t,0,0,38,23,0,0,w,h)}
+function drawGrid(g){const cv=$('#cv');if(!cv||!G.src||G.gridNow===g)return;G.gridNow=g;if(g>=1000)drawZoom(cv.getContext('2d'),G.src,g-1000);else drawMosaic(cv.getContext('2d'),G.src,g)}
 function setStage(st){
   G.stage=st;const cv=$('#cv');if(!cv)return;
   
   document.querySelectorAll('#dots i').forEach((d,i)=>{d.className=i<st?'on':(i===st?'cur':'')});
-  const p=$('#pts');if(p)p.textContent=G.answered?'':'Jetzt gibt es '+PTS[st]+' Punkte · falsch = −'+PEN;
+  const p=$('#pts');if(p)p.textContent=G.answered?'':'Jetzt gibt es '+ptsFor(st)+' Punkte · falsch = −'+PEN;
   if(st>0)beep(260+st*70,.06);
 }
 function answer(id){
@@ -2894,9 +2969,9 @@ function answer(id){
 function doAnswer(id,c){
   if(G.answered||G.vph!=='play')return;
   const stage=Math.min(NS-1,Math.floor(c.t/stepMs()));
-  if(M==='solo'&&G.firstMs<0){G.firstMs=c.t;G.firstOk=id===G.q.id;G.firstPts=G.firstOk?PTS[stage]+Math.min(50,G.streak*10):-Math.min(PEN,G.score)}
+  if(M==='solo'&&G.firstMs<0){G.firstMs=c.t;G.firstOk=id===G.q.id;G.firstPts=G.firstOk?ptsFor(stage)+Math.min(50,G.streak*10):-Math.min(PEN,G.score)}
   if(id===G.q.id){
-    const base=PTS[stage],bonus=Math.min(50,G.streak*10);
+    const base=ptsFor(stage),bonus=Math.min(50,G.streak*10);
     G.rpts=base+bonus-G.pen;G.rms=c.t;G.score+=base+bonus;G.streak++;G.correct++;G.answered=true;
     G.log.push({id:G.q.id,pts:G.rpts,ok:true});
     const cv=$('#cv');if(cv)drawMosaic(cv.getContext('2d'),G.src,999);
@@ -2909,7 +2984,7 @@ function doAnswer(id,c){
     G.wrong.push(id);G.streak=0;const cut=Math.min(PEN,G.score);G.score-=cut;G.pen+=cut;
     document.querySelectorAll('.opt').forEach(o=>{if(o.dataset.o===id){o.classList.add('bad');o.disabled=true}});
     const bn=$('#bn');if(bn){bn.textContent='−'+PEN+' Punkte';bn.style.background='var(--rd)';bn.style.color='#fff';bn.classList.add('show');setTimeout(()=>{bn.classList.remove('show');bn.style.background='';bn.style.color=''},900)}
-    $('#pts').textContent='Jetzt gibt es '+PTS[stage]+' Punkte · falsch = −'+PEN;hud();beep(140,.2,'sawtooth');report();G.lastLive=Date.now()-3300;if(M==='solo')liveSolo();
+    $('#pts').textContent='Jetzt gibt es '+ptsFor(stage)+' Punkte · falsch = −'+PEN;hud();beep(140,.2,'sawtooth');report();G.lastLive=Date.now()-3300;if(M==='solo')liveSolo();
   }
 }
 function updateBar(t){const b=$('#bar');if(b)b.style.width=Math.max(0,100-t/playMs()*100)+'%'}
@@ -2931,10 +3006,10 @@ function enterBreak(){
   let top='';
   const banner=isH?'<div class="res host">Lösung</div>':G.answered?'<div class="res ok">✅ Richtig! '+(G.rpts>=0?'+':'−')+Math.abs(G.rpts)+'</div>':(G.wrong.length?'<div class="res no">❌ Nicht erkannt'+(G.pen?' · −'+G.pen+' Abzug':'')+'</div>':'<div class="res to">⏱ Zeit abgelaufen</div>');
   const last=G.r>=nRounds()-1;
-  const foot=M==='solo'?'<div id="top"></div><button class="btn gr" id="nx">'+(last?'🏁 Zum Ergebnis':'Weiter ▶')+'</button>':'<div class="pts" id="cdn"></div>'+(isH?'':'<div id="top"></div>');
-  app('<div class="wrap'+(isH?' wide':'')+'">'+(isH?'':hudHTML())+banner+'<canvas id="cv" width="'+W+'" height="'+H+'"></canvas>'+
-    '<div class="nm">'+esc(b.n)+'</div><div style="text-align:center">'+b.fl+' '+esc(b.land)+'</div>'+
-    '<div class="card">'+shareRows(b)+'</div><div class="fact">💡 '+esc(b.fact)+'</div>'+memeHTML(b)+foot+
+  const foot=M==='solo'?'<button class="btn gr" id="nx">'+(last?'🏁 Zum Ergebnis':'Weiter ▶')+'</button>':'<div class="pts" id="cdn"></div>';
+  const info='<canvas id="cv" width="'+W+'" height="'+H+'"></canvas><div class="nm">'+esc(b.n)+'</div><div style="text-align:center">'+b.fl+' '+esc(b.land)+'</div>'+
+    '<div class="card">'+shareRows(b)+'</div><div class="fact">💡 '+esc(b.fact)+'</div>'+memeHTML(b);
+  app('<div class="wrap'+(isH?' wide':' bk')+'">'+(isH?'':hudHTML())+banner+(isH?info+foot:(lastR()?'<div class="card" style="text-align:center;border-color:var(--ye)">🥁 <b>Die letzte Runde wird erst bei der Siegerehrung ausgewertet!</b><div class="tag">Wer liegt vorn? Gleich wird es spannend …</div></div>'+info+foot:'<div class="bcols"><div class="bl"><div class="rdock" id="rdock"></div><div id="top"></div></div><div class="br">'+info+'</div></div>'+foot))+
     (isH?'<div class="row"><button class="btn sm cy" id="hSkip">⏭ Nächste Frage</button><button class="btn sm gh" id="hEnd">⏹ Spiel beenden</button></div><div id="top"></div>':'')+'</div>');
   drawMosaic($('#cv').getContext('2d'),G.src,999);hud();
   if(M==='solo'){$('#nx').onclick=()=>{if(last)return goEnd();G.sph='play';G.t0=Date.now();V='play';beep(440,.08);startRound(G.r+1)}}
@@ -2942,7 +3017,7 @@ function enterBreak(){
   if(M==='room')G.lastRank=Date.now()-1500;
   if(M==='solo')soloRank();
 }
-function updateBrk(c){const e=$('#cdn');if(!e)return;const s=Math.max(0,Math.ceil((brkMs()-c.t)/1000));e.textContent=M==='room'&&R.cfg&&R.cfg.mode==='manual'&&s<=0?(G.r>=nRounds()-1?'Warten auf die Lehrkraft …':'Warten, bis die Lehrkraft weiterklickt …'):(G.r>=nRounds()-1?'Ergebnis in ':'Nächste Runde in ')+s+' s'}
+function updateBrk(c){const e=$('#cdn');if(!e)return;const s=Math.max(0,Math.ceil((brkMs()-c.t)/1000));e.textContent=M==='room'&&R.cfg&&R.cfg.mode==='manual'&&s<=0?(G.r>=nRounds()-1?'Warten auf die Lehrkraft …':'Warten, bis die Lehrkraft weiterklickt …'):(G.r>=nRounds()-1?'Siegerehrung in ':'Nächste Runde in ')+s+' s'}
 const ptsTxt=(p,ms)=>p>0?'+'+p+' · '+fs_(ms):(p<0?'−'+Math.abs(p):'–');
 const fs_=ms=>(ms/1000).toFixed(1).replace('.',',')+' s';
 function roundLi(p,i,me){return '<li'+(me?' class="me"':'')+'><span class="rk">'+(i+1)+'.</span>'+AV(p[1],22)+' '+esc(p[0])+'<span class="sc">'+ptsTxt(p[2],p[3])+'</span></li>'}
@@ -2951,7 +3026,7 @@ async function roomRank(){
   const t=$('#top');if(!t||V!=='play'||G.vph!=='brk')return;
   raceBox(t,true);
   G.ahead=x.ahead?x.ahead[0]:null;
-  const v=roomView(x,3);
+  const v=roomView(x,2);
   if(v){raceRender($('#race'),v.rows,R.name,ropeList(R.name),{lead:v.lead.s});setMore(v,'m')}
   $('#rl').innerHTML=(x.rtop&&x.rtop.length?'<h3>⚡ Beste dieser Runde</h3><ol class="lb">'+x.rtop.map((p,i)=>roundLi(p,i,p[0]===R.name)).join('')+(x.rme&&x.rme[0]>5?'<li class="me"><span class="rk">'+x.rme[0]+'.</span>'+AV(R.av,22)+' '+esc(R.name)+'<span class="sc">'+ptsTxt(x.rme[1],x.rme[2])+'</span></li>':'')+'</ol>':'');
   lassoPanel(x);
@@ -2961,7 +3036,7 @@ async function roomRank(){
 function tick(){
   if(M==='home')return;
   if(M!=='solo'){
-    if(V==='pre'){const t=srvNow()-R.st;if(t<0){const e=$('#cd');if(e){const n=Math.ceil(-t/1000);if(e.textContent!=n){e.textContent=n;beep(500,.07)}}return}V='play';G.r=-1;G.vph='';G.reported={};G.score=0;G.adj=0;G.sl=0;G.jmsg='';G.streak=0;G.correct=0;G.log=[];G.qs=buildQs(R.seed,R.cfg.rounds,BR);beep(880,.2)}
+    if(V==='pre'){const t=srvNow()-R.st;if(t<0){const e=$('#cd');if(e){const n=Math.ceil(-t/1000);if(e.textContent!=n){e.textContent=n;beep(500,.07)}}return}V='play';G.r=-1;G.vph='';G.reported={};G.score=0;G.adj=0;G.sl=0;G.jmsg='';G.streak=0;G.correct=0;G.log=[];G.qs=buildQs(R.seed,R.cfg.rounds,roomPool());beep(880,.2)}
     if(V!=='play')return;
   }else if(V!=='play')return;
   const c=clock();
@@ -3044,7 +3119,7 @@ function joinView(code){
     await syncTime();applyState(x);roomAfterJoin();
   };
 }
-function applyState(x){if(!x)return;if(x.cfg)R.cfg=x.cfg;if(x.ph)R.ph=x.ph;if(x.st!=null)R.st=x.st;if(x.gate)R.gate=x.gate;if(x.seed!=null)R.seed=x.seed;if(x.name)R.rname=x.name;if(x.total!=null)R.total=x.total;if(x.rank)R.rank=x.rank}
+function applyState(x){if(!x)return;if(x.cfg)R.cfg=x.cfg;if(x.ph)R.ph=x.ph;if(x.st!=null)R.st=x.st;if(x.gate)R.gate=x.gate;if(x.mus){if(M!=='host')Mus.setState(x.mus)}else if(x.mus===null&&M==='room'&&Mus.on)Mus.setState({on:false,season:'auto',i:0});if(x.seed!=null)R.seed=x.seed;if(x.name)R.rname=x.name;if(x.total!=null)R.total=x.total;if(x.rank)R.rank=x.rank}
 function roomAfterJoin(){
   if(R.ph==='play'){V='pre';app('<div class="wrap"><div class="h1" style="font-size:26px">Gleich geht’s los!</div><div class="cd" id="cd">–</div></div>');startPoll();return}
   lobbyView();startPoll();
@@ -3091,14 +3166,14 @@ function hostSetup(){
   V='host-setup';clearInterval(heroT);
   app('<div class="wrap"><div class="h1" style="font-size:26px">Raum eröffnen</div><div class="sub">Die Schüler öffnen die Seite per QR-Code, geben Namen und Rolle ein und spielen gleichzeitig – ihr seht live die Rangliste.</div>'+
    '<label>Name des Raums (z. B. Klasse)</label><input id="hn" maxlength="30" placeholder="z. B. IK 1a">'+
-   '<label>Anzahl der Runden</label><select id="hr"><option value="5">5 Marken</option><option value="8" selected>8 Marken</option><option value="14">Alle 14 Marken</option></select>'+
-   '<label>Tempo der Pixel-Stufen</label><select id="hs"><option value="4000">Gemütlich (4 s je Stufe)</option><option value="3000" selected>Normal (3 s)</option><option value="2000">Schnell (2 s)</option></select>'+
+   '<label>Anzahl der Runden</label><select id="hr"><option value="5">5 Marken</option><option value="8" selected>8 Marken</option><option value="14">14 Marken</option><option value="20">20 Marken</option><option value="30">Alle Marken</option></select>'+
+   '<label>Spielmodus</label><select id="hg"><option value="klassisch">🧩 Klassisch – Pixel werden schärfer</option><option value="mut">🎲 Mut-Modus – je unschärfer, desto mehr Punkte</option><option value="blick">👁 Kurzer Blick – 1 Sekunde scharf, dann aus dem Gedächtnis</option><option value="zoom">🔍 Lupe – Ausschnitt wird größer</option></select><label>Tempo der Pixel-Stufen</label><select id="hs"><option value="4000">Gemütlich (4 s je Stufe)</option><option value="3000" selected>Normal (3 s)</option><option value="2000">Schnell (2 s)</option></select>'+
    '<label>Ablauf</label><select id="hm"><option value="auto">Automatisch weiter, sobald alle geantwortet haben</option><option value="manual">Ich klicke bei jeder Frage selbst weiter</option></select>'+
    '<div class="err" id="he"></div><button class="btn gr" id="hc">🚀 Raum eröffnen</button><button class="btn gh" id="hb">← Zurück</button></div>');
   $('#hb').onclick=homeView;
   $('#hc').onclick=async()=>{
     $('#hc').disabled=true;
-    const x=await api('create',{name:$('#hn').value,cfg:{rounds:+$('#hr').value,step:+$('#hs').value,mode:$('#hm').value}});
+    const x=await api('create',{name:$('#hn').value,cfg:{rounds:+$('#hr').value,step:+$('#hs').value,mode:$('#hm').value,gm:$('#hg').value}});
     if(!x||!x.ok){$('#he').textContent=(x&&x.err)||'Fehler';$('#hc').disabled=false;return}
     M='host';Object.assign(R,{code:x.c,hk:x.hk,cfg:x.cfg,seed:x.seed,rname:x.name,ph:'lobby',st:0,players:[]});
     ls.set('pm_host',{c:x.c,hk:x.hk});await syncTime();hostLobby();startPoll();
@@ -3119,19 +3194,19 @@ function hostLobby(){
    '<div class="grid2"><div><div class="card" style="text-align:center"><div class="sub">Scannen oder auf <b>'+esc(location.host||'lernspiele')+'</b> den Code eingeben:</div><div class="code">'+esc(R.code)+'</div><div class="qr">'+qrSvg(url)+'</div>'+
    '<div class="row" style="justify-content:center;margin-top:10px"><button class="btn sm cy" id="cp">🔗 Link kopieren</button></div><div class="tag" id="ul" style="word-break:break-all">'+esc(url)+'</div></div></div>'+
    '<div><div class="card"><b>👥 Im Raum: <span id="pc">0</span></b><div class="chips" id="chips" style="margin-top:8px"></div></div>'+
-   '<div class="card"><b>Einstellungen</b><label>Runden</label><select id="hr"><option value="5">5 Marken</option><option value="8">8 Marken</option><option value="14">Alle 14 Marken</option></select><label>Tempo</label><select id="hs"><option value="4000">Gemütlich (4 s)</option><option value="3000">Normal (3 s)</option><option value="2000">Schnell (2 s)</option></select><label>Ablauf</label><select id="hm"><option value="auto">Automatisch weiter, sobald alle geantwortet haben</option><option value="manual">Ich klicke bei jeder Frage selbst weiter</option></select></div>'+
+   '<div class="card"><b>Einstellungen</b><label>Runden</label><select id="hr"><option value="5">5 Marken</option><option value="8">8 Marken</option><option value="14">14 Marken</option><option value="20">20 Marken</option><option value="30">Alle Marken</option></select><label>Spielmodus</label><select id="hg"><option value="klassisch">🧩 Klassisch – Pixel werden schärfer</option><option value="mut">🎲 Mut-Modus – je unschärfer, desto mehr Punkte</option><option value="blick">👁 Kurzer Blick – 1 Sekunde scharf, dann aus dem Gedächtnis</option><option value="zoom">🔍 Lupe – Ausschnitt wird größer</option></select><label>Tempo</label><select id="hs"><option value="4000">Gemütlich (4 s)</option><option value="3000">Normal (3 s)</option><option value="2000">Schnell (2 s)</option></select><label>Ablauf</label><select id="hm"><option value="auto">Automatisch weiter, sobald alle geantwortet haben</option><option value="manual">Ich klicke bei jeder Frage selbst weiter</option></select></div>'+
    '<button class="btn gr" id="st">▶ Spiel starten</button><button class="btn gh" id="cl">Raum schließen</button></div></div>'+
    '<details><summary>👩‍🏫 Einsatz im Unterricht</summary><div class="card">Ablauf: Raum zeigen → Schüler beitreten lassen → starten. Jede Runde dauert ca. '+Math.round((NS*R.cfg.step+10000)/1000)+' s. Nach dem Spiel die Grafik „Marktanteile 2007 vs. 2025“ besprechen: Wer hat verloren, wer gewonnen, und warum? Nach jeder Auswertung können sich Spieler weiter hinten mit dem Lasso ein Stück nach vorn ziehen (Catch-up: je weiter hinten, desto größer der Zug, immer nur ein Stück). Am Ende gibt es eine Siegerehrung vom letzten bis zum ersten Platz.</div></details></div>');
-  $('#hr').value=String(R.cfg.rounds);$('#hs').value=String(R.cfg.step);$('#hm').value=R.cfg.mode||'auto';
-  const upd=async()=>{const x=await api('cfg',{c:R.code,hk:R.hk,cfg:{rounds:+$('#hr').value,step:+$('#hs').value,mode:$('#hm').value}});if(x&&x.ok)R.cfg=x.cfg};
-  $('#hr').onchange=upd;$('#hs').onchange=upd;$('#hm').onchange=upd;
+  $('#hr').value=String(R.cfg.rounds);$('#hs').value=String(R.cfg.step);$('#hm').value=R.cfg.mode||'auto';$('#hg').value=R.cfg.gm||'klassisch';
+  const upd=async()=>{const pool=avail().map(b=>b.id);const x=await api('cfg',{c:R.code,hk:R.hk,cfg:{pool,rounds:Math.min(+$('#hr').value,pool.length||30),step:+$('#hs').value,mode:$('#hm').value,gm:$('#hg').value}});if(x&&x.ok)R.cfg=x.cfg};
+  $('#hr').onchange=upd;$('#hs').onchange=upd;$('#hm').onchange=upd;$('#hg').onchange=upd;
   $('#cp').onclick=()=>{try{navigator.clipboard.writeText(url).then(()=>{$('#cp').textContent='✅ Kopiert'})}catch(e){prompt('Link kopieren:',url)}};
   $('#cl').onclick=async()=>{if(!confirm('Raum wirklich schließen? Alle Schüler werden getrennt.'))return;await api('close',{c:R.code,hk:R.hk});stopPoll();ls.del('pm_host');M='home';homeView()};
   $('#st').onclick=async()=>{
     $('#st').disabled=true;await upd();
     const x=await api('start',{c:R.code,hk:R.hk});
     if(!x||!x.ok){$('#st').disabled=false;alert((x&&x.err)||'Fehler');return}
-    await syncTime();R.ph='play';R.st=x.st;R.gate=1;G.r=-1;G.vph='';G.qs=buildQs(R.seed,R.cfg.rounds,BR);
+    await syncTime();R.ph='play';R.st=x.st;R.gate=1;G.r=-1;G.vph='';G.qs=buildQs(R.seed,R.cfg.rounds,roomPool());
     V='pre';app('<div class="wrap"><div class="h1" style="font-size:30px;text-align:center">Gleich geht’s los!</div><div class="cd" id="cd">–</div></div>');
   };
   hostLobbyUpd();
@@ -3142,6 +3217,7 @@ function hostLobbyUpd(){
   c.querySelectorAll('[data-k]').forEach(b=>b.onclick=async()=>{await api('kick',{c:R.code,hk:R.hk,pid:b.dataset.k});R.players=R.players.filter(p=>p.id!==b.dataset.k);hostLobbyUpd()});
 }
 function hostTop(){const t=$('#top');if(!t)return;
+  if(lastR()&&(G.vph==='play'||G.vph==='brk')){t.innerHTML='<div class="card" style="text-align:center;border-color:var(--ye)"><h3>🥁 Spannung …</h3>Die letzte Runde wird erst bei der Siegerehrung ausgewertet.</div>';return}
   if(!$('#race'))t.innerHTML='<h3>🏁 Rennbahn</h3><div class="race" id="race"></div><div id="rl"></div>';
   raceRender($('#race'),R.players.slice(0,12).map((p,i)=>({n:p.n,e:p.e,s:p.s,m:p.m==null?-1:p.m,mt:p.mt||0,rk:i+1})),undefined,[]);
   const rl=$('#rl');if(!rl)return;
@@ -3177,11 +3253,18 @@ let cerT=null;
 function ceremony(all,meName){
   clearInterval(cerT);const box=$('#cer');if(!box||!all.length)return;
   const N=all.length;let i=N-1;
-  box.innerHTML='<div class="cerc" id="cerc"></div><div id="pod"></div><ol class="lb" id="cerl"></ol><button type="button" class="btn sm gh" id="cerskip">⏭ Gleich alle zeigen</button>';
+  const wait=[];for(let n=box.nextElementSibling;n;n=n.nextElementSibling){n.classList.add('cerwait');wait.push(n)}
+  const unwait=()=>wait.forEach(n=>n.classList.remove('cerwait'));
+  const sw=Math.max(8,Math.floor(Math.min(box.clientWidth||340,520)/N)-2),asz=Math.max(12,Math.min(40,sw)),dh=Math.max(4,Math.min(16,Math.floor(120/N)));
+  box.innerHTML='<div class="cerc" id="cerc"></div><div class="stairs" id="stairs">'+all.map((p,k)=>'<div class="stp" data-k="'+k+'" style="width:'+sw+'px;height:'+(18+(N-k)*dh)+'px"><b>'+(k+1)+'</b></div>').reverse().join('')+'</div><div id="pod"></div><ol class="lb" id="cerl"></ol><button type="button" class="btn sm gh" id="cerskip">⏭ Gleich alle zeigen</button>';
   const showOne=(k,quiet)=>{
     const p=all[k],card=$('#cerc');if(!card)return;
     card.innerHTML='<div class="cerp">Platz '+(k+1)+'</div><div class="cerav">'+AV(p.e,96)+'</div><div class="cern">'+esc(p.n)+'</div><div class="cers">'+p.s+' Punkte</div>';
     card.classList.remove('pop');void card.offsetWidth;card.classList.add('pop');
+    const col=document.querySelector('#stairs .stp[data-k="'+k+'"]');
+    if(col){document.querySelectorAll('#stairs .stav.cur').forEach(e=>e.classList.remove('cur'));
+      col.insertAdjacentHTML('afterbegin','<div class="stav'+(quiet?'':' hop cur')+(p.n===meName?' me':'')+'" title="'+esc(p.n)+'">'+AV(p.e,asz)+'</div>');
+      col.classList.add('on')}
     $('#cerl').insertAdjacentHTML('afterbegin','<li'+(p.n===meName?' class="me"':'')+'><span class="rk">'+(k+1)+'.</span>'+AV(p.e,22)+' '+esc(p.n)+'<span class="sc">'+p.s+'</span></li>');
     if(!quiet)beep(k<3?880-k*110:260+(N-k)*18,.14,k<3?'triangle':'square');
   };
@@ -3191,13 +3274,90 @@ function ceremony(all,meName){
     card.innerHTML='<div class="cerp">🎉 Die Besten! 🎉</div>';
     const t3=all.slice(0,3),order=t3.length>=3?[1,0,2]:(t3.length===2?[1,0]:[0]),hs=[130,95,70],med=['🥇','🥈','🥉'];
     $('#pod').innerHTML='<div class="pod">'+order.map(k=>{const p=t3[k];return '<div class="pcol"><div>'+AV(p.e,64)+'</div><b>'+esc(p.n)+'</b><small>'+p.s+' P.</small><div class="pbar" style="height:'+hs[k]+'px">'+med[k]+'</div></div>'}).join('')+'</div><div class="conf">🎉 🎊 🏆 🎊 🎉</div>';
-    beep(988,.25,'triangle');setTimeout(()=>beep(1175,.35,'triangle'),220);
+    beep(988,.25,'triangle');setTimeout(()=>beep(1175,.35,'triangle'),220);setTimeout(unwait,1200);
   };
   showOne(i);
   const iv=Math.max(450,Math.min(1900,26000/N));
   cerT=setInterval(()=>{if(!$('#cer')){clearInterval(cerT);return}i--;if(i<0){fin();return}showOne(i);if(i===0){clearInterval(cerT);setTimeout(()=>{if($('#cer'))fin()},2200)}},iv);
-  $('#cerskip').onclick=()=>{clearInterval(cerT);for(let k=i-1;k>=0;k--)showOne(k,true);fin();$('#cerskip').remove()};
+  $('#cerskip').onclick=()=>{clearInterval(cerT);for(let k=i-1;k>=0;k--)showOne(k,true);fin();$('#cerskip').remove();unwait()};
 }
+
+
+/* ===================== Musik (selbst erzeugt, keine Dateien) ===================== */
+const SCALES={maj:[0,2,4,5,7,9,11],min:[0,2,3,5,7,8,10],mixo:[0,2,4,5,7,9,10],pent:[0,2,4,7,9],dor:[0,2,3,5,7,9,10]};
+const TRACKS=[
+ {id:'f1',s:'fruehling',n:'Blütenzauber',bpm:112,root:60,sc:'maj',pr:[0,4,5,3],ld:'triangle',dr:1},
+ {id:'f2',s:'fruehling',n:'Regenbogen-Hüpfer',bpm:126,root:67,sc:'pent',pr:[0,3,4,0],ld:'square',dr:1},
+ {id:'f3',s:'fruehling',n:'Vogelchor',bpm:100,root:62,sc:'maj',pr:[0,5,3,4],ld:'sine',dr:0},
+ {id:'s1',s:'sommer',n:'Sonnenbrille',bpm:128,root:57,sc:'maj',pr:[0,3,4,3],ld:'square',dr:1},
+ {id:'s2',s:'sommer',n:'Strandparty',bpm:118,root:64,sc:'mixo',pr:[0,6,3,0],ld:'triangle',dr:1},
+ {id:'s3',s:'sommer',n:'Eiscreme-Express',bpm:134,root:65,sc:'pent',pr:[0,4,5,4],ld:'square',dr:1},
+ {id:'h1',s:'herbst',n:'Laubregen',bpm:96,root:57,sc:'min',pr:[0,5,3,4],ld:'triangle',dr:1},
+ {id:'h2',s:'herbst',n:'Kürbis-Disco',bpm:122,root:62,sc:'dor',pr:[0,3,0,4],ld:'square',dr:1},
+ {id:'h3',s:'herbst',n:'Nebelwald',bpm:88,root:64,sc:'min',pr:[0,3,5,4],ld:'sine',dr:0},
+ {id:'w1',s:'winter',n:'Schneeflocken',bpm:84,root:72,sc:'maj',pr:[0,5,3,4],ld:'sine',dr:0},
+ {id:'w2',s:'winter',n:'Glühwein-Groove',bpm:104,root:55,sc:'dor',pr:[0,3,6,4],ld:'triangle',dr:1},
+ {id:'w3',s:'winter',n:'Lichterglanz',bpm:100,root:65,sc:'maj',pr:[0,4,3,5],ld:'square',dr:1}
+];
+const SEAS={fruehling:'🌸 Frühling',sommer:'☀️ Sommer',herbst:'🍂 Herbst',winter:'❄️ Winter'};
+const seasonNow=()=>{const m=new Date().getMonth()+1;return m>=3&&m<=5?'fruehling':m>=6&&m<=8?'sommer':m>=9&&m<=11?'herbst':'winter'};
+const Mus={on:false,s:'auto',i:0,cur:null,t:null,step:0,next:0,vol:.5,mute:!!ls.get('pm_mmute'),out:null,
+  list(){const s=this.s==='auto'?seasonNow():this.s;return TRACKS.filter(t=>t.s===s)},
+  ac(){AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();
+    if(!this.out){const c=AC.createDynamicsCompressor(),g=AC.createGain();g.gain.value=.22;g.connect(c);c.connect(AC.destination);this.out=g}return AC},
+  nt(sc,d){const S=SCALES[sc],n=S.length,o=Math.floor(d/n);return S[((d%n)+n)%n]+12*o},
+  rnd(seed){let x=seed>>>0||1;return()=>{x^=x<<13;x>>>=0;x^=x>>>17;x^=x<<5;x>>>=0;return x/4294967296}},
+  tone(f,t,d,type,v){const A=AC,o=A.createOscillator(),g=A.createGain();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.012);g.gain.exponentialRampToValueAtTime(.0008,t+d);o.connect(g);g.connect(this.out);o.start(t);o.stop(t+d+.05)},
+  noise(t,d,v,hp){const A=AC,b=A.createBuffer(1,Math.floor(A.sampleRate*d),A.sampleRate),a=b.getChannelData(0);for(let k=0;k<a.length;k++)a[k]=Math.random()*2-1;
+    const s=A.createBufferSource(),g=A.createGain(),f=A.createBiquadFilter();f.type='highpass';f.frequency.value=hp;s.buffer=b;g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.0008,t+d);s.connect(f);f.connect(g);g.connect(this.out);s.start(t)},
+  kick(t){const A=AC,o=A.createOscillator(),g=A.createGain();o.frequency.setValueAtTime(150,t);o.frequency.exponentialRampToValueAtTime(40,t+.13);g.gain.setValueAtTime(.9,t);g.gain.exponentialRampToValueAtTime(.001,t+.16);o.connect(g);g.connect(this.out);o.start(t);o.stop(t+.2)},
+  playStep(T,k,t){ // k = Achtel-Schritt seit Start; 8 je Takt
+    const bar=Math.floor(k/8),st=k%8,ch=T.pr[bar%4],ph=Math.floor(bar/4)%4,spb=60/T.bpm/2,m=T.root;
+    const hz=n=>440*Math.pow(2,(n-69)/12),N=d=>m+this.nt(T.sc,d);
+    if(st%2===0)this.tone(hz(N(ch)-24+(st===4?7:0)),t,spb*1.7,'triangle',.5);
+    if(st===0||st===3||st===6){[0,2,4].forEach((q,j)=>this.tone(hz(N(ch+q)-12),t+j*.012,spb*.9,'square',.07))}
+    const r=this.rnd(T.id.charCodeAt(1)*977+T.id.charCodeAt(0)*31+ph*13+bar%4*7+st*101);
+    if(r()<(T.dr?.62:.4)){const d=ch+[0,1,2,3,4,5,2,-1][Math.floor(r()*8)]+(ph%2?2:0);this.tone(hz(N(d)+(T.dr?12:12)),t,spb*(1+r()*1.4),T.ld,.16)}
+    if(T.dr){if(st%4===0)this.kick(t);if(st===2||st===6)this.noise(t,.12,.28,1800);this.noise(t,.03,.08,7000)}
+    else if(st%4===0)this.tone(hz(N(ch+4)+12),t,spb*3,'sine',.07)},
+  tickLoop(){if(!this.on||!this.cur||this.mute)return;const T=this.cur,spb=60/T.bpm/2;
+    while(this.next<AC.currentTime+.3){this.playStep(T,this.step,this.next);this.next+=spb;this.step++;
+      if(this.step>=8*32){this.i=(this.i+1)%this.list().length;this.start(true);return}}},
+  start(auto){clearInterval(this.t);const L=this.list();this.cur=L[this.i%L.length];this.step=0;
+    if(!this.on||this.mute||!this.cur)return;this.ac();this.next=AC.currentTime+.1;this.t=setInterval(()=>this.tickLoop(),80);if(!auto)this.ui()},
+  stop(){clearInterval(this.t);this.t=null},
+  setState(s,silent){const ch=s.on!==this.on||s.season!==this.s||s.i!==this.i;this.on=!!s.on;this.s=s.season||'auto';this.i=s.i|0;
+    if(!this.on){this.stop();this.cur=null}else if(ch||!this.t)this.start(); this.ui()},
+  setMute(m){this.mute=m;ls.set('pm_mmute',m);if(m)this.stop();else if(this.on)this.start();this.ui()},
+  ui(){const b=$('#mfab');if(b)b.textContent=this.on&&!this.mute?'🎵':'🔇';const p=$('#mpan');if(p&&p.style.display!=='none')musPanel()}
+};
+function musPublish(on,s,i){const st={on,season:s,i};Mus.setState(st);
+  if(M==='host')api('mus',{c:R.code,hk:R.hk,on,season:s,i})}
+function musPanel(){
+  let p=$('#mpan');if(!p){p=document.createElement('div');p.id='mpan';document.body.appendChild(p)}
+  const ctl=M==='host'||M==='solo'||M==='home',L=Mus.list(),cur=Mus.cur&&Mus.on?Mus.cur.id:'';
+  let h='<b>🎵 Musik</b> <button type="button" class="mx" id="mclose">✕</button>';
+  if(ctl){
+    h+='<div class="mrow"><button type="button" class="btn sm '+(Mus.on?'gr':'gh')+'" id="mon">'+(Mus.on?'⏸ Musik an':'▶ Musik aus')+'</button><button type="button" class="btn sm cy" id="mnx">⏭</button></div>';
+    h+='<div class="mrow">'+['auto','fruehling','sommer','herbst','winter'].map(s=>'<button type="button" class="chipb'+(Mus.s===s?' on':'')+'" data-ms="'+s+'">'+(s==='auto'?'Auto ('+SEAS[seasonNow()].split(' ')[0]+')':SEAS[s])+'</button>').join('')+'</div>';
+    h+='<div class="mtl">'+L.map((t,k)=>'<button type="button" class="mt'+(t.id===cur?' on':'')+'" data-mi="'+k+'">'+(t.id===cur?'▶ ':'')+esc(t.n)+'</button>').join('')+'</div>';
+  }else{
+    h+='<div class="tag">'+(Mus.on&&Mus.cur?'Läuft: '+esc(Mus.cur.n)+' ('+(SEAS[Mus.cur.s]||'')+')':'Die Lehrkraft hat die Musik aus.')+'</div>';
+  }
+  h+='<div class="mrow"><label class="mlab"><input type="checkbox" id="mmu"'+(Mus.mute?' checked':'')+'> Auf diesem Gerät stumm</label></div>';
+  p.innerHTML=h;
+  const on=(sel,f)=>{const e=p.querySelector(sel);if(e)e.onclick=f};
+  on('#mclose',()=>{p.style.display='none'});
+  const push=(o,s,i)=>{if(M==='host')musPublish(o,s,i);else Mus.setState({on:o,season:s,i});Mus.ui()};
+  on('#mon',()=>push(!Mus.on,Mus.s,Mus.i));
+  on('#mnx',()=>push(true,Mus.s,(Mus.i+1)%Mus.list().length));
+  p.querySelectorAll('[data-ms]').forEach(b=>b.onclick=()=>push(true,b.dataset.ms,0));
+  p.querySelectorAll('[data-mi]').forEach(b=>b.onclick=()=>push(true,Mus.s,+b.dataset.mi));
+  const mu=$('#mmu');if(mu)mu.onchange=()=>Mus.setMute(mu.checked);
+}
+(function(){const f=document.createElement('button');f.id='mfab';f.type='button';f.textContent='🔇';f.title='Musik';
+  f.onclick=()=>{const p=$('#mpan');if(p&&p.style.display!=='none'){p.style.display='none';return}musPanel();$('#mpan').style.display='block'};
+  document.body.appendChild(f);document.addEventListener('pointerdown',()=>{if(Mus.on&&!Mus.mute&&AC&&AC.state==='suspended')AC.resume()},true)})();
 
 /* ===================== Start ===================== */
 homeView();preload();
