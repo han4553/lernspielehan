@@ -34,7 +34,7 @@ const num = (v, lo, hi, d) => {
   v = Number(v);
   return Number.isFinite(v) ? Math.min(hi, Math.max(lo, Math.round(v))) : d;
 };
-const cleanCfg = (c) => ({ rounds: num(c && c.rounds, 3, 30, 8), step: num(c && c.step, 2000, 6000, 3000), brk: 10000, mode: c && c.mode === 'manual' ? 'manual' : 'auto', gm: ['klassisch', 'mut', 'blick', 'zoom', 'wer', 'konto', 'blitz'].includes(c && c.gm) ? c.gm : 'klassisch', sc: ['strecke','wueste','schnee','weltall','strand','dschungel','wechsel'].includes(c && c.sc) ? c.sc : 'strecke', sm: ['standard','risiko','fair','turbo','wechsel'].includes(c && c.sm) ? c.sm : 'standard', pool: Array.isArray(c && c.pool) ? c.pool.slice(0, 60).map((s) => String(s).replace(/[^a-z0-9]/gi, '').slice(0, 20)).filter(Boolean) : null });
+const cleanCfg = (c) => ({ rounds: num(c && c.rounds, 3, 30, 8), step: num(c && c.step, 2000, 6000, 3000), brk: 10000, mode: c && c.mode === 'manual' ? 'manual' : 'auto', gm: ['klassisch', 'mut', 'blick', 'zoom', 'wer', 'konto', 'blitz', 'news'].includes(c && c.gm) ? c.gm : 'klassisch', sc: ['strecke','wueste','schnee','weltall','strand','dschungel','wechsel'].includes(c && c.sc) ? c.sc : 'strecke', sm: ['standard','risiko','fair','turbo','wechsel'].includes(c && c.sm) ? c.sm : 'standard', pool: Array.isArray(c && c.pool) ? c.pool.slice(0, 60).map((s) => String(s).replace(/[^a-z0-9]/gi, '').slice(0, 20)).filter(Boolean) : null });
 const clean = (s, n) => String(s == null ? '' : s).replace(/[<>&"'`]/g, '').replace(/\s+/g, ' ').trim().slice(0, n);
 const sorted = (pl) =>
   Object.keys(pl)
