@@ -31,6 +31,18 @@
     {
       "source": "/pixel-marken/",
       "destination": "/pixel-marken/Pixel_Marken.html"
+    },
+    {
+      "source": "/wimmelbilder",
+      "destination": "/wimmelbilder/Wimmelbilder.html"
+    },
+    {
+      "source": "/wimmelbilder/",
+      "destination": "/wimmelbilder/Wimmelbilder.html"
+    },
+    {
+      "source": "/wimmelbilder/arbeitsblaetter",
+      "destination": "/wimmelbilder/arbeitsblaetter/index.html"
     }
   ]
 }
