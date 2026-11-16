@@ -100,7 +100,7 @@ module.exports = async (req, res) => {
       const id = clean(b.id, 6), p = J(h['p:' + id], null);
       if (!p) return res.status(403).json({ error: 'unbekannt' });
       const r = b.rep || {};
-      const rep = { step: Math.max(0, Math.min(9, +r.step || 0)), ok: Math.max(0, Math.min(30, +r.ok || 0)), of: Math.max(0, Math.min(30, +r.of || 0)), slogan: clean(r.slogan, 90), pitch: clean(r.pitch, 6000), t: Date.now() };
+      const rep = { step: Math.max(0, Math.min(9, +r.step || 0)), ok: Math.max(0, Math.min(30, +r.ok || 0)), of: Math.max(0, Math.min(30, +r.of || 0)), slogan: clean(r.slogan, 90), pitch: clean(r.pitch, 6000), hilfen: Math.max(0, Math.min(99, +r.hilfen || 0)), t: Date.now() };
       p.last = Date.now();
       await R('HSET', key, 'r:' + id, JSON.stringify(rep), 'p:' + id, JSON.stringify(p));
       return res.json({ ok: 1 });

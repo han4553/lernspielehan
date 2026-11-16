@@ -156,6 +156,14 @@ pre{white-space:pre-wrap;background:#f4f8fc;border-radius:10px;padding:14px;font
 .fall-auftrag{background:#fff;border-left:5px solid #1A3C6E;border-radius:8px;padding:8px 12px}
 .fall-mini{background:#E8F4F8;border-left:6px solid #1A3C6E;border-radius:10px;padding:10px 14px;margin:0 0 12px;color:#1d2433}
 .fall-mini summary{cursor:pointer;font-weight:800;color:#1A3C6E}
+.hilfe-box{background:#f3f0ff;border-left:6px solid #7c3aed;border-radius:10px;padding:12px 16px;margin:18px 0}
+.hilfe-box summary{cursor:pointer;font-weight:800;color:#5b21b6}.hilfe-box summary small{font-weight:600;color:#6b7280}
+.hitem{background:#fff;border-radius:10px;padding:10px 12px;margin:10px 0;border:1px solid #e9e3ff}
+.htitle{font-weight:800;margin-bottom:6px}.hlv{color:#7c3aed;letter-spacing:2px;font-size:.85rem}
+.hstufe{border-radius:8px;padding:8px 10px;margin:6px 0;font-size:.95rem}.hs1{background:#eef6ff}.hs2{background:#fff7e6}.hs3{background:#ecfdf3}
+.hwait{background:#faf5ff;border:1px dashed #a78bfa;border-radius:8px;padding:8px 10px;color:#5b21b6}
+.hbar{height:6px;background:#e9e3ff;border-radius:4px;margin-top:6px;overflow:hidden}.hbar i{display:block;height:100%;background:#7c3aed;transition:width 1s linear}
+.selfcheck{margin-top:12px}.selfcheck .good{color:#15803d;font-weight:700}.selfcheck .bad{color:#b91c1c;font-weight:700}
 .coach-box{background:#eefaf3;border-left:6px solid #2b9348;border-radius:10px;padding:12px 16px;margin:18px 0}
 .coach-box summary{cursor:pointer;font-weight:800;color:#1f6f35}
 .rec-box{background:#fff;border:2px solid #d5deea;border-radius:12px;padding:12px;margin-top:12px}
@@ -492,7 +500,7 @@ function render(){
   renderChrome();
   const fns = [stLos, stProdukt, stMarkt, stSlogan, stVierP, stKanal, stWerbemittel, stPitch, stVote];
   if(!S.reflex) S.reflex={};
-  document.getElementById('stage').innerHTML = (S.step>=2&&S.step<=7?situationBox(false):'') + fns[S.step]() + extraBoxes() + hintBox(S.step);
+  document.getElementById('stage').innerHTML = (S.step>=2&&S.step<=7?situationBox(false):'') + fns[S.step]() + hilfeBox(S.step) + extraBoxes() + hintBox(S.step);
   afterRender();
 }
 
@@ -1113,6 +1121,8 @@ document.addEventListener('click', async e=>{
   if(t.hasAttribute && t.hasAttribute('data-pmclose')){ document.getElementById('pitchModal').style.display='none'; return; }
   if(t.hasAttribute && t.hasAttribute('data-tclearvotes')){ if(await ask('Alle eingegangenen Bewertungen löschen?')) teacherAct('clearvotes',{}); return; }
   if(t.dataset && t.dataset.tphase){ const ph=t.dataset.tphase; if(ph==='end' && !await ask('Klassenrunde beenden? Danach kann niemand mehr beitreten.')) return; teacherAct('set',{patch:{state:ph}}); return; }
+  if(t.dataset && t.dataset.hilfe){ hilfeNehmen(t.dataset.hilfe); return; }
+  if(t.dataset && t.dataset.selfcheck){ selbstCheck(+t.dataset.selfcheck); return; }
   if(t.dataset && t.dataset.tlive!==undefined){ liveOpen(t.dataset.tlive); return; }
   if(t.dataset && t.dataset.livenav){ liveNav(+t.dataset.livenav); return; }
   if(t.dataset && t.dataset.liveid){ liveSel(t.dataset.liveid); return; }
@@ -2656,6 +2666,135 @@ function recStop(){
 }
 function recSave(){ if(!REC.url) return; const a=document.createElement('a'); a.href=REC.url; a.download=(produkt().n.split(' ')[0])+'-radiospot.'+(REC.ext||'webm'); document.body.appendChild(a); a.click(); a.remove(); }
 
+/* ---------- Hilfe-Station für Schüler: gestufte Hilfen (annehmen + Wartezeit), keine fertigen Lösungen ---------- */
+const H_STUFE=['💭 Denkanstoß','🧭 So gehst du vor','✍️ Formulierungshilfe'];
+const H_WARTE=[10,20,30];
+const H_DENK=['Lies die Aufgabe noch einmal in Ruhe.','Schau dir deine Produktkarte und die Fallsituation an.','Notiere schon mal ein Stichwort – egal wie unfertig.','Frag dich: Was würde meine Kundengruppe dazu sagen?'];
+const kg=(p)=>p&&p.kunden?p.kunden.join(', '):'';
+const HILFEN={
+ 1:[{k:'1a',t:'Wie gestalte ich mein Produktbild?',h:[
+   p=>`Wer soll ${escapeHtml(p.n)} kaufen? Welche Farben, Formen und Materialien erwartet diese Kundengruppe von einem solchen Produkt?`,
+   'Wähle einen Reiter: <b>3D-Modell</b> (Farbe je Bauteil, Material/Skin, Logo-Text, drehen), <b>Foto</b> oder <b>Zeichnen</b>. Probiere 2–3 Varianten aus und klicke erst dann auf „✅ Als mein Produktbild verwenden“.',
+   'Beispiel an einem <i>anderen</i> Produkt: Eine Kinderzahnbürste wirkt mit knalligen Farben und runden Formen fröhlich, eine Luxusuhr mit Schwarz, Metall und wenig Text edel. Was davon passt zu <i>deinem</i> Produkt?']},
+  {k:'1b',t:'Was sind Produktmerkmale?',h:[
+   'Merkmale sind Eigenschaften, die man sehen, messen oder prüfen kann: Material, Größe, Gewicht, Funktion, Herkunft.',
+   'Lies die Merkmale auf deiner Produktkarte. Markiere das Merkmal, das die Konkurrenz <b>nicht</b> hat – das wird später wichtig für deine USPs.',
+   p=>`Satzanfang für deine Notizen: „Das Besondere an ${escapeHtml(p.n)} ist …, weil …“`]}],
+ 2:[{k:'2a',t:'Welche Kundengruppe passt?',h:[
+   (p,si)=>`Lies die Fallsituation${si?` von ${escapeHtml(si.firma)}`:''}: Wen will die Firma erreichen? Was steht im Ziel?`,
+   p=>`Vergleiche die Kundengruppen (${escapeHtml(kg(p))}): Wer hat das größte Bedürfnis? Wer kann und will den Preis zahlen? Wer passt zum Ziel der Fallsituation?`,
+   'Denksatz: „Wenn ich zu dieser Gruppe gehören würde, würde ich das Produkt kaufen, weil …“ – Klingt der Satz überzeugend? Dann hast du deine Gruppe.']},
+  {k:'2b',t:'Welches Absatzgebiet wähle ich?',h:[
+   'Wo wohnen und kaufen deine Kunden? Steht in der Fallsituation ein Ort oder eine Region?',
+   'Wäge ab: <b>regional</b> = günstig und nah am Kunden, aber kleine Reichweite. <b>Deutschlandweit/online</b> = große Reichweite, aber mehr Konkurrenz und höhere Kosten.',
+   'Beispiel an <i>anderen</i> Produkten: Honig vom Imker → Wochenmärkte in Baden-Württemberg. Trend-Sneaker → Online-Shop deutschlandweit. Was gilt für dein Produkt?']},
+  {k:'2c',t:'Wie formuliere ich USPs?',h:[
+   'USP = Unique Selling Proposition: der Grund, warum Kunden <b>genau dieses</b> Produkt kaufen sollen – und nicht das der Konkurrenz.',
+   'Mach aus einem Merkmal einen Nutzen: Merkmal + „damit du …“. Schreib nicht, was das Produkt <i>ist</i>, sondern was der Kunde davon <i>hat</i>.',
+   'Beispiel an einem <i>anderen</i> Produkt: Merkmal „Akku hält 20 Stunden“ → USP „Hält den ganzen Festivaltag durch – ganz ohne Steckdose.“ Satzbausteine: „Endlich …“, „Ohne …“, „Damit du …“, „Nie wieder …“']},
+  {k:'2d',t:'Welches Bedürfnis hat meine Zielgruppe?',h:[
+   'Welches Problem oder welcher Wunsch hat deine Kundengruppe im Alltag?',
+   'Beantworte die W-Fragen: Wann tritt das Problem auf? Wo? Wie oft? Was nervt daran am meisten?',
+   'Satzanfang: „Meine Kunden ärgern sich, wenn … Sie wünschen sich …“']}],
+ 3:[{k:'3a',t:'Welche Tonalität passt?',h:[
+   'Wie sprechen deine Kunden untereinander? Locker, sachlich, herzlich?',
+   'Faustregel: Junge Zielgruppen → frech oder humorvoll. Familien → emotional. Fachleute und Berufstätige → seriös oder sachlich. Umweltbewusste → nachhaltig.',
+   'Test: Lies deinen Slogan laut im gewählten Ton vor. Würde deine Zielgruppe schmunzeln oder nicken? Wenn nicht, wechsle den Ton.']},
+  {k:'3b',t:'Wie finde ich einen guten Slogan?',h:[
+   'Ein guter Slogan ist kurz (höchstens 40 Zeichen), leicht zu merken und zeigt den Nutzen.',
+   'Probiere Techniken: Reim, Alliteration (gleiche Anfangsbuchstaben), Wortspiel, Aufforderung („Hol dir …“), Markenname im Slogan. Schreib 5 Ideen auf und streiche dann die schwächsten.',
+   p=>`Lückensätze zum Ausprobieren: „Mehr ___, weniger ___.“ · „${escapeHtml(p.n.split(' ')[0])} – ___ für ___.“ · „___? ___!“ · „Weil ___ einfach ___ ist.“`]}],
+ 4:[{k:'4a',t:'Welche Preisstrategie?',h:[
+   'Was sagt die Fallsituation über den Preis? Was ist deine Zielgruppe bereit zu zahlen?',
+   '<b>Premiumpreis</b> = hohe Qualität und gutes Image. <b>Niedrigpreis</b> = viele Kunden, wenig Gewinn pro Stück. <b>Penetrationspreis</b> = günstig einsteigen, später erhöhen.',
+   'Prüffrage: „Passt mein Preis zu meinem Produktbild, meinem Vertriebsweg und meiner Zielgruppe?“ Wenn ein Teil nicht passt, ändere einen davon.']},
+  {k:'4b',t:'Welcher Vertriebsweg?',h:[
+   'Wo kauft deine Zielgruppe normalerweise ein – online, im Fachgeschäft, im Supermarkt?',
+   '<b>Direkt</b> (eigener Online-Shop) = mehr Gewinn, du erreichst aber nur, wer dich schon kennt. <b>Indirekt</b> (Handel) = mehr Reichweite, der Händler will mitverdienen.',
+   'Beispiel an <i>anderen</i> Produkten: Premium-Uhr → Fachhandel und eigener Shop. Bio-Müsli → Bio-Supermarkt und Drogerie.']},
+  {k:'4c',t:'Was kommt in die Promotion?',h:[
+   'Wie erfährt deine Zielgruppe überhaupt von deinem Produkt?',
+   'Mögliche Bausteine: Werbung, Verkaufsförderung (Gratisprobe, Gutschein, Aktion im Laden), Öffentlichkeitsarbeit (PR), Sponsoring.',
+   'Satzmuster: „Wir erreichen ___ durch ___, weil sie ___.“']},
+  {k:'4d',t:'Wie reagiere ich auf ein Marktereignis?',h:[
+   'Lies das Ereignis genau: Welches der vier P ist betroffen?',
+   'Sammle 2 mögliche Reaktionen und notiere je einen Vorteil und einen Nachteil. Entscheide dich dann für eine.',
+   'Begründungsmuster: „Wir reagieren mit ___, weil ___. Ein Nachteil ist ___. Den nehmen wir in Kauf, weil ___.“']}],
+ 5:[{k:'5a',t:'Welche Kanäle passen zur Zielgruppe?',h:[
+   'Welche Medien nutzt deine Zielgruppe jeden Tag?',
+   'Geh den Tag deiner Zielgruppe durch: morgens, unterwegs, bei der Arbeit oder in der Schule, abends. Wo begegnet ihr Werbung?',
+   'Beispiel an einer <i>anderen</i> Zielgruppe: Pendler → Radio am Morgen, Plakat am Bahnhof, Podcast im Zug.']},
+  {k:'5b',t:'Wie verteile ich das Budget?',h:[
+   'Das Budget muss genau verplant werden – nicht mehr und nicht weniger.',
+   'Setze einen Schwerpunkt: 1–2 Hauptkanäle bekommen den größten Teil, weitere Kanäle ergänzen. Eine mögliche Aufteilung: 60 % / 30 % / 10 %.',
+   'Rechne nach: Summe aller Kanäle = Budget. Anteil eines Kanals = Betrag ÷ Budget × 100. Kannst du für jeden Kanal einen Satz Begründung sagen?']},
+  {k:'5c',t:'Welches Werbegesicht passt?',h:[
+   'Passt die Person zu deiner Zielgruppe und zum Image deines Produkts?',
+   'Wäge ab: Große Stars haben viel Reichweite, sind aber teuer und wirken oft weniger glaubwürdig. Micro-Influencer haben weniger Follower, aber eine treue Community.',
+   'Prüfliste: Zielgruppe passt? Image passt? Kosten im Budget? Als Werbung gekennzeichnet? Gab es Skandale?']}],
+ 6:[{k:'6a',t:'Wie baue ich einen Instagram-Beitrag?',h:[
+   'Was soll jemand, der nur 2 Sekunden auf das Bild schaut, sofort verstehen?',
+   'Bausteine: auffälliges Bild, kurze Überschrift im Bild (wenige große Wörter), Bildtext mit Nutzen, 3–10 passende Hashtags, Kennzeichnung „Anzeige“.',
+   'Aufbau nach AIDA: Aufmerksamkeit (Bild/Überschrift) → Interesse (Nutzen) → Wunsch (Gefühl) → Handlung (Call-to-Action).']},
+  {k:'6b',t:'Wie plane ich einen Werbeclip?',h:[
+   'Was passiert in den ersten 3 Sekunden, damit niemand weiterscrollt?',
+   'Roter Faden in 3–5 Szenen: Problem → Produkt taucht auf → Lösung/Nutzen → Abschlusskarte mit Produkt, Slogan und Call-to-Action.',
+   'Szenenplan zum Ausfüllen: Szene 1 „Problem: ___“ · Szene 2 „Auftritt: ___“ · Szene 3 „Nutzen: ___“ · Szene 4 „Slogan + ___“.']},
+  {k:'6c',t:'Wie formuliere ich Hook und Call-to-Action?',h:[
+   'Hook = Aufhänger am Anfang. Call-to-Action = klare Aufforderung am Ende.',
+   'Hook: Frage, überraschende Zahl oder ein Problem aus dem Alltag. Call-to-Action: beginnt mit einem Verb und sagt genau, was zu tun ist.',
+   'Starter: Hook „Kennst du das, wenn …?“ · CTA „Jetzt ___ und ___ sichern!“ / „Teste ___ ab ___ im ___.“']}],
+ 7:[{k:'7a',t:'Wie baue ich meinen Pitch auf?',h:[
+   'Was ist der rote Faden deiner Kampagne – in einem Satz?',
+   'Reihenfolge: Ausgangslage (Fallsituation) → Ziel → Zielgruppe → Idee und Slogan → 4P und Kanäle → Werbemittel → wie das Ziel erreicht wird.',
+   'Satzanfänge: „Stellt euch vor …“ · „Unser Ziel ist …“ · „Deshalb haben wir …“ · „Messen werden wir den Erfolg an …“']},
+  {k:'7b',t:'Wie begründe ich die Lösung der Fallsituation?',h:[
+   'Lies Ziel und Erfolgskennzahl deiner Fallsituation noch einmal.',
+   'Verbinde jede wichtige Maßnahme mit dem Ziel: Welche Maßnahme bringt welchen Beitrag?',
+   'Muster: „Das Ziel ___ erreichen wir durch ___, weil ___. Erkennen können wir den Erfolg an ___.“']}],
+ 8:[{k:'8a',t:'Wie bewerte ich fair?',h:[
+   'Bewerte die Kampagne, nicht die Person.',
+   'Geh jedes Kriterium einzeln durch und vergib die Punkte erst, wenn du einen Grund nennen kannst.',
+   'Feedback-Satz: „Besonders gelungen ist …, weil … Verbessern könntest du …“']}]
+};
+const STEP_CHECKS={1:[0],2:[1,2,3],3:[4,5],4:[6,7],5:[8],6:[9,10,11],7:[12]};
+let HWAIT={};
+function hilfeBox(step){
+  const L=HILFEN[step], p=produkt(); if(!L||!p) return ''; const si=situation(); const H=S.hilfen||{};
+  return `<details class="hilfe-box noprint" ${S.hilfeOpen===step?'open':''}>
+    <summary>🆘 Hilfe-Station <small>– erst selbst probieren, dann gestufte Hilfe holen</small></summary>
+    <p class="hint">Jede Frage hat 3 Stufen: 💭 Denkanstoß → 🧭 So gehst du vor → ✍️ Formulierungshilfe. Eine fertige Lösung gibt es nicht – die Entscheidung triffst du selbst.</p>
+    ${L.map(it=>{ const lv=H[it.k]||0; const w=HWAIT[it.k];
+      return `<div class="hitem"><div class="htitle">${escapeHtml(it.t)} <span class="hlv">${'●'.repeat(lv)}${'○'.repeat(3-lv)}</span></div>
+      ${it.h.slice(0,lv).map((x,i)=>`<div class="hstufe hs${i+1}"><b>${H_STUFE[i]}:</b> ${typeof x==='function'?x(p,si):x}</div>`).join('')}
+      ${lv<3?(w?`<div class="hwait" data-hw="${it.k}">⏳ …</div>`:`<button class="tbtn" data-hilfe="${it.k}">🆘 ${lv?'Nächste Stufe':'Hilfe'} annehmen (Stufe ${lv+1})</button>`):'<div class="hint">✅ Alle Stufen genutzt – jetzt bist du dran!</div>'}</div>`; }).join('')}
+    ${STEP_CHECKS[step]?`<div class="selfcheck"><button class="btn" data-selfcheck="${step}">✔ Mein Ergebnis prüfen</button><div id="sc-${step}"></div></div>`:''}
+  </details>`;
+}
+async function hilfeNehmen(k){
+  const step=S.step, it=(HILFEN[step]||[]).find(x=>x.k===k); if(!it||HWAIT[k]) return; const lv=(S.hilfen||{})[k]||0; if(lv>=3) return;
+  if(!await ask(`Hilfe Stufe ${lv+1} zu „${it.t}“ annehmen? Versuch es vorher ruhig noch einmal selbst. Nach dem Annehmen hast du ${H_WARTE[lv]} Sekunden Denkzeit.`,'🆘 Ja, Hilfe annehmen')) return;
+  HWAIT[k]={end:Date.now()+H_WARTE[lv]*1000, lv, tip:H_DENK[Math.floor(Math.random()*H_DENK.length)]}; S.hilfeOpen=step; render(); hilfeTick();
+}
+function hilfeTick(){
+  const now=Date.now(); let changed=false;
+  for(const [k,w] of Object.entries(HWAIT)){
+    const s=Math.ceil((w.end-now)/1000);
+    if(s<=0){ delete HWAIT[k]; S.hilfen=S.hilfen||{}; S.hilfen[k]=Math.max(S.hilfen[k]||0,w.lv+1); S.hilfenN=(S.hilfenN||0)+1; changed=true; continue; }
+    const el=document.querySelector(`[data-hw="${k}"]`); if(el) el.innerHTML=`⏳ Denkzeit: noch <b>${s} s</b> – ${escapeHtml(w.tip)}<div class="hbar"><i style="width:${Math.round((1-s/H_WARTE[w.lv])*100)}%"></i></div>`;
+  }
+  if(changed){ saveState(); const y=window.scrollY; render(); window.scrollTo({top:y}); if(typeof roomReport==='function') roomReport(true); }
+}
+setInterval(hilfeTick,1000);
+function selbstCheck(step){
+  const el=document.getElementById('sc-'+step); if(!el) return; const idx=STEP_CHECKS[step]||[];
+  const res=idx.map(i=>{ let ok=false; try{ ok=!!CHECKS[i][1](S); }catch(e){} return [ok,CHECKS[i][0]]; });
+  const all=res.every(r=>r[0]); const tips=coachTips(step).filter(t=>t[0]==='💡').length;
+  el.innerHTML=`<ul class="checks">${res.map(([ok,t])=>`<li>${ok?'✅':'❌'} ${escapeHtml(t)}</li>`).join('')}</ul>
+    <p class="${all?'good':'bad'}">${all?'🎉 Alle Pflichtpunkte dieser Etappe sind erledigt.':'Noch nicht alles erledigt – hol dir bei Bedarf eine Hilfe.'}${tips?` Der Kampagnen-Coach hat noch ${tips} Tipp${tips>1?'s':''} für dich.`:''}</p>`;
+}
+document.addEventListener('toggle',e=>{ const d=e.target; if(d.classList&&d.classList.contains('hilfe-box')) S.hilfeOpen=d.open?S.step:null; },true);
+
 /* ---------- Kampagnen-Coach (ohne externe Tools) ---------- */
 function coachTips(step){
   const p=produkt(), T=[]; if(!p) return T;
@@ -2856,7 +2995,7 @@ async function roomPoll(){
 async function roomReport(force){
   if(!S.room || !S.los) return;
   let ok=0; CHECKS.forEach(([,fn])=>{ try{ if(fn(S)) ok++; }catch(e){} });
-  const rep={step:S.step, ok, of:CHECKS.length, slogan:S.slogan, pitch:pitchText()};
+  const rep={step:S.step, ok, of:CHECKS.length, slogan:S.slogan, pitch:pitchText(), hilfen:S.hilfenN||0};
   const sig=JSON.stringify(rep); if(!force && sig===LAST_REPORT) return;
   try { await api('report',{code:S.room.code,id:S.room.id,rep}); LAST_REPORT=sig; } catch(e){}
 }
@@ -2930,13 +3069,14 @@ function teacherRender(soft){
       </div>
     </div>
     <div class="card solid"><h3 style="margin-top:0">Schülerinnen und Schüler</h3>
-      ${ps.length?`<table class="vote-table t-table"><tr><th>#</th><th>Name</th><th>Anzeigename</th><th>Los / Produkt</th><th>Etappe</th><th>Checkliste</th><th>Zuletzt</th><th></th></tr>
+      ${ps.length?`<table class="vote-table t-table"><tr><th>#</th><th>Name</th><th>Anzeigename</th><th>Los / Produkt</th><th>Etappe</th><th>Checkliste</th><th title="angenommene Hilfestufen">Hilfen</th><th>Zuletzt</th><th></th></tr>
       ${ps.map(p=>{ const r=reps[p.id]||{}, pr=PRODUKTE[p.los-1];
         return `<tr><td>${p.id}</td><td>${escapeHtml(p.name)}</td>
           <td><input type="text" value="${escapeHtml(p.alias||'')}" data-talias="${p.id}" placeholder="—" style="padding:5px;max-width:120px" onkeydown="if(event.key==='Enter') this.blur()"></td>
           <td><select data-tlos="${p.id}" style="width:auto;padding:5px">${['<option value="0">–</option>'].concat(PRODUKTE.map((q,i)=>`<option value="${i+1}" ${p.los===i+1?'selected':''}>${i+1} ${q.e} ${escapeHtml(q.n.split(' ').slice(0,2).join(' '))}</option>`)).join('')}</select>${losCount[p.los]>1?' <span class="bad" title="Los doppelt vergeben">⚠️</span>':''}</td>
           <td>${r.step!=null?STUFEN[r.step]:'–'}</td>
           <td>${r.of?`<div class="bar" style="margin:0;min-width:90px"><div style="width:${Math.round(r.ok/r.of*100)}%;background:#2ec4b6"></div></div><span class="hint">${r.ok}/${r.of}</span>`:'–'}</td>
+          <td>${r.hilfen?'🆘 '+r.hilfen:'–'}</td>
           <td class="hint">${ago(p.last)}</td>
           <td style="white-space:nowrap"><button class="tbtn" data-tlive="${p.id}" title="Live zusehen">📺</button> ${r.pitch?`<button class="tbtn" data-tpitch="${p.id}">👁 Pitch</button>`:''} ${p.los?`<button class="tbtn" data-tloesone="${p.los}">💡</button>`:''} <button class="tbtn" data-tkick="${p.id}">✕</button></td></tr>`; }).join('')}
       </table>`:'<p class="hint">Noch niemand beigetreten. Zeige den QR-Code oder teile den Link.</p>'}
@@ -3216,14 +3356,14 @@ const HINTS = [
 ];
 function hintBox(i){
   const h = HINTS[i];
-  return `<details class="hints noprint">
+  return `${S.room||LIVE?'':`<details class="hints noprint">
     <summary>💡 Hinweise für Lehrkräfte</summary>
     <p><b>Lernziel:</b> ${h.ziel}</p>
     <p><b>Sozialform:</b> ${h.methode}</p>
     <p><b>Reflexionsfrage:</b> ${h.frage}</p>
     <p><b>Differenzierung:</b> ${h.diff}</p>
     <p><b>Beobachtung:</b> ${h.beob}</p>
-  </details>
+  </details>`}
   <div class="reflex noprint">
     <label class="lbl">📝 Deine Reflexion zu dieser Etappe</label>
     <textarea data-bind="reflex.${i}" placeholder="${h.frage}">${escapeHtml((S.reflex||{})[i]||'')}</textarea>
