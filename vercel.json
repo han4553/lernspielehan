@@ -43,6 +43,14 @@
     {
       "source": "/wimmelbilder/arbeitsblaetter",
       "destination": "/wimmelbilder/arbeitsblaetter/index.html"
+    },
+    {
+      "source": "/kampagnen-werkstatt",
+      "destination": "/kampagnen-werkstatt/Kampagnen_Werkstatt.html"
+    },
+    {
+      "source": "/kampagnen-werkstatt/",
+      "destination": "/kampagnen-werkstatt/Kampagnen_Werkstatt.html"
     }
   ]
 }
