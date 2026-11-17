@@ -25,14 +25,6 @@
       "destination": "/escape/Sternenfracht.html"
     },
     {
-      "source": "/pixel-marken",
-      "destination": "/pixel-marken/Pixel_Marken.html"
-    },
-    {
-      "source": "/pixel-marken/",
-      "destination": "/pixel-marken/Pixel_Marken.html"
-    },
-    {
       "source": "/wimmelbilder",
       "destination": "/wimmelbilder/Wimmelbilder.html"
     },
@@ -51,6 +43,26 @@
     {
       "source": "/kampagnen-werkstatt/",
       "destination": "/kampagnen-werkstatt/Kampagnen_Werkstatt.html"
+    },
+    {
+      "source": "/kaufvertragsstoerungen",
+      "destination": "/kaufvertragsstoerungen/Kaufvertragsstoerungen.html"
+    },
+    {
+      "source": "/kaufvertragsstoerungen/",
+      "destination": "/kaufvertragsstoerungen/Kaufvertragsstoerungen.html"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/pixel-marken",
+      "destination": "/kaufvertragsstoerungen/",
+      "permanent": false
+    },
+    {
+      "source": "/pixel-marken/",
+      "destination": "/kaufvertragsstoerungen/",
+      "permanent": false
     }
   ]
 }

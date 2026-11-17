@@ -2454,7 +2454,7 @@ const PROD='https://lernspiele-eight.vercel.app';
 const FILE=location.protocol==='file:';
 const BASE=FILE?PROD:'';
 const API=BASE+'/api/pm';
-const JOINURL=FILE?PROD+'/pixel-marken/':location.origin+location.pathname;
+const JOINURL=FILE?PROD+'/kaufvertragsstoerungen/':location.origin+location.pathname;
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=v=>v.toFixed(2).replace('.',',');
@@ -3334,7 +3334,7 @@ async function hostEndView(){
    '<div>'+winnersHTML(hostWinners())+(isTQ()?'':chartHTML()+learnHTML())+'<button class="btn cy" id="csv">⬇ Ergebnis als CSV</button><button class="btn gr" id="nw">🔄 Neues Spiel (gleicher Raum)</button><button class="btn gh" id="cl">Raum schließen</button></div></div></div>');
   raceRender($('#race'),pl.slice(0,12).map(p=>({n:p.n,e:p.e,s:p.s,m:-1,mt:0})));
   ceremony(pl.map(p=>({n:p.n,e:p.e,s:p.s})),'');bindChart();
-  $('#csv').onclick=()=>{const rows=[['Platz','Name','Treffer','Ø Zeit (s)','Punkte']].concat(pl.map((p,i)=>[i+1,p.n,p.c,avgT(p).replace(' s',''),p.s]));const csv='﻿'+rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(';')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='pixel-marken-'+R.code+'.csv';a.click()};
+  $('#csv').onclick=()=>{const rows=[['Platz','Name','Treffer','Ø Zeit (s)','Punkte']].concat(pl.map((p,i)=>[i+1,p.n,p.c,avgT(p).replace(' s',''),p.s]));const csv='﻿'+rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(';')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='kaufvertragsstoerungen-'+R.code+'.csv';a.click()};
   $('#nw').onclick=async()=>{const x=await api('reset',{c:R.code,hk:R.hk});if(x&&x.ok){R.ph='lobby';R.seed=x.seed;R.st=0;G.r=-1;G.vph='';hostLobby()}};
   $('#cl').onclick=async()=>{await api('close',{c:R.code,hk:R.hk});stopPoll();ls.del('pm_host');M='home';homeView()};
 }
