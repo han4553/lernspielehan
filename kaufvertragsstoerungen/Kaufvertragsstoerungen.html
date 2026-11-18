@@ -92,6 +92,9 @@ input:focus,select:focus{outline:none;border-color:var(--cy)}
 .bcols{display:flex;flex-direction:column}.tqmode .br{order:-1}
 @media(min-width:900px){.wrap.bk{max-width:1100px}.bcols{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}.bk .rdock{top:4px}.bk .br canvas{max-width:100%}}
 body.ingame #mfab,body.ingame #mpan{display:none}
+#tbar{position:fixed;left:50%;transform:translateX(-50%);bottom:8px;z-index:60;display:flex;gap:8px;padding:6px 8px;border-radius:14px;background:#1c0f45f2;border:2px solid #ffffff44}
+body.tp .wrap{padding-bottom:80px}
+body.tp #mfab{display:none}
 #mfab{position:fixed;right:10px;bottom:10px;z-index:50;width:44px;height:44px;border-radius:50%;border:2px solid #ffffff44;background:#33216bee;color:#fff;font-size:20px;cursor:pointer}
 #mpan{display:none;position:fixed;right:10px;bottom:64px;z-index:51;width:min(320px,calc(100vw - 20px));max-height:70vh;overflow:auto;background:#241552f5;border:2px solid var(--ye);border-radius:14px;padding:10px 12px}
 #mpan .mx{float:right;background:none;border:0;color:#fff;font-size:18px}.mrow{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.mlab{font-size:13px;color:var(--mut)}
@@ -2762,7 +2765,7 @@ function setupSync(gmId,nrId,smId,subId){
 const GMH={blitz:'Fälle und Fragen aus Sachmangel, Lieferungsverzug und Zahlungsverzug, gemischt. Nach und nach fallen falsche Antworten weg.',sm:'Mangelarten, Rügepflicht, Fristen und Gewährleistungsrechte.',lv:'Voraussetzungen, Mahnung, Nachfrist, Rechte des Käufers und Vertragsstrafe.',zv:'Verzugsbeginn, Verzugszinsen, Mahn-Treppe, Mahnbescheid und Zwangsvollstreckung.',wer:'Hinweis für Hinweis: Welcher Fachbegriff ist gemeint?',konto:'Ordne den Fall der richtigen Mangelart zu.'};
 /* ===================== Startseite ===================== */
 let heroT=null,heroI=0,heroS=0;
-function homeView(){
+function homeView(){teacherBarOff();R.tp=0;
   V='home';M='home';
   const q=new URLSearchParams(location.search);
   const ready=true;
@@ -3106,7 +3109,7 @@ function enterBreak(){
   if(M==='room')G.lastRank=Date.now()-1500;
   if(M==='solo')soloRank();
 }
-function updateBrk(c){const e=$('#cdn');if(!e)return;const s=Math.max(0,Math.ceil((brkMs()-c.t)/1000));e.textContent=M==='room'&&R.cfg&&R.cfg.mode==='manual'&&s<=0?(G.r>=nRounds()-1?'Warten auf die Lehrkraft …':'Warten, bis die Lehrkraft weiterklickt …'):(G.r>=nRounds()-1?'Siegerehrung in ':'Nächste Runde in ')+s+' s'}
+function updateBrk(c){const e=$('#cdn');if(!e)return;const s=Math.max(0,Math.ceil((brkMs()-c.t)/1000));e.textContent=M==='room'&&R.cfg&&R.cfg.mode==='manual'&&s<=0?(R.tp?'Unten auf „Weiter“ klicken, wenn alle bereit sind':G.r>=nRounds()-1?'Warten auf die Lehrkraft …':'Warten, bis die Lehrkraft weiterklickt …'):(G.r>=nRounds()-1?'Siegerehrung in ':'Nächste Runde in ')+s+' s'}
 const ptsTxt=(p,ms)=>p>0?'+'+p+' · '+fs_(ms):(p<0?'−'+Math.abs(p):'–');
 const fs_=ms=>(ms/1000).toFixed(1).replace('.',',')+' s';
 function roundLi(p,i,me){return '<li'+(me?' class="me"':'')+'><span class="rk">'+(i+1)+'.</span>'+AV(p[1],22)+' '+esc(p[0])+'<span class="sc">'+ptsTxt(p[2],p[3])+'</span></li>'}
@@ -3151,7 +3154,7 @@ setInterval(tick,70);
 function titleFor(){const m0=nRounds()*100,p0=myScore()/m0;return p0>=.9?'🏆 Rechts-Legende':p0>=.7?'🥇 Mängel-Profi':p0>=.5?'🥈 Fristen-Kenner':p0>=.3?'🥉 Mahn-Lehrling':'🤓 Weiter üben!'}
 function titleOld(){const m=nRounds()*100,p=myScore()/m;return p>=.9?'🏆 Pixel-Legende':p>=.7?'🥇 Logo-Profi':p>=.5?'🥈 Marken-Kenner':p>=.3?'🥉 Pixel-Lehrling':'🤓 Weiter üben!'}
 let endList=[],ceList=[];
-async function goEnd(){
+async function goEnd(){teacherBarOff();
   if(V==='end')return;V='end';clearTimeout(G.peekT);beep(523,.15);setTimeout(()=>beep(659,.15),150);setTimeout(()=>beep(784,.3),300);
   if(M==='host'){await hostEndView();return}
   let rk='';
@@ -3210,7 +3213,7 @@ function joinView(code){
     await syncTime();applyState(x);roomAfterJoin();
   };
 }
-function applyState(x){if(!x)return;if(x.cfg)R.cfg=x.cfg;if(x.ph)R.ph=x.ph;if(x.st!=null)R.st=x.st;if(x.gate)R.gate=x.gate;if(x.mus){if(M!=='host')Mus.setState(x.mus)}else if(x.mus===null&&M==='room'&&Mus.on)Mus.setState({on:false,season:'auto',i:0});if(x.seed!=null)R.seed=x.seed;if(x.name)R.rname=x.name;if(x.total!=null)R.total=x.total;if(x.rank)R.rank=x.rank}
+function applyState(x){if(!x)return;if(x.cfg)R.cfg=x.cfg;if(x.ph)R.ph=x.ph;if(x.st!=null)R.st=x.st;if(x.gate)R.gate=x.gate;if(x.mus){if(M!=='host'&&!R.tp)Mus.setState(x.mus)}else if(x.mus===null&&M==='room'&&!R.tp&&Mus.on)Mus.setState({on:false,season:'auto',i:0});if(x.seed!=null)R.seed=x.seed;if(x.name)R.rname=x.name;if(x.total!=null)R.total=x.total;if(x.rank)R.rank=x.rank}
 function roomAfterJoin(){
   if(R.ph==='play'){V='pre';app('<div class="wrap"><div class="h1" style="font-size:26px">Gleich geht’s los!</div><div class="cd" id="cd">–</div></div>');startPoll();return}
   lobbyView();startPoll();
@@ -3249,7 +3252,7 @@ async function poll(){
   }
 }
 function stopPoll(){clearInterval(pollT);pollT=null}
-function leaveRoom(){stopPoll();M='home';R.code='';R.pid='';ls.del('pm_p')}
+function leaveRoom(){teacherBarOff();R.tp=0;stopPoll();M='home';R.code='';R.pid='';ls.del('pm_p')}
 async function report(){if(M!=='room')return;const x=await api('rep',{c:R.code,pid:R.pid,s:G.score,rd:G.r,cc:G.correct,pts:G.answered?G.rpts:-G.pen,ms:G.answered?Math.round(G.rms||0):0,ok:G.answered?1:0});if(G.vph==='play')liveRank();if(x&&x.kicked){stopPoll();ls.del('pm_p');alert('Du wurdest aus dem Raum entfernt.');homeView()}}
 
 /* ===================== Lehrkraft ===================== */
@@ -3285,6 +3288,7 @@ function hostLobby(){
    '<div class="grid2"><div><div class="card" style="text-align:center"><div class="sub">Scannen oder auf <b>'+esc(location.host||'lernspiele')+'</b> den Code eingeben:</div><div class="code">'+esc(R.code)+'</div><div class="qr">'+qrSvg(url)+'</div>'+
    '<div class="row" style="justify-content:center;margin-top:10px"><button class="btn sm cy" id="cp">🔗 Link kopieren</button></div><div class="tag" id="ul" style="word-break:break-all">'+esc(url)+'</div></div></div>'+
    '<div><div class="card"><b>👥 Im Raum: <span id="pc">0</span></b><div class="chips" id="chips" style="margin-top:8px"></div></div>'+
+   '<div class="card" id="tpc"><b>🎮 Ich spiele selbst mit</b><div class="sub" style="margin:4px 0">Du spielst wie die Schüler und steuerst den Ablauf trotzdem selbst (Weiter, Beenden, Musik).</div>'+(R.tp?'<div class="tag">✅ Du spielst mit als <b>'+esc(R.name)+'</b></div>':'<label>Dein Name</label><input id="tn" maxlength="14" value="Lehrkraft" autocomplete="off"><label>Dein Männchen</label>'+avBuilder()+'<div class="err" id="te"></div><button class="btn cy" id="tj">🎮 Mitspielen</button>')+'</div>'+
    '<div class="card"><b>Einstellungen</b><label>Runden</label><select id="hr"><option value="5">5 Fragen</option><option value="8">8 Fragen</option><option value="14">14 Fragen</option><option value="20">20 Fragen</option><option value="30">Alle Fragen</option></select><label>Spielmodus</label><select id="hg"><option value="blitz">⚖️ Fall-Quiz – alle Themen</option><option value="sm">📦 Mangelhafte Lieferung (Sachmangel)</option><option value="lv">🚚 Lieferungsverzug</option><option value="zv">💶 Zahlungsverzug und Mahnverfahren</option><option value="wer">🕵️ Wer bin ich? – Fachbegriffe (7 Hinweise)</option><option value="konto">🔎 Mängel-Check – Welche Mangelart liegt vor?</option></select><label>Rennbahn-Szenerie</label><select id="hsc"><option value="strecke">🏁 Rennstrecke</option><option value="wueste">🏜 Wüste</option><option value="schnee">❄️ Schneelandschaft</option><option value="weltall">🚀 Weltall</option><option value="strand">🏖 Strand</option><option value="dschungel">🌴 Dschungel</option><option value="wechsel">🔀 Wechselt jede Runde</option></select><label>Punkte-Wertung</label><select id="hsm"><option value="standard">⚖️ Standard – falsch −25</option><option value="risiko">🎰 Risiko – doppelte Punkte, falsch −50</option><option value="fair">🕊 Fair – kein Abzug, kein Serienbonus</option><option value="turbo">🔥 Turbo – Serienbonus bis +100</option><option value="wechsel">🔀 Wertung wechselt jede Runde</option></select><label>Tempo</label><select id="hs"><option value="6000">Gemütlich (6 s)</option><option value="4000">Normal (4 s)</option><option value="3000">Schnell (3 s)</option></select><label>Ablauf</label><select id="hm"><option value="auto">Automatisch weiter, sobald alle geantwortet haben</option><option value="manual">Ich klicke bei jeder Frage selbst weiter</option></select></div>'+
    '<button class="btn gr" id="st">▶ Spiel starten</button><button class="btn gh" id="cl">Raum schließen</button></div></div>'+
    '<details><summary>👩‍🏫 Einsatz im Unterricht</summary><div class="card">Ablauf: Raum zeigen → Schüler beitreten lassen → starten. Jede Runde dauert ca. '+Math.round((NS*R.cfg.step+10000)/1000)+' s. Nach dem Spiel die Fragen besprechen, die oft falsch waren (Erklärung steht nach jeder Frage im Bildschirm). Nach jeder Auswertung können sich Spieler weiter hinten mit dem Lasso ein Stück nach vorn ziehen (Catch-up: je weiter hinten, desto größer der Zug, immer nur ein Stück). Am Ende gibt es eine Siegerehrung vom letzten bis zum ersten Platz.</div></details></div>');
@@ -3297,11 +3301,26 @@ function hostLobby(){
     $('#st').disabled=true;await upd();
     const x=await api('start',{c:R.code,hk:R.hk});
     if(!x||!x.ok){$('#st').disabled=false;alert((x&&x.err)||'Fehler');return}
-    await syncTime();R.ph='play';R.st=x.st;R.gate=1;G.r=-1;G.vph='';G.qs=isTQ()?buildTQ(R.seed,R.cfg.rounds,GM()):buildQs(R.seed,R.cfg.rounds,roomPool());
+    await syncTime();if(R.tp){M='room';teacherBar()}R.ph='play';R.st=x.st;R.gate=1;G.r=-1;G.vph='';G.qs=isTQ()?buildTQ(R.seed,R.cfg.rounds,GM()):buildQs(R.seed,R.cfg.rounds,roomPool());
     V='pre';app('<div class="wrap"><div class="h1" style="font-size:30px;text-align:center">Gleich geht’s los!</div><div class="cd" id="cd">–</div></div>');
   };
+  if(!R.tp&&$('#tj')){bindAv();$('#tj').onclick=async()=>{
+    const n=$('#tn').value.trim();if(!n){$('#te').textContent='Bitte einen Namen eingeben.';return}
+    $('#tj').disabled=true;$('#te').textContent='';
+    const x=await api('join',{c:R.code,n,e:pick.av});
+    if(!x||!x.ok){$('#te').textContent=(x&&x.err)||'Fehler';$('#tj').disabled=false;return}
+    R.pid=x.pid;R.name=x.n;R.av=pick.av;R.tp=1;hostLobby();
+  }}
   hostLobbyUpd();
 }
+function teacherBar(){
+  if(!R.hk||!R.tp)return;let b=$('#tbar');
+  if(!b){b=document.createElement('div');b.id='tbar';document.body.appendChild(b);document.body.classList.add('tp')}
+  b.innerHTML='<button type="button" class="btn sm cy" id="tSkip">⏭ Weiter</button><button type="button" class="btn sm gh" id="tMus">'+(Mus.on?'🎵 aus':'🎵 an')+'</button><button type="button" class="btn sm gh" id="tEnd">⏹ Beenden</button>';
+  $('#tSkip').onclick=hostSkip;$('#tEnd').onclick=hostEnd;
+  $('#tMus').onclick=()=>{musPublish(!Mus.on,Mus.s,Mus.i);Mus.ui();teacherBar()};
+}
+function teacherBarOff(){const b=$('#tbar');if(b)b.remove();document.body.classList.remove('tp')}
 function hostLobbyUpd(){
   const c=$('#chips');if(!c)return;$('#pc').textContent=R.players.length;
   c.innerHTML=R.players.map(p=>'<span class="chip">'+AV(p.e,22)+' '+esc(p.n)+'<button data-k="'+esc(p.id)+'" title="Entfernen">✕</button></span>').join('')||'<span class="mut">Noch niemand …</span>';
@@ -3423,10 +3442,10 @@ const Mus={on:false,s:'auto',i:0,cur:null,t:null,step:0,next:0,vol:.5,mute:!!ls.
   ui(){const b=$('#mfab');if(b)b.textContent=this.on&&!this.mute?'🎵':'🔇';const p=$('#mpan');if(p&&p.style.display!=='none')musPanel()}
 };
 function musPublish(on,s,i){const st={on,season:s,i};Mus.setState(st);
-  if(M==='host')api('mus',{c:R.code,hk:R.hk,on,season:s,i})}
+  if(M==='host'||R.tp)api('mus',{c:R.code,hk:R.hk,on,season:s,i})}
 function musPanel(){
   let p=$('#mpan');if(!p){p=document.createElement('div');p.id='mpan';document.body.appendChild(p)}
-  const ctl=M==='host'||M==='solo'||M==='home',L=Mus.list(),cur=Mus.cur&&Mus.on?Mus.cur.id:'';
+  const ctl=M==='host'||R.tp||M==='solo'||M==='home',L=Mus.list(),cur=Mus.cur&&Mus.on?Mus.cur.id:'';
   let h='<b>🎵 Musik</b> <button type="button" class="mx" id="mclose">✕</button>';
   if(ctl){
     h+='<div class="mrow"><button type="button" class="btn sm '+(Mus.on?'gr':'gh')+'" id="mon">'+(Mus.on?'⏸ Musik an':'▶ Musik aus')+'</button><button type="button" class="btn sm cy" id="mnx">⏭</button></div>';
@@ -3439,7 +3458,7 @@ function musPanel(){
   p.innerHTML=h;
   const on=(sel,f)=>{const e=p.querySelector(sel);if(e)e.onclick=f};
   on('#mclose',()=>{p.style.display='none'});
-  const push=(o,s,i)=>{if(M==='host')musPublish(o,s,i);else Mus.setState({on:o,season:s,i});Mus.ui()};
+  const push=(o,s,i)=>{if(M==='host'||R.tp)musPublish(o,s,i);else Mus.setState({on:o,season:s,i});Mus.ui()};
   on('#mon',()=>push(!Mus.on,Mus.s,Mus.i));
   on('#mnx',()=>push(true,Mus.s,(Mus.i+1)%Mus.list().length));
   p.querySelectorAll('[data-ms]').forEach(b=>b.onclick=()=>push(true,b.dataset.ms,0));
